@@ -109,10 +109,10 @@ void GameHandler::render(){
     BeginMode2D(camera);
 
     // Render the visible blocks from the grid
-    int xRenderAmount = (GetScreenWidth() / mapGrid.s) / (2 * zoom) +1; // Calculate how many tiles are viewed by the camera
-    int yRenderAmount = (GetScreenHeight() / mapGrid.s) / (2 * zoom) +1; // Calculate how many tiles are viewed by the camera
+    int xRenderAmount = (GetScreenWidth() / mapGrid.s) / (2 * zoom) +2; // Calculate how many tiles are viewed by the camera
+    int yRenderAmount = (GetScreenHeight() / mapGrid.s) / (2 * zoom) +2; // Calculate how many tiles are viewed by the camera
     // Calculate the cameraTarget position on the grid
-    size_t iCamera = cameraTarget.x / mapGrid.s; 
+    size_t iCamera = cameraTarget.x / mapGrid.s;
     size_t jCamera = cameraTarget.y / mapGrid.s;
 
     // Loop over the amount of blocks that are visible
