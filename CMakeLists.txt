@@ -1,5 +1,6 @@
 # Minimum required version of CMake
 cmake_minimum_required(VERSION 3.14)
+cmake_policy(SET CMP0135 NEW)
 
 # Project name and version
 project(MyCppProject VERSION 1.0)
@@ -56,7 +57,8 @@ add_executable(${PROJECT_NAME} ${SOURCES})
 
 # Include directories for header files
 target_include_directories(${PROJECT_NAME} PRIVATE 
-    ${CMAKE_SOURCE_DIR}/include 
+    ${CMAKE_SOURCE_DIR}/include/controllers 
+    ${CMAKE_SOURCE_DIR}/include/objects
     ${CMAKE_BINARY_DIR} 
 )
 

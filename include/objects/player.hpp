@@ -14,14 +14,12 @@ private:
     Storage storage;
     Engine engine;
 
-    
-
 public:
-    // Collision helpers
-    bool top, topLast;
-    bool right, rightLast;
-    bool bottom, bottomLast;
-    bool left, leftLast;
+    // If player is touching a block on any side
+    bool top;
+    bool right;
+    bool bottom;
+    bool left;
 
     Player() : AABB(){}
     Player(const Vector2 rPosition, const Vector2 rSize, const Vector2 rVelocity) : AABB(rPosition, rSize, rVelocity){}

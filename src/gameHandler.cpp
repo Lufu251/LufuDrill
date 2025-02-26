@@ -12,19 +12,6 @@ GameHandler::~GameHandler(){}
 void GameHandler::initialize(){
     player = Player({200,200}, {24,24}, {0,0});
     mapGrid = Grid(100,100, 32);
-    fuelMenu = FuelMenu({100,100}, {600,600});
-    playerGui = PlayerGui({0,0}, {static_cast<float>(GetScreenWidth()), static_cast<float>(GetScreenHeight())});
-    fuelMenu.initialize();
-    playerGui.initialize();
-    playerGui.enable();
-    
-
-    // Camera initialization
-    zoom = 2.0f;
-    cameraTarget = player.p;
-    camera.rotation = 0.0f;
-    camera.offset = (Vector2){ GetScreenWidth() / 2.0f + player.s.x/2, GetScreenHeight() / 2.0f + player.s.y/2}; // Center the view on the player
-    camera.zoom = zoom;
 
     generateTerrain();
 
@@ -32,10 +19,6 @@ void GameHandler::initialize(){
 }
 
 void GameHandler::update(float deltaTime){
-    // Update and smooth camera movement
-    cameraTarget = Vector2Lerp(cameraTarget, player.p, 0.2f);
-    camera.target = cameraTarget;
-
     // Movement input
     Vector2 direction{0,0};
     handleInput(direction);
@@ -54,101 +37,16 @@ void GameHandler::update(float deltaTime){
     }
 
     // Physics collision response
-    int d  = collisionResponse(player, mapGrid);
-    player.top = false;
-    player.right = false;
-    player.bottom = false;
-    player.left = false;
-    if(d == 1){
-        player.top = true;
-    }
-    if(d == 2){
-        player.right = true;
-    }
-    if(d == 3){
-        player.bottom = true;
-    }
-    if(d== 4){
-        player.left = true;
-    }
+    collisionResponse(player, mapGrid);
 
-    if(player.top && player.topLast){
-        std::cout << "On Top" << std::endl;
-    }
-    if(player.right && player.rightLast){
-        std::cout << "On Right" << std::endl;
-    }
-    if(player.bottom && player.bottomLast){
-        std::cout << "On Bottom" << std::endl;
-    }
-    if(player.left && player.leftLast){
-        std::cout << "On Left" << std::endl;
-    }
-
-
-    player.topLast = player.top;
-    player.rightLast = player.right;
-    player.bottomLast = player.bottom;
-    player.leftLast = player.left;
-
-    // Clamp player to grdMap
+    // Clamp player to gridMap
     player.p.x = std::clamp(player.p.x, 0.f, static_cast<float>(mapGrid.sizeX * mapGrid.s - player.s.x));
     player.p.y = std::clamp(player.p.y, 0.f, static_cast<float>(mapGrid.sizeY * mapGrid.s - player.s.y));
 
-    playerGui.update();
-    fuelMenu.update();
     
-    if(IsWindowResized()){
-        camera.offset = (Vector2){ GetScreenWidth() / 2.0f - player.s.x, GetScreenHeight() / 2.0f - player.s.y}; // Center the view
-    }
 }
 
-void GameHandler::render(){
 
-    // Render game view with the camera ------------------------------------
-    BeginMode2D(camera);
-
-    // Render the visible blocks from the grid
-    int xRenderAmount = (GetScreenWidth() / mapGrid.s) / (2 * zoom) +2; // Calculate how many tiles are viewed by the camera
-    int yRenderAmount = (GetScreenHeight() / mapGrid.s) / (2 * zoom) +2; // Calculate how many tiles are viewed by the camera
-    // Calculate the cameraTarget position on the grid
-    size_t iCamera = cameraTarget.x / mapGrid.s;
-    size_t jCamera = cameraTarget.y / mapGrid.s;
-
-    // Loop over the amount of blocks that are visible
-    for (int i = -xRenderAmount; i <= xRenderAmount; i++){
-        for (int j = -yRenderAmount; j <= yRenderAmount; j++){
-            int iBlock = iCamera + i;
-            int jBlock = jCamera + j;
-            // Clamp to grid size
-            if(iBlock < 0 || iBlock > mapGrid.sizeX || jBlock < 0 || iBlock > mapGrid.sizeY){
-                continue;
-            }
-
-            Block block = mapGrid(iBlock, jBlock); // get the current block
-
-            switch (block.mType)
-            {
-                case EMPTY: DrawRectangle(block.p.x, block.p.y, mapGrid.s, mapGrid.s, YELLOW); break;
-                case DIRT: DrawRectangle(block.p.x, block.p.y, mapGrid.s, mapGrid.s, BROWN); break;
-                case ROCK: DrawRectangle(block.p.x, block.p.y, mapGrid.s, mapGrid.s, GRAY); break;
-            }
-            //DrawText(TextFormat("[%i,%i]", iBlock , jBlock), 2 + block.p.x, 6 + block.p.y, 8, LIGHTGRAY);
-
-            DrawRectangleLines(block.p.x, block.p.y, mapGrid.s, mapGrid.s, WHITE);
-        }
-    }
-    
-    player.render();
-
-    EndMode2D();
-
-    // Render Gui view ------------------------------------
-
-    playerGui.render();
-    fuelMenu.render();
-
-}
 
 void GameHandler::handleInput(Vector2& rDirection){
     // Player input
@@ -216,9 +114,8 @@ std::vector<AABB> GameHandler::getPossibleCollisionsFromGrid(AABB& b, Grid& grid
     return blocks;
 }
 
-int GameHandler::collisionResponse(AABB& b, Grid& grid){
+void GameHandler::collisionResponse(AABB& b, Grid& grid){
     AABB cb = b;
-    int d = -1;
 
     //std::cout << std::endl << "------------- Collision START -------------" << std::endl;
     // Loop a cloned Player with the collision and end loop when movement is done
@@ -237,7 +134,6 @@ int GameHandler::collisionResponse(AABB& b, Grid& grid){
             if(hit.n.x < 0){
                 // LEFT
                 //std::cout << "Collision on LEFT" << " x " << hit.x << " y " << hit.y << " distance " << hit.collisionTime << std::endl;
-                d = 4;
 
                 // Dampening everytime a hit occures
                 cb.v.x *= ext_bounceDamping;
@@ -246,7 +142,6 @@ int GameHandler::collisionResponse(AABB& b, Grid& grid){
             else if(hit.n.x > 0){
                 // RIGHT
                 //std::cout << "Collision on RIGHT" << " x " << hit.x << " y " << hit.y << " distance " << hit.collisionTime << std::endl;
-                d = 2;
 
                 // Dampening everytime a hit occures
                 cb.v.x *= ext_bounceDamping;
@@ -255,7 +150,6 @@ int GameHandler::collisionResponse(AABB& b, Grid& grid){
             if(hit.n.y < 0){
                 // TOP
                 //std::cout << "Collision on TOP" << " x " << hit.x << " y " << hit.y << " distance " << hit.collisionTime << std::endl;
-                d = 1;
 
                 // Dampening everytime a hit occures
                 cb.v.y *= ext_bounceDamping;
@@ -268,7 +162,6 @@ int GameHandler::collisionResponse(AABB& b, Grid& grid){
             else if(hit.n.y > 0){
                 // DOWN
                 //std::cout << "Collision on Bottom" << " x " << hit.x << " y " << hit.y << " distance " << hit.collisionTime << std::endl;
-                d = 3;
 
                 // Dampening everytime a hit occures
                 cb.v.y *= ext_bounceDamping;
@@ -297,6 +190,4 @@ int GameHandler::collisionResponse(AABB& b, Grid& grid){
         }
     }
     b.p = cb.p; // Loop has ended player can now be set to the new position
-
-    return d;
 }
