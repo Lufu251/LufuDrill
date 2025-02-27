@@ -15,6 +15,9 @@ public:
     Vector2 s;
     Vector2 v;
 
+    // Zero means not touching. Any other numbers show for how many frames it is touching
+    uint top, right, bottom, left;
+
 
     AABB(/* args */) {}
     AABB(const Vector2 rPosition, const Vector2 rSize) : p(rPosition), s(rSize){}

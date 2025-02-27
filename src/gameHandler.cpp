@@ -51,11 +51,12 @@ std::vector<AABB> GameHandler::getPossibleCollisionsFromGrid(AABB& b, Grid& grid
     size_t jPlayer = b.getGridPosition(grid.s).y;
 
     // Check how many tiles around the player need to be calculated
-    int gridDistance = Vector2Length(b.v) / static_cast<float>(grid.s) +1; // amount of tiles that need to be checked
+    int gridDistancex = Vector2Length(b.v) / static_cast<float>(grid.s) + std::ceil(b.s.x / grid.s); // amount of tiles that need to be checked
+    int gridDistancey = Vector2Length(b.v) / static_cast<float>(grid.s) + std::ceil(b.s.y / grid.s); // amount of tiles that need to be checked
 
     // Loop blocks near player
-    for (int i = -gridDistance; i <= gridDistance; i++){
-        for (int j = -gridDistance; j <= gridDistance; j++){
+    for (int i = -gridDistancex; i <= gridDistancex; i++){
+        for (int j = -gridDistancey; j <= gridDistancey; j++){
             // Calculate the gridposition of the block that needs to be checked
             int iBlock = iPlayer + i;
             int jBlock = jPlayer + j;
