@@ -1,4 +1,5 @@
 #include <iostream>
+#include <algorithm>
 
 #include <raylib.h>
 
@@ -20,6 +21,7 @@ const int startScreenWidth = 1200;
 const int startScreenHeight = 900;
 
 int main(){
+    // Declaration ----------------------------------------------------------------------------------
     // Set configuration flags before initializing the window
     SetConfigFlags(FLAG_WINDOW_RESIZABLE);
     
@@ -34,6 +36,10 @@ int main(){
     // Gui Elements
     PlayerGui playerGui;
     FuelMenu fuelMenu;
+
+    // Member variables for game state
+    Player player;
+    Grid mapGrid;
     
     // Initialization ----------------------------------------------------------------------------------
     resourceManager.setAssetDirectoryPath("assets", 3);
@@ -46,34 +52,62 @@ int main(){
     playerGui.initialize();
     playerGui.enable();
 
+    player = Player({200,200}, {24,24}, {0,0});
+    mapGrid = Grid(100,100, 32);
+    gameHandler.generateTerrain(mapGrid);
+
     // Preload textures
     resourceManager.preloadTexture("tile.png");
 
-    gameHandler.initialize();
 
-    gameRenderer.setCameraTarget(gameHandler.player);
+    gameRenderer.setCameraTarget(player);
 
     while (!WindowShouldClose()){
         // Logic ----------------------------------------------------------------------------------
 
         // Update and smooth camera movement
-        gameRenderer.updateCameraOnWindowResize(gameHandler.player);
-        gameRenderer.updateCamera(gameHandler.player);
+        gameRenderer.updateCameraOnWindowResize(player);
+        gameRenderer.updateCamera(player);
 
 
         // Game Logic ------------------------------
         float deltaTime = GetFrameTime();
-        gameHandler.update(deltaTime);
 
+        // Movement input
+        Vector2 direction{0,0};
+        gameHandler.handleInput(direction);
+        direction = Vector2Scale(direction, ext_speed); // Multiply by speed
+
+        Vector2 frameVelocityChange{0,0};
+        frameVelocityChange = direction + ext_gravity; // Update frames velocity change that will be added to the players velocity
+
+        player.addVelocity(frameVelocityChange); // Add gravity and player input to the players velocity
+        
+        player.v = Vector2Scale(player.v, ext_friction); // Apply air friction
+
+        // Stop completely if below the threshold
+        if (Vector2Length(player.v) < ext_velocityThreshold) {
+                player.v = { 0.0f, 0.0f };
+        }
+
+        // Physics collision response
+        gameHandler.collisionResponse(player, mapGrid);
+
+        // Clamp player to gridMap
+        player.p.x = std::clamp(player.p.x, 0.f, static_cast<float>(mapGrid.sizeX * mapGrid.s - player.s.x));
+        player.p.y = std::clamp(player.p.y, 0.f, static_cast<float>(mapGrid.sizeY * mapGrid.s - player.s.y));
+        
+
+        // Update Gui
         playerGui.update();
         fuelMenu.update();
         
         // Draw ----------------------------------------------------------------------------------
         BeginDrawing();
             // Clear Screen for the new render cycle
-            ClearBackground(BLACK);
-            gameRenderer.renderGrid(gameHandler.mapGrid);
-            gameRenderer.renderPlayer(gameHandler.player);
+            ClearBackground(LIGHTGRAY);
+            gameRenderer.renderGrid(mapGrid);
+            gameRenderer.renderPlayer(player);
 
             fuelMenu.render();
             playerGui.render();

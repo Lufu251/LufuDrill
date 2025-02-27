@@ -14,7 +14,7 @@ void GameRenderer::setCameraTarget(Player& player){
 }
 
 void GameRenderer::updateCamera(Player& player){
-    cameraTarget = Vector2Lerp(cameraTarget, player.p, 0.2f);
+    cameraTarget = Vector2Lerp(cameraTarget, player.p, 0.6f);
     camera.target = cameraTarget;
 }
 
