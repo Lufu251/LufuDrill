@@ -1,16 +1,16 @@
-#include <resourceManager.hpp>
+#include <assetManager.hpp>
 
 #include <stdexcept>
 #include <filesystem>
 
 // Access the singleton instance
-ResourceManager& ResourceManager::getInstance() {
-    static ResourceManager instance;
+AssetManager& AssetManager::getInstance() {
+    static AssetManager instance;
     return instance;
 }
 
 // Get a texture
-Texture2D& ResourceManager::getTexture(const std::string& filename) {
+Texture2D& AssetManager::getTexture(const std::string& filename) {
     auto it = textures.find(filename);
     if (it != textures.end()) {
         return it->second;
@@ -22,7 +22,7 @@ Texture2D& ResourceManager::getTexture(const std::string& filename) {
 }
 
 // Get a sound
-Sound& ResourceManager::getSound(const std::string& filename) {
+Sound& AssetManager::getSound(const std::string& filename) {
     auto it = sounds.find(filename);
     if (it != sounds.end()) {
         return it->second;
@@ -34,7 +34,7 @@ Sound& ResourceManager::getSound(const std::string& filename) {
 }
 
 // Get a font
-Font& ResourceManager::getFont(const std::string& filename) {
+Font& AssetManager::getFont(const std::string& filename) {
     auto it = fonts.find(filename);
     if (it != fonts.end()) {
         return it->second;
@@ -46,7 +46,7 @@ Font& ResourceManager::getFont(const std::string& filename) {
 }
 
 // Preload texture
-void ResourceManager::preloadTexture(const std::string& filename) {
+void AssetManager::preloadTexture(const std::string& filename) {
     // Check if it was already loaded
     if (textures.find(filename) == textures.end()) {
         loadTexture(filename);
@@ -54,7 +54,7 @@ void ResourceManager::preloadTexture(const std::string& filename) {
 }
 
 // Preload sound
-void ResourceManager::preloadSound(const std::string& filename) {
+void AssetManager::preloadSound(const std::string& filename) {
     // Check if it was already loaded
     if (sounds.find(filename) == sounds.end()) {
         loadSound(filename);
@@ -62,7 +62,7 @@ void ResourceManager::preloadSound(const std::string& filename) {
 }
 
 // Preload font
-void ResourceManager::preloadFont(const std::string& filename, int fontSize) {
+void AssetManager::preloadFont(const std::string& filename, int fontSize) {
     // Check if it was already loaded
     if (fonts.find(filename) == fonts.end()) {
         loadFont(filename, fontSize);
@@ -70,7 +70,7 @@ void ResourceManager::preloadFont(const std::string& filename, int fontSize) {
 }
 
 // Load a texture
-void ResourceManager::loadTexture(const std::string& filename) {
+void AssetManager::loadTexture(const std::string& filename) {
     Texture2D texture = LoadTexture((path + "/" + texturesDirectory + "/" + filename).c_str());
     if (texture.id == 0) {
         throw std::runtime_error("Failed to load texture: " + filename);
@@ -79,7 +79,7 @@ void ResourceManager::loadTexture(const std::string& filename) {
 }
 
 // Load a sound
-void ResourceManager::loadSound(const std::string& filename) {
+void AssetManager::loadSound(const std::string& filename) {
     Sound sound = LoadSound((path + "/" + soundsDirectory + "/" + filename).c_str());
     if (!sound.stream.buffer) {
         throw std::runtime_error("Failed to load sound: " + filename);
@@ -88,7 +88,7 @@ void ResourceManager::loadSound(const std::string& filename) {
 }
 
 // Load a font
-void ResourceManager::loadFont(const std::string& filename, int fontSize) {
+void AssetManager::loadFont(const std::string& filename, int fontSize) {
     Font font = LoadFontEx((path + "/" + fontsDirectory + "/" + filename).c_str(), fontSize, nullptr, 0);
     if (font.baseSize == 0) {
         throw std::runtime_error("Failed to load font: " + filename);
@@ -96,8 +96,8 @@ void ResourceManager::loadFont(const std::string& filename, int fontSize) {
     fonts[filename] = font;
 }
 
-// Search for a directory starting from the working directory. The ResourceManager will look for resources in this directory
-void ResourceManager::setAssetDirectoryPath(std::string folderName, int searchDepth){
+// Search for a directory starting from the working directory. The AssetManager will look for resources in this directory
+void AssetManager::setAssetDirectoryPath(std::string folderName, int searchDepth){
     std::filesystem::path currentDir = GetWorkingDirectory();
     std::cout << "Searching for " << folderName << " directory starting from " << currentDir << std::endl;
     
@@ -116,20 +116,20 @@ void ResourceManager::setAssetDirectoryPath(std::string folderName, int searchDe
     }
 }
 
-void ResourceManager::setTexturesDirectory(const std::string& folderName){
+void AssetManager::setTexturesDirectory(const std::string& folderName){
     texturesDirectory = folderName;
 }
 
-void ResourceManager::setSoundsDirectory(const std::string& folderName){
+void AssetManager::setSoundsDirectory(const std::string& folderName){
     soundsDirectory = folderName;
 }
 
-void ResourceManager::setFontsDirectory(const std::string& folderName){
+void AssetManager::setFontsDirectory(const std::string& folderName){
     fontsDirectory = folderName;
 }
 
 // Cleanup all resources
-void ResourceManager::cleanup() {
+void AssetManager::cleanup() {
     for (auto& [key, texture] : textures) {
         UnloadTexture(texture);
     }

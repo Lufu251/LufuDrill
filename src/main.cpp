@@ -4,7 +4,7 @@
 #include <raylib.h>
 
 #include <gameHandler.hpp>
-#include <resourceManager.hpp>
+#include <assetManager.hpp>
 #include <gameRenderer.hpp>
 
 #include <globalVariables.hpp>
@@ -28,8 +28,8 @@ int main(){
     InitWindow(startScreenWidth, startScreenHeight, "LuFu_Drill");
     SetTargetFPS(60);
 
-    // Access the ResourceManager instance
-    ResourceManager& resourceManager = ResourceManager::getInstance();
+    // Access the assetManager instance
+    AssetManager& assetManager = AssetManager::getInstance();
     GameHandler gameHandler;
     GameRenderer gameRenderer;
 
@@ -42,8 +42,8 @@ int main(){
     Grid mapGrid;
     
     // Initialization ----------------------------------------------------------------------------------
-    resourceManager.setAssetDirectoryPath("assets", 3);
-    //resourceManager.preloadTexture("/Roboto-Regular.ttf");
+    assetManager.setAssetDirectoryPath("assets", 3);
+    //assetManager.preloadTexture("/Roboto-Regular.ttf");
 
     fuelMenu = FuelMenu({100,100}, {600,600});
     playerGui = PlayerGui({0,0}, {static_cast<float>(GetScreenWidth()), static_cast<float>(GetScreenHeight())});
@@ -57,7 +57,7 @@ int main(){
     gameHandler.generateTerrain(mapGrid);
 
     // Preload textures
-    resourceManager.preloadTexture("tile.png");
+    assetManager.preloadTexture("tile.png");
 
 
     gameRenderer.setCameraTarget(player);
@@ -116,7 +116,7 @@ int main(){
     }
 
     // Cleanup resources and close raylib
-    resourceManager.cleanup();
+    assetManager.cleanup();
     CloseWindow();
     return 0;
 }

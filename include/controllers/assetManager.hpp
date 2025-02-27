@@ -7,15 +7,15 @@
 
 #include <raylib.h>
 
-class ResourceManager
+class AssetManager
 {
 private:
     // Private constructor
-    ResourceManager() = default;
+    AssetManager() = default;
 
     // Disable copy and assignment
-    ResourceManager(const ResourceManager&) = delete;
-    ResourceManager& operator=(const ResourceManager&) = delete;
+    AssetManager(const AssetManager&) = delete;
+    AssetManager& operator=(const AssetManager&) = delete;
 
     // Private helper methods for loading
     void loadTexture(const std::string& filename);
@@ -35,7 +35,7 @@ private:
     
 public:
     // Access the singleton instance
-    static ResourceManager& getInstance();
+    static AssetManager& getInstance();
 
     // Get texture by filename
     Texture2D& getTexture(const std::string& filename);
