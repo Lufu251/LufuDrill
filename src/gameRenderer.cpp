@@ -8,19 +8,19 @@ void GameRenderer::setCameraTarget(Player& player){
     // Camera initialization
     zoom = 2.0f;
     camera.rotation = 0.0f;
-    cameraTarget = player.p;
-    camera.offset = (Vector2){ GetScreenWidth() / 2.0f + player.s.x/2, GetScreenHeight() / 2.0f + player.s.y/2}; // Center the view on the player
+    cameraTarget = player.position;
+    camera.offset = (Vector2){ GetScreenWidth() / 2.0f + player.size.x/2, GetScreenHeight() / 2.0f + player.size.y/2}; // Center the view on the player
     camera.zoom = zoom;
 }
 
 void GameRenderer::updateCamera(Player& player){
-    cameraTarget = Vector2Lerp(cameraTarget, player.p, 0.6f);
+    cameraTarget = Vector2Lerp(cameraTarget, player.position, 0.6f);
     camera.target = cameraTarget;
 }
 
 void GameRenderer::updateCameraOnWindowResize(Player& player){
     if(IsWindowResized()){
-        camera.offset = (Vector2){ GetScreenWidth() / 2.0f - player.s.x, GetScreenHeight() / 2.0f - player.s.y}; // Center the view
+        camera.offset = (Vector2){ GetScreenWidth() / 2.0f - player.size.x, GetScreenHeight() / 2.0f - player.size.y}; // Center the view
     }
 }
 
@@ -49,13 +49,13 @@ void GameRenderer::renderGrid(Grid& mapGrid){
 
             switch (block.mType)
             {
-                case EMPTY: DrawRectangle(block.p.x, block.p.y, mapGrid.s, mapGrid.s, YELLOW); break;
-                case DIRT: DrawRectangle(block.p.x, block.p.y, mapGrid.s, mapGrid.s, BROWN); break;
-                case ROCK: DrawRectangle(block.p.x, block.p.y, mapGrid.s, mapGrid.s, GRAY); break;
+                case EMPTY: DrawRectangle(block.position.x, block.position.y, mapGrid.s, mapGrid.s, YELLOW); break;
+                case DIRT: DrawRectangle(block.position.x, block.position.y, mapGrid.s, mapGrid.s, BROWN); break;
+                case ROCK: DrawRectangle(block.position.x, block.position.y, mapGrid.s, mapGrid.s, GRAY); break;
             }
             //DrawText(TextFormat("[%i,%i]", iBlock , jBlock), 2 + block.p.x, 6 + block.p.y, 8, LIGHTGRAY);
 
-            DrawRectangleLines(block.p.x, block.p.y, mapGrid.s, mapGrid.s, WHITE);
+            DrawRectangleLines(block.position.x, block.position.y, mapGrid.s, mapGrid.s, WHITE);
         }
     }
     EndMode2D();

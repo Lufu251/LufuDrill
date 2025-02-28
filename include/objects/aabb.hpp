@@ -11,21 +11,21 @@ class AABB{
 private:
     /* data */
 public:
-    Vector2 p;
-    Vector2 s;
-    Vector2 v;
+    Vector2 position;
+    Vector2 size;
+    Vector2 velocity;
 
     // Zero means not touching. Any other numbers show for how many frames it is touching
     uint top, right, bottom, left;
 
 
     AABB(/* args */) {}
-    AABB(const Vector2 rPosition, const Vector2 rSize) : p(rPosition), s(rSize){}
-    AABB(const Vector2 rPosition, const Vector2 rSize, const Vector2 rVelocity) : p(rPosition), s(rSize), v(rVelocity){}
+    AABB(const Vector2 rPosition, const Vector2 rSize) : position(rPosition), size(rSize){}
+    AABB(const Vector2 rPosition, const Vector2 rSize, const Vector2 rVelocity) : position(rPosition), size(rSize), velocity(rVelocity){}
     ~AABB(){}
 
     Vector2 getGridPosition(size_t& rBlockSize){
-         return (p + s /2) / rBlockSize;
+         return (position + size /2) / rBlockSize;
     }
 };
 
@@ -49,44 +49,44 @@ inline Hit sweptAABB(const AABB& b1, const AABB& b2){
     float xInvExit, yInvExit;
     
     // find the distance between the objects on the near and far sides for both x and y 
-    if (b1.v.x > 0.0f){
-        xInvEntry = b2.p.x - (b1.p.x + b1.s.x);
-        xInvExit = (b2.p.x + b2.s.x) - b1.p.x;
+    if (b1.velocity.x > 0.0f){
+        xInvEntry = b2.position.x - (b1.position.x + b1.size.x);
+        xInvExit = (b2.position.x + b2.size.x) - b1.position.x;
     }
     else{
-        xInvEntry = (b2.p.x + b2.s.x) - b1.p.x;
-        xInvExit = b2.p.x - (b1.p.x + b1.s.x);
+        xInvEntry = (b2.position.x + b2.size.x) - b1.position.x;
+        xInvExit = b2.position.x - (b1.position.x + b1.size.x);
     }
 
-    if (b1.v.y > 0.0f){
-        yInvEntry = b2.p.y - (b1.p.y + b1.s.y);
-        yInvExit = (b2.p.y + b2.s.y) - b1.p.y;
+    if (b1.velocity.y > 0.0f){
+        yInvEntry = b2.position.y - (b1.position.y + b1.size.y);
+        yInvExit = (b2.position.y + b2.size.y) - b1.position.y;
     }
     else{
-        yInvEntry = (b2.p.y + b2.s.y) - b1.p.y;
-        yInvExit = b2.p.y - (b1.p.y + b1.s.y);
+        yInvEntry = (b2.position.y + b2.size.y) - b1.position.y;
+        yInvExit = b2.position.y - (b1.position.y + b1.size.y);
     }
     
     // find time of collision and time of leaving for each axis (if statement is to prevent divide by zero)
     float xEntry, yEntry;
     float xExit, yExit;
 
-    if (b1.v.x == 0.0f){ 
+    if (b1.velocity.x == 0.0f){ 
     xEntry = -std::numeric_limits<float>::infinity();
     xExit = std::numeric_limits<float>::infinity();
     }
     else{
-        xEntry = xInvEntry / b1.v.x;
-        xExit = xInvExit / b1.v.x;
+        xEntry = xInvEntry / b1.velocity.x;
+        xExit = xInvExit / b1.velocity.x;
     }
 
-    if (b1.v.y == 0.0f) {
+    if (b1.velocity.y == 0.0f) {
         yEntry = -std::numeric_limits<float>::infinity();
         yExit = std::numeric_limits<float>::infinity();
     }
     else{
-        yEntry = yInvEntry / b1.v.y;
-        yExit = yInvExit / b1.v.y;
+        yEntry = yInvEntry / b1.velocity.y;
+        yExit = yInvExit / b1.velocity.y;
     }
 
     // find the earliest/latest times of collision
@@ -150,7 +150,7 @@ inline Hit sweptAABB(const AABB& b1, const AABB& b2){
         }
         // Set hit to the correct values
         hit.collisionTime = entryTime;
-        hit.p = b1.p + b1.v * entryTime;
+        hit.p = b1.position + b1.velocity * entryTime;
 
         // return the time of collision
         return hit;
@@ -159,16 +159,16 @@ inline Hit sweptAABB(const AABB& b1, const AABB& b2){
 
 // Checks for a regular AABB to AABB collision
 inline bool AABBCheck(AABB b1, AABB b2){ 
-  return !(b1.p.x + b1.s.x < b2.p.x || b1.p.x > b2.p.x + b2.s.x || b1.p.y + b1.s.y < b2.p.y || b1.p.y > b2.p.y + b2.s.y); 
+  return !(b1.position.x + b1.size.x < b2.position.x || b1.position.x > b2.position.x + b2.size.x || b1.position.y + b1.size.y < b2.position.y || b1.position.y > b2.position.y + b2.size.y); 
 }
 
 // Returns the broadphasebox from a AABB
 inline AABB GetSweptBroadphaseBox(AABB b1){ 
   AABB broadphasebox;
-  broadphasebox.p.x = b1.v.x > 0 ? b1.p.x : b1.p.x + b1.v.x;
-  broadphasebox.p.y = b1.v.y > 0 ? b1.p.y : b1.p.y + b1.v.y;
-  broadphasebox.s.x = b1.v.x > 0 ? b1.v.x + b1.s.x : b1.s.x - b1.v.x;
-  broadphasebox.s.y = b1.v.y > 0 ? b1.v.y + b1.s.y : b1.s.y - b1.v.y;
+  broadphasebox.position.x = b1.velocity.x > 0 ? b1.position.x : b1.position.x + b1.velocity.x;
+  broadphasebox.position.y = b1.velocity.y > 0 ? b1.position.y : b1.position.y + b1.velocity.y;
+  broadphasebox.size.x = b1.velocity.x > 0 ? b1.velocity.x + b1.size.x : b1.size.x - b1.velocity.x;
+  broadphasebox.size.y = b1.velocity.y > 0 ? b1.velocity.y + b1.size.y : b1.size.y - b1.velocity.y;
 
   return broadphasebox;
 }

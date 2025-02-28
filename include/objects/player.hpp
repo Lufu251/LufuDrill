@@ -20,14 +20,14 @@ public:
     ~Player(){}
     
     void addForce(const Vector2& rVelocity){
-        v += rVelocity;
+        velocity += rVelocity;
     }
 
     void updatePosition(){
-        p += v;
+        position += velocity;
     }
 
     void render(){
-        DrawRectangleV(p, s, RED);
+        DrawRectangleV(position, size, RED);
     }
 };

@@ -9,12 +9,6 @@
 #include <gameHandler.hpp>
 #include <gameRenderer.hpp>
 
-#include <globalVariables.hpp>
-
-// Initialize global variables
-const float ext_velocityThreshold = 0.05f; // Threshold to stop completely
-const float ext_bounceDamping = 0.1f; // Remaing velocity after collision
-const float ext_onGroundSlow = 0.8f; // Slow when moving on ground
 
 const int startScreenWidth = 1200;
 const int startScreenHeight = 900;
@@ -80,7 +74,7 @@ int main(){
         movementInput = Vector2Scale(movementInput, dataManager.movementSpeed); // Multiply by speed
 
         // Calculate air resistance
-        Vector2 airResistance = player.v - player.v * dataManager.airResistance;
+        Vector2 airResistance = player.velocity - player.velocity * dataManager.airResistance;
 
         player.addForce(movementInput); // Add movementInput to player velocity
         player.addForce(dataManager.gravity); // Add gravity to player velocity
@@ -88,17 +82,18 @@ int main(){
         
 
         // Stop completely if below the threshold
-        if (Vector2Length(player.v) < ext_velocityThreshold) {
-                player.v = { 0.0f, 0.0f };
-        }
+        if (Vector2Length(player.velocity) < dataManager.velocityThreshhold) player.velocity = { 0.0f, 0.0f };
 
         // Physics collision response
         gameHandler.collisionResponse(player, mapGrid);
 
         // Clamp player to gridMap
-        player.p.x = std::clamp(player.p.x, 0.f, static_cast<float>(mapGrid.sizeX * mapGrid.s - player.s.x));
-        player.p.y = std::clamp(player.p.y, 0.f, static_cast<float>(mapGrid.sizeY * mapGrid.s - player.s.y));
-        
+        Vector2 positionBeforeClamp = player.position;
+        player.position.x = std::clamp(player.position.x, 0.f, static_cast<float>(mapGrid.sizeX * mapGrid.s - player.size.x));
+        player.position.y = std::clamp(player.position.y, 0.f, static_cast<float>(mapGrid.sizeY * mapGrid.s - player.size.y));
+        // If position was clamped set velocity to 0 in this axis
+        if(positionBeforeClamp.x != player.position.x) player.velocity.x = 0;
+        if(positionBeforeClamp.y != player.position.y) player.velocity.y = 0;
 
         // Update Gui
         playerGui.update();

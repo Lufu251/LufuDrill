@@ -3,7 +3,7 @@
 #include <iostream>
 #include <algorithm>
 
-#include <globalVariables.hpp>
+#include <dataManager.hpp>
 
 GameHandler::GameHandler(/* args */){}
 
@@ -51,8 +51,8 @@ std::vector<AABB> GameHandler::getPossibleCollisionsFromGrid(AABB& box, Grid& gr
     size_t jPlayer = box.getGridPosition(grid.s).y;
 
     // Check how many tiles around the player need to be calculated
-    int gridDistancex = Vector2Length(box.v) / static_cast<float>(grid.s) + std::ceil(box.s.x / grid.s); // amount of tiles that need to be checked
-    int gridDistancey = Vector2Length(box.v) / static_cast<float>(grid.s) + std::ceil(box.s.y / grid.s); // amount of tiles that need to be checked
+    int gridDistancex = Vector2Length(box.velocity) / static_cast<float>(grid.s) + std::ceil(box.size.x / grid.s); // amount of tiles that need to be checked
+    int gridDistancey = Vector2Length(box.velocity) / static_cast<float>(grid.s) + std::ceil(box.size.y / grid.s); // amount of tiles that need to be checked
 
     // Loop blocks near player
     for (int i = -gridDistancex; i <= gridDistancex; i++){
@@ -77,11 +77,12 @@ std::vector<AABB> GameHandler::getPossibleCollisionsFromGrid(AABB& box, Grid& gr
 }
 
 void GameHandler::collisionResponse(AABB& box, Grid& grid){
+    DataManager& dataManager = DataManager::getInstance();
     AABB boxClone = box;
 
     //std::cout << std::endl << "------------- Collision START -------------" << std::endl;
     // Loop a cloned Player with the collision and end loop when movement is done
-    while(Vector2Length(boxClone.v) > 0){
+    while(Vector2Length(boxClone.velocity) > 0){
         
         // Create a list with block that need to be checked
         std::vector<AABB> blocks = getPossibleCollisionsFromGrid(box, grid); // AABB from all blocks that can collide
@@ -96,62 +97,62 @@ void GameHandler::collisionResponse(AABB& box, Grid& grid){
             if(hit.n.x < 0){
                 // LEFT
                 //std::cout << "Collision on LEFT" << " x " << hit.x << " y " << hit.y << " distance " << hit.collisionTime << std::endl;
-
+                
                 // Dampening everytime a hit occures
-                boxClone.v.x *= ext_bounceDamping;
-                box.v.x *= ext_bounceDamping;
+                boxClone.velocity.x *= dataManager.collisionRetention;
+                box.velocity.x *= dataManager.collisionRetention;
             }
             else if(hit.n.x > 0){
                 // RIGHT
                 //std::cout << "Collision on RIGHT" << " x " << hit.x << " y " << hit.y << " distance " << hit.collisionTime << std::endl;
 
                 // Dampening everytime a hit occures
-                boxClone.v.x *= ext_bounceDamping;
-                box.v.x *= ext_bounceDamping;
+                boxClone.velocity.x *= dataManager.collisionRetention;
+                box.velocity.x *= dataManager.collisionRetention;
             }
             if(hit.n.y < 0){
                 // TOP
                 //std::cout << "Collision on TOP" << " x " << hit.x << " y " << hit.y << " distance " << hit.collisionTime << std::endl;
 
                 // Dampening everytime a hit occures
-                boxClone.v.y *= ext_bounceDamping;
-                box.v.y *= ext_bounceDamping;
+                boxClone.velocity.y *= dataManager.collisionRetention;
+                box.velocity.y *= dataManager.collisionRetention;
 
                 // Slow when moving over ground
-                boxClone.v.x *= ext_onGroundSlow;
-                box.v.x *= ext_onGroundSlow;
+                boxClone.velocity.x *= dataManager.onGroundResistance;
+                box.velocity.x *= dataManager.onGroundResistance;
             }
             else if(hit.n.y > 0){
                 // DOWN
                 //std::cout << "Collision on Bottom" << " x " << hit.x << " y " << hit.y << " distance " << hit.collisionTime << std::endl;
 
                 // Dampening everytime a hit occures
-                boxClone.v.y *= ext_bounceDamping;
-                box.v.y *= ext_bounceDamping;
+                boxClone.velocity.y *= dataManager.collisionRetention;
+                box.velocity.y *= dataManager.collisionRetention;
             }
 
-            boxClone.p = hit.p; // Move to the point of collision
+            boxClone.position = hit.p; // Move to the point of collision
 
             // Set cPlayer velocity to the remaining velocity
             float remainingTime = 1.0f - hit.collisionTime; // Calculate remaining distance after the collision
-            boxClone.v *= remainingTime;
+            boxClone.velocity *= remainingTime;
 
             // reflect the velocity of cPlayer and player
-            if (abs(hit.n.x) > 0.0001f) box.v.x = -box.v.x;
-            if (abs(hit.n.y) > 0.0001f) box.v.y = -box.v.y;
+            if (abs(hit.n.x) > 0.0001f) box.velocity.x = -box.velocity.x;
+            if (abs(hit.n.y) > 0.0001f) box.velocity.y = -box.velocity.y;
 
-            if (abs(hit.n.x) > 0.0001f) boxClone.v.x = -boxClone.v.x;
-            if (abs(hit.n.y) > 0.0001f) boxClone.v.y = -boxClone.v.y;
+            if (abs(hit.n.x) > 0.0001f) boxClone.velocity.x = -boxClone.velocity.x;
+            if (abs(hit.n.y) > 0.0001f) boxClone.velocity.y = -boxClone.velocity.y;
         }
         else{
             // No hit occured do a regular move
-            boxClone.p += boxClone.v; // regulary add velocity
-            boxClone.v = {0 , 0}; // Reset velocity all movement has been done / END Loop
+            boxClone.position += boxClone.velocity; // regulary add velocity
+            boxClone.velocity = {0 , 0}; // Reset velocity all movement has been done / END Loop
 
             //std::cout << "------------- Collision END -------------" << std::endl;
         }
     }
-    box.p = boxClone.p; // Loop has ended player can now be set to the new position
+    box.position = boxClone.position; // Loop has ended player can now be set to the new position
 }
 
 void GameHandler::checkPlayerTouchingBlocks(AABB& box, Grid& grid){
@@ -165,8 +166,8 @@ void GameHandler::checkPlayerTouchingBlocks(AABB& box, Grid& grid){
     size_t jPlayer = box.getGridPosition(grid.s).y;
 
     // Check how many tiles around the player need to be calculated
-    int gridDistancex = Vector2Length(box.v) / static_cast<float>(grid.s) + std::ceil(box.s.x / grid.s); // amount of tiles that need to be checked
-    int gridDistancey = Vector2Length(box.v) / static_cast<float>(grid.s) + std::ceil(box.s.y / grid.s); // amount of tiles that need to be checked
+    int gridDistancex = Vector2Length(box.velocity) / static_cast<float>(grid.s) + std::ceil(box.size.x / grid.s); // amount of tiles that need to be checked
+    int gridDistancey = Vector2Length(box.velocity) / static_cast<float>(grid.s) + std::ceil(box.size.y / grid.s); // amount of tiles that need to be checked
 
     // Loop blocks near player
     for (int i = -gridDistancex; i <= gridDistancex; i++){
