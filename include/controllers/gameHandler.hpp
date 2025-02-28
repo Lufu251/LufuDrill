@@ -22,5 +22,5 @@ public:
     void generateTerrain(Grid& grid);
     std::vector<AABB> getPossibleCollisionsFromGrid(AABB& player, Grid& grid);
     void collisionResponse(AABB& player, Grid& grid);
-    void checkTouchingSides(AABB& player, Grid& grid);
+    void checkPlayerTouchingBlocks(AABB& box, Grid& grid);
 };

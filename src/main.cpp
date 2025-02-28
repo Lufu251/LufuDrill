@@ -10,12 +10,12 @@
 #include <globalVariables.hpp>
 
 // Initialize global variables
-const float ext_speed = 1.5f; // Movement speed
-const float ext_friction = 0.93f; // Deceleration factor
-const float ext_velocityThreshold = 0.1f; // Threshold to stop completely
+const float ext_speed = 0.6f; // Movement speed
+const float ext_friction = 0.985f; // Deceleration factor
+const float ext_velocityThreshold = 0.05f; // Threshold to stop completely
 const float ext_bounceDamping = 0.1f; // Remaing velocity after collision
 const float ext_onGroundSlow = 0.8f; // Slow when moving on ground
-const Vector2 ext_gravity{0.0f,0.98f}; // Gravity
+const Vector2 ext_gravity{0.0f,0.4f}; // Gravity
 
 const int startScreenWidth = 1200;
 const int startScreenHeight = 900;
@@ -30,6 +30,8 @@ int main(){
 
     // Access the assetManager instance
     AssetManager& assetManager = AssetManager::getInstance();
+
+    
     GameHandler gameHandler;
     GameRenderer gameRenderer;
 

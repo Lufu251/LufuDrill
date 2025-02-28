@@ -42,17 +42,17 @@ void GameHandler::generateTerrain(Grid& grid){
         grid(8,10).mType = ROCK; grid(9,10).mType = ROCK;
 }
 
-std::vector<AABB> GameHandler::getPossibleCollisionsFromGrid(AABB& b, Grid& grid){
+std::vector<AABB> GameHandler::getPossibleCollisionsFromGrid(AABB& box, Grid& grid){
     std::vector<AABB> blocks;
     blocks.reserve(9);
 
     // Get the player position on the grid
-    size_t iPlayer = b.getGridPosition(grid.s).x;
-    size_t jPlayer = b.getGridPosition(grid.s).y;
+    size_t iPlayer = box.getGridPosition(grid.s).x;
+    size_t jPlayer = box.getGridPosition(grid.s).y;
 
     // Check how many tiles around the player need to be calculated
-    int gridDistancex = Vector2Length(b.v) / static_cast<float>(grid.s) + std::ceil(b.s.x / grid.s); // amount of tiles that need to be checked
-    int gridDistancey = Vector2Length(b.v) / static_cast<float>(grid.s) + std::ceil(b.s.y / grid.s); // amount of tiles that need to be checked
+    int gridDistancex = Vector2Length(box.v) / static_cast<float>(grid.s) + std::ceil(box.s.x / grid.s); // amount of tiles that need to be checked
+    int gridDistancey = Vector2Length(box.v) / static_cast<float>(grid.s) + std::ceil(box.s.y / grid.s); // amount of tiles that need to be checked
 
     // Loop blocks near player
     for (int i = -gridDistancex; i <= gridDistancex; i++){
@@ -154,6 +154,37 @@ void GameHandler::collisionResponse(AABB& box, Grid& grid){
     box.p = boxClone.p; // Loop has ended player can now be set to the new position
 }
 
-void GameHandler::checkTouchingSides(AABB& player, Grid& grid){
-    
+void GameHandler::checkPlayerTouchingBlocks(AABB& box, Grid& grid){
+    bool up = false, right = false, down = false, left = false;
+
+    // Distance which is considered as touching
+    float epsilon = 0.1;
+
+    // Get the player position on the grid
+    size_t iPlayer = box.getGridPosition(grid.s).x;
+    size_t jPlayer = box.getGridPosition(grid.s).y;
+
+    // Check how many tiles around the player need to be calculated
+    int gridDistancex = Vector2Length(box.v) / static_cast<float>(grid.s) + std::ceil(box.s.x / grid.s); // amount of tiles that need to be checked
+    int gridDistancey = Vector2Length(box.v) / static_cast<float>(grid.s) + std::ceil(box.s.y / grid.s); // amount of tiles that need to be checked
+
+    // Loop blocks near player
+    for (int i = -gridDistancex; i <= gridDistancex; i++){
+        for (int j = -gridDistancey; j <= gridDistancey; j++){
+            // Calculate the gridposition of the block that needs to be checked
+            int iBlock = iPlayer + i;
+            int jBlock = jPlayer + j;
+
+            // Check if position is out of bound from grid and skip this loop
+            if (iBlock < 0 || iBlock > grid.sizeX -1 || jBlock < 0 || jBlock > grid.sizeY -1){
+                // Out of bound
+                //std::cout << "Collision check: Grid position is out ofbound" << iBlock << " " << jBlock << std::endl;
+                continue;
+            }
+            else if(grid(iBlock, jBlock).mType > 0){ // Block is not empty
+                // Check block for touching side ---------------------------------------------------
+                Block& block = grid(iBlock, jBlock);
+            }
+        }
+    }
 }
