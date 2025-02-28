@@ -18,7 +18,6 @@ public:
     using GuiContext::GuiContext;
 
     void initialize(){
-        mFont = LoadFontEx("../../data/Roboto-Regular.ttf", 64, NULL, 0);
         //guiElements["fuelText"] = std::make_shared<TextBox>(mPosition + Vector2{200,100}, Vector2{100,20}, 18, mFont);
     }
 

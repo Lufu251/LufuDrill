@@ -71,7 +71,7 @@ void AssetManager::preloadFont(const std::string& filename, int fontSize) {
 
 // Load a texture
 void AssetManager::loadTexture(const std::string& filename) {
-    Texture2D texture = LoadTexture((path + "/" + texturesDirectory + "/" + filename).c_str());
+    Texture2D texture = LoadTexture((assetPath + "/" + texturesDirectory + "/" + filename).c_str());
     if (texture.id == 0) {
         throw std::runtime_error("Failed to load texture: " + filename);
     }
@@ -80,7 +80,7 @@ void AssetManager::loadTexture(const std::string& filename) {
 
 // Load a sound
 void AssetManager::loadSound(const std::string& filename) {
-    Sound sound = LoadSound((path + "/" + soundsDirectory + "/" + filename).c_str());
+    Sound sound = LoadSound((assetPath + "/" + soundsDirectory + "/" + filename).c_str());
     if (!sound.stream.buffer) {
         throw std::runtime_error("Failed to load sound: " + filename);
     }
@@ -89,7 +89,7 @@ void AssetManager::loadSound(const std::string& filename) {
 
 // Load a font
 void AssetManager::loadFont(const std::string& filename, int fontSize) {
-    Font font = LoadFontEx((path + "/" + fontsDirectory + "/" + filename).c_str(), fontSize, nullptr, 0);
+    Font font = LoadFontEx((assetPath + "/" + fontsDirectory + "/" + filename).c_str(), fontSize, nullptr, 0);
     if (font.baseSize == 0) {
         throw std::runtime_error("Failed to load font: " + filename);
     }
@@ -97,21 +97,21 @@ void AssetManager::loadFont(const std::string& filename, int fontSize) {
 }
 
 // Search for a directory starting from the working directory. The AssetManager will look for resources in this directory
-void AssetManager::setAssetDirectoryPath(std::string folderName, int searchDepth){
+void AssetManager::searchAssetsDirectoryPath(std::string folderName, int searchDepth){
     std::filesystem::path currentDir = GetWorkingDirectory();
     std::cout << "Searching for " << folderName << " directory starting from " << currentDir << std::endl;
     
     for (size_t i = 0; i < searchDepth; i++){
         std::filesystem::path potentialPath = currentDir / folderName;
         if (std::filesystem::exists(potentialPath) && std::filesystem::is_directory(potentialPath)) {
-            path = potentialPath; // Folder found exit for loop
-            std::cout << "Path to directory " << folderName << " found. Path is " << path << std::endl;
+            assetPath = potentialPath; // Folder found exit for loop
+            std::cout << "Path to directory " << folderName << " found. Path is " << assetPath << std::endl;
             break;
         }
         currentDir = currentDir.parent_path(); // Move up one level
     }
 
-    if(path == ""){
+    if(assetPath == ""){
         throw std::runtime_error("Failed to find directory: " + folderName);
     }
 }

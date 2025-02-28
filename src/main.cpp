@@ -3,8 +3,10 @@
 
 #include <raylib.h>
 
-#include <gameHandler.hpp>
+
 #include <assetManager.hpp>
+#include <dataManager.hpp>
+#include <gameHandler.hpp>
 #include <gameRenderer.hpp>
 
 #include <globalVariables.hpp>
@@ -28,10 +30,11 @@ int main(){
     InitWindow(startScreenWidth, startScreenHeight, "LuFu_Drill");
     SetTargetFPS(60);
 
-    // Access the assetManager instance
+    // Access singleton classes
     AssetManager& assetManager = AssetManager::getInstance();
+    DataManager& dataManager = DataManager::getInstance();
 
-    
+
     GameHandler gameHandler;
     GameRenderer gameRenderer;
 
@@ -44,8 +47,8 @@ int main(){
     Grid mapGrid;
     
     // Initialization ----------------------------------------------------------------------------------
-    assetManager.setAssetDirectoryPath("assets", 3);
-    //assetManager.preloadTexture("/Roboto-Regular.ttf");
+    assetManager.searchAssetsDirectoryPath("assets", 3);
+    dataManager.searchDataDirectoryPath("data", 3);
 
     fuelMenu = FuelMenu({100,100}, {600,600});
     playerGui = PlayerGui({0,0}, {static_cast<float>(GetScreenWidth()), static_cast<float>(GetScreenHeight())});
@@ -60,7 +63,6 @@ int main(){
 
     // Preload textures
     assetManager.preloadTexture("tile.png");
-
 
     gameRenderer.setCameraTarget(player);
 

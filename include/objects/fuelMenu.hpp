@@ -18,7 +18,6 @@ public:
     using GuiContext::GuiContext;
 
     void initialize(){
-        mFont = LoadFontEx("../../data/Roboto-Regular.ttf", 64, NULL, 0);
         guiElements["closeButton"] = std::make_shared<Button>(mPosition + Vector2{580,0}, Vector2{20,20});
         guiElements["testButton"] = std::make_shared<Button>(mPosition + Vector2{100,100}, Vector2{80,20});
         guiElements["testTextBox"] = std::make_shared<TextBox>(mPosition + Vector2{200,100}, Vector2{100,20}, 18, mFont);

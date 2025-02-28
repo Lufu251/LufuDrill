@@ -23,7 +23,9 @@ private:
     void loadFont(const std::string& filename, int fontSize);
 
     // Private string for data folder path
-    std::string path;
+    std::string assetPath;
+
+    // Directory names
     std::string texturesDirectory = "textures";
     std::string soundsDirectory = "sounds";
     std::string fontsDirectory = "fonts";
@@ -52,7 +54,7 @@ public:
     void preloadFont(const std::string& filename, int fontSize);
 
     // Search for a directory and set the path to this directory
-    void setAssetDirectoryPath(std::string dir, int searchDepth);
+    void searchAssetsDirectoryPath(std::string dir, int searchDepth);
 
     // Set textures directory. Default is "textures"
     void setTexturesDirectory(const std::string& folderName);
