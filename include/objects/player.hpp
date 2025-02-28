@@ -18,13 +18,8 @@ public:
     Player() : AABB(){}
     Player(const Vector2 rPosition, const Vector2 rSize, const Vector2 rVelocity) : AABB(rPosition, rSize, rVelocity){}
     ~Player(){}
-
-    void move(const Vector2& direction){
-        p.x += direction.x;
-        p.y += direction.y;
-    }
     
-    void addVelocity(const Vector2& rVelocity){
+    void addForce(const Vector2& rVelocity){
         v += rVelocity;
     }
 

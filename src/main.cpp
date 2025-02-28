@@ -12,12 +12,9 @@
 #include <globalVariables.hpp>
 
 // Initialize global variables
-const float ext_speed = 0.6f; // Movement speed
-const float ext_friction = 0.985f; // Deceleration factor
 const float ext_velocityThreshold = 0.05f; // Threshold to stop completely
 const float ext_bounceDamping = 0.1f; // Remaing velocity after collision
 const float ext_onGroundSlow = 0.8f; // Slow when moving on ground
-const Vector2 ext_gravity{0.0f,0.4f}; // Gravity
 
 const int startScreenWidth = 1200;
 const int startScreenHeight = 900;
@@ -50,10 +47,16 @@ int main(){
     assetManager.searchAssetsDirectoryPath("assets", 3);
     dataManager.searchDataDirectoryPath("data", 3);
 
+    // Preload textures
+    assetManager.preloadTexture("tile.png");
+
+    // Preload fonts
+    assetManager.preloadFont("Roboto-Regular.ttf", 32);
+
     fuelMenu = FuelMenu({100,100}, {600,600});
     playerGui = PlayerGui({0,0}, {static_cast<float>(GetScreenWidth()), static_cast<float>(GetScreenHeight())});
     fuelMenu.initialize();
-    fuelMenu.enable();
+    fuelMenu.disable();
     playerGui.initialize();
     playerGui.enable();
 
@@ -61,33 +64,28 @@ int main(){
     mapGrid = Grid(100,100, 32);
     gameHandler.generateTerrain(mapGrid);
 
-    // Preload textures
-    assetManager.preloadTexture("tile.png");
-
     gameRenderer.setCameraTarget(player);
 
     while (!WindowShouldClose()){
-        // Logic ----------------------------------------------------------------------------------
+        // Game Logic ------------------------------
+        float deltaTime = GetFrameTime();
 
         // Update and smooth camera movement
         gameRenderer.updateCameraOnWindowResize(player);
         gameRenderer.updateCamera(player);
 
-
-        // Game Logic ------------------------------
-        float deltaTime = GetFrameTime();
-
         // Movement input
-        Vector2 direction{0,0};
-        gameHandler.handleInput(direction);
-        direction = Vector2Scale(direction, ext_speed); // Multiply by speed
+        Vector2 movementInput{0,0};
+        gameHandler.handleInput(movementInput);
+        movementInput = Vector2Scale(movementInput, dataManager.movementSpeed); // Multiply by speed
 
-        Vector2 frameVelocityChange{0,0};
-        frameVelocityChange = direction + ext_gravity; // Update frames velocity change that will be added to the players velocity
+        // Calculate air resistance
+        Vector2 airResistance = player.v - player.v * dataManager.airResistance;
 
-        player.addVelocity(frameVelocityChange); // Add gravity and player input to the players velocity
+        player.addForce(movementInput); // Add movementInput to player velocity
+        player.addForce(dataManager.gravity); // Add gravity to player velocity
+        player.addForce(Vector2Negate(airResistance)); // Add airResistance to player velocity
         
-        player.v = Vector2Scale(player.v, ext_friction); // Apply air friction
 
         // Stop completely if below the threshold
         if (Vector2Length(player.v) < ext_velocityThreshold) {

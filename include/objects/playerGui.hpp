@@ -33,10 +33,11 @@ public:
     }
 
     void render() override {
+        AssetManager& assetManager = AssetManager::getInstance();
         // Check if menu is activ
         if(mIsActive){
 
-            DrawTextEx(mFont, "Fuel:", mPosition + Vector2{20,20}, 20, 1, GREEN);
+            DrawTextEx(assetManager.getFont("Roboto-Regular.ttf"), "Fuel:", mPosition + Vector2{20,20}, 20, 1, GREEN);
 
             // Draw GuiElements
             for(auto [key, guiElement] : guiElements){

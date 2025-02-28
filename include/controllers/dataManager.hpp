@@ -29,6 +29,11 @@ private:
     
 
 public:
+    // Variables
+    float movementSpeed = 0.6f;
+    const Vector2 gravity{0.0f,0.4f}; // Gravity
+    float airResistance = 0.985f;
+
     // Access the singleton instance
     static DataManager& getInstance();
 
