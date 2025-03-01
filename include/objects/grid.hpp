@@ -1,6 +1,7 @@
 #pragma once
 
 #include <vector>
+#include <cassert>
 
 #include <block.hpp>
 
@@ -9,15 +10,17 @@ class Grid
 private:
     std::vector<Block> gridData;
 public:
-    size_t s;
+    size_t blockSize;
     size_t sizeX, sizeY;
 
     Grid(){}
-    Grid(size_t x, size_t y, size_t blockSize) : sizeX(x), sizeY(y), gridData(x*y), s(blockSize){}
+    Grid(size_t x, size_t y, size_t blockSize) : sizeX(x), sizeY(y), gridData(x*y), blockSize(blockSize){}
 
     ~Grid(){}
 
     Block& operator() (size_t x, size_t y){
+        assert(x < sizeX);
+        assert(y < sizeY);
         return gridData[sizeX * y + x];
     }
 };

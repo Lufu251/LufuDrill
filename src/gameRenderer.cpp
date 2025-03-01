@@ -29,11 +29,11 @@ void GameRenderer::renderGrid(Grid& mapGrid){
     BeginMode2D(camera);
 
     // Render the visible blocks from the grid
-    int xRenderAmount = (GetScreenWidth() / mapGrid.s) / (2 * zoom) +2; // Calculate how many tiles are viewed by the camera
-    int yRenderAmount = (GetScreenHeight() / mapGrid.s) / (2 * zoom) +2; // Calculate how many tiles are viewed by the camera
+    int xRenderAmount = (GetScreenWidth() / mapGrid.blockSize) / (2 * zoom) +2; // Calculate how many tiles are viewed by the camera
+    int yRenderAmount = (GetScreenHeight() / mapGrid.blockSize) / (2 * zoom) +2; // Calculate how many tiles are viewed by the camera
     // Calculate the cameraTarget position on the grid
-    size_t iCamera = cameraTarget.x / mapGrid.s;
-    size_t jCamera = cameraTarget.y / mapGrid.s;
+    size_t iCamera = cameraTarget.x / mapGrid.blockSize;
+    size_t jCamera = cameraTarget.y / mapGrid.blockSize;
 
     // Loop over the amount of blocks that are visible
     for (int i = -xRenderAmount; i <= xRenderAmount; i++){
@@ -41,7 +41,7 @@ void GameRenderer::renderGrid(Grid& mapGrid){
             int iBlock = iCamera + i;
             int jBlock = jCamera + j;
             // Clamp to grid size
-            if(iBlock < 0 || iBlock > mapGrid.sizeX || jBlock < 0 || iBlock > mapGrid.sizeY){
+            if(iBlock < 0 || iBlock >= mapGrid.sizeX || jBlock < 0 || jBlock >= mapGrid.sizeY){
                 continue;
             }
 
@@ -49,13 +49,13 @@ void GameRenderer::renderGrid(Grid& mapGrid){
 
             switch (block.mType)
             {
-                case EMPTY: DrawRectangle(block.position.x, block.position.y, mapGrid.s, mapGrid.s, YELLOW); break;
-                case DIRT: DrawRectangle(block.position.x, block.position.y, mapGrid.s, mapGrid.s, BROWN); break;
-                case ROCK: DrawRectangle(block.position.x, block.position.y, mapGrid.s, mapGrid.s, GRAY); break;
+                case EMPTY: DrawRectangle(block.position.x, block.position.y, mapGrid.blockSize, mapGrid.blockSize, YELLOW); break;
+                case DIRT: DrawRectangle(block.position.x, block.position.y, mapGrid.blockSize, mapGrid.blockSize, BROWN); break;
+                case ROCK: DrawRectangle(block.position.x, block.position.y, mapGrid.blockSize, mapGrid.blockSize, GRAY); break;
             }
             //DrawText(TextFormat("[%i,%i]", iBlock , jBlock), 2 + block.p.x, 6 + block.p.y, 8, LIGHTGRAY);
 
-            DrawRectangleLines(block.position.x, block.position.y, mapGrid.s, mapGrid.s, WHITE);
+            DrawRectangleLines(block.position.x, block.position.y, mapGrid.blockSize, mapGrid.blockSize, WHITE);
         }
     }
     EndMode2D();

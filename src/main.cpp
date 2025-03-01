@@ -61,7 +61,7 @@ int main(){
     gameRenderer.setCameraTarget(player);
 
     while (!WindowShouldClose()){
-        // Game Logic ------------------------------
+        // Logic ----------------------------------------------------------------------------------
         float deltaTime = GetFrameTime();
 
         // Update and smooth camera movement
@@ -89,8 +89,8 @@ int main(){
 
         // Clamp player to gridMap
         Vector2 positionBeforeClamp = player.position;
-        player.position.x = std::clamp(player.position.x, 0.f, static_cast<float>(mapGrid.sizeX * mapGrid.s - player.size.x));
-        player.position.y = std::clamp(player.position.y, 0.f, static_cast<float>(mapGrid.sizeY * mapGrid.s - player.size.y));
+        player.position.x = std::clamp(player.position.x, 0.f, static_cast<float>(mapGrid.sizeX * mapGrid.blockSize - player.size.x));
+        player.position.y = std::clamp(player.position.y, 0.f, static_cast<float>(mapGrid.sizeY * mapGrid.blockSize - player.size.y));
         // If position was clamped set velocity to 0 in this axis
         if(positionBeforeClamp.x != player.position.x) player.velocity.x = 0;
         if(positionBeforeClamp.y != player.position.y) player.velocity.y = 0;

@@ -19,11 +19,11 @@ void GameHandler::handleInput(Vector2& rDirection){
 void GameHandler::generateTerrain(Grid& grid){
     for (size_t x = 0; x < grid.sizeX; x++){
             for (size_t y = 0; y < grid.sizeY; y++){
-                if(y > 15 && x != 5){
-                    grid(x,y) = Block(ROCK, {static_cast<float>(x * grid.s), static_cast<float>(y * grid.s)}, {static_cast<float>(grid.s), static_cast<float>(grid.s)});
+                if(y > 15 && x != 25){
+                    grid(x,y) = Block(ROCK, {static_cast<float>(x * grid.blockSize), static_cast<float>(y * grid.blockSize)}, {static_cast<float>(grid.blockSize), static_cast<float>(grid.blockSize)});
                 }
                 else{
-                    grid(x,y) = Block(EMPTY, {static_cast<float>(x * grid.s), static_cast<float>(y * grid.s)}, {static_cast<float>(grid.s), static_cast<float>(grid.s)});
+                    grid(x,y) = Block(EMPTY, {static_cast<float>(x * grid.blockSize), static_cast<float>(y * grid.blockSize)}, {static_cast<float>(grid.blockSize), static_cast<float>(grid.blockSize)});
                 }
             }
         }
@@ -47,12 +47,12 @@ std::vector<AABB> GameHandler::getPossibleCollisionsFromGrid(AABB& box, Grid& gr
     blocks.reserve(9);
 
     // Get the player position on the grid
-    size_t iPlayer = box.getGridPosition(grid.s).x;
-    size_t jPlayer = box.getGridPosition(grid.s).y;
+    size_t iPlayer = box.getGridPosition(grid.blockSize).x;
+    size_t jPlayer = box.getGridPosition(grid.blockSize).y;
 
     // Check how many tiles around the player need to be calculated
-    int gridDistancex = Vector2Length(box.velocity) / static_cast<float>(grid.s) + std::ceil(box.size.x / grid.s); // amount of tiles that need to be checked
-    int gridDistancey = Vector2Length(box.velocity) / static_cast<float>(grid.s) + std::ceil(box.size.y / grid.s); // amount of tiles that need to be checked
+    int gridDistancex = Vector2Length(box.velocity) / static_cast<float>(grid.blockSize) + std::ceil(box.size.x / grid.blockSize); // amount of tiles that need to be checked
+    int gridDistancey = Vector2Length(box.velocity) / static_cast<float>(grid.blockSize) + std::ceil(box.size.y / grid.blockSize); // amount of tiles that need to be checked
 
     // Loop blocks near player
     for (int i = -gridDistancex; i <= gridDistancex; i++){
@@ -62,7 +62,7 @@ std::vector<AABB> GameHandler::getPossibleCollisionsFromGrid(AABB& box, Grid& gr
             int jBlock = jPlayer + j;
 
             // Check if position is out of bound from grid and skip this loop
-            if (iBlock < 0 || iBlock > grid.sizeX -1 || jBlock < 0 || jBlock > grid.sizeY -1){
+            if (iBlock < 0 || iBlock >= grid.sizeX || jBlock < 0 || jBlock >= grid.sizeY){
                 // Out of bound
                 //std::cout << "Collision check: Grid position is out ofbound" << iBlock << " " << jBlock << std::endl;
                 continue;
@@ -162,12 +162,12 @@ void GameHandler::checkPlayerTouchingBlocks(AABB& box, Grid& grid){
     float epsilon = 0.1;
 
     // Get the player position on the grid
-    size_t iPlayer = box.getGridPosition(grid.s).x;
-    size_t jPlayer = box.getGridPosition(grid.s).y;
+    size_t iPlayer = box.getGridPosition(grid.blockSize).x;
+    size_t jPlayer = box.getGridPosition(grid.blockSize).y;
 
     // Check how many tiles around the player need to be calculated
-    int gridDistancex = Vector2Length(box.velocity) / static_cast<float>(grid.s) + std::ceil(box.size.x / grid.s); // amount of tiles that need to be checked
-    int gridDistancey = Vector2Length(box.velocity) / static_cast<float>(grid.s) + std::ceil(box.size.y / grid.s); // amount of tiles that need to be checked
+    int gridDistancex = Vector2Length(box.velocity) / static_cast<float>(grid.blockSize) + std::ceil(box.size.x / grid.blockSize); // amount of tiles that need to be checked
+    int gridDistancey = Vector2Length(box.velocity) / static_cast<float>(grid.blockSize) + std::ceil(box.size.y / grid.blockSize); // amount of tiles that need to be checked
 
     // Loop blocks near player
     for (int i = -gridDistancex; i <= gridDistancex; i++){
