@@ -20,7 +20,7 @@ public:
     // Helper methods
     void handleInput(Vector2& rDirection);
     void generateTerrain(Grid& grid);
-    std::vector<AABB> getPossibleCollisionsFromGrid(AABB& player, Grid& grid);
-    void collisionResponse(AABB& player, Grid& grid);
-    void checkPlayerTouchingBlocks(AABB& box, Grid& grid);
+    std::vector<AABB> getPossibleCollisionsFromGrid(AABB& box, Grid& grid);
+    void checkCollisionAndMove(AABB& box, Grid& grid);
+    void checkTouching(AABB& box, Grid& grid);
 };

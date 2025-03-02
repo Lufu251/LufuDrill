@@ -84,8 +84,8 @@ int main(){
         // Stop completely if below the threshold
         if (Vector2Length(player.velocity) < dataManager.velocityThreshhold) player.velocity = { 0.0f, 0.0f };
 
-        // Physics collision response
-        gameHandler.collisionResponse(player, mapGrid);
+        // Physics collision response and move player
+        gameHandler.checkCollisionAndMove(player, mapGrid);
 
         // Clamp player to gridMap
         Vector2 positionBeforeClamp = player.position;
@@ -94,6 +94,15 @@ int main(){
         // If position was clamped set velocity to 0 in this axis
         if(positionBeforeClamp.x != player.position.x) player.velocity.x = 0;
         if(positionBeforeClamp.y != player.position.y) player.velocity.y = 0;
+
+        // Check if player is touching a block on any side and count for how long it is touching
+        gameHandler.checkTouching(player, mapGrid);
+
+        // Print touching sides
+        if(player.left) std::cout << "Player LEFT " << player.left << std::endl;
+        if(player.right) std::cout << "Player RIGHT " << player.right << std::endl;
+        if(player.top) std::cout << "Player TOP " << player.top << std::endl;
+        if(player.bottom) std::cout << "Player BOTTOM " << player.bottom << std::endl;
 
         // Update Gui
         playerGui.update();

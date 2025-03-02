@@ -14,7 +14,7 @@ public:
     size_t sizeX, sizeY;
 
     Grid(){}
-    Grid(size_t x, size_t y, size_t blockSize) : sizeX(x), sizeY(y), gridData(x*y), blockSize(blockSize){}
+    Grid(size_t x, size_t y, size_t bS) : sizeX(x), sizeY(y), gridData(x*y), blockSize(bS){}
 
     ~Grid(){}
 

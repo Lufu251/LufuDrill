@@ -174,17 +174,17 @@ inline AABB GetSweptBroadphaseBox(AABB b1){
 }
 
 // Returns the nearest collision from a list of AABB's
-inline Hit GetNearestCollisionFromList(AABB& player, std::vector<AABB>& blocks){
+inline Hit GetNearestCollisionFromList(AABB& box, std::vector<AABB>& blocks){
     Hit hit({0.0f, 0.0f}, 1.0f, {0.0f, 0.0f}); // Set collision time to max
 
     // Iterate the list of possible vectors
     for(auto b : blocks){
         // Broad-Phasing with standard AABB check
-        AABB broadphase = GetSweptBroadphaseBox(player); // create the broadphase AABB from the player position and velocity
+        AABB broadphase = GetSweptBroadphaseBox(box); // create the broadphase AABB from the player position and velocity
         if(AABBCheck(broadphase, b)){
             // Hit is very likely
             // Do a swept AABB test and get distance to collisionpoint
-            Hit possibleHit = sweptAABB(player, b);
+            Hit possibleHit = sweptAABB(box, b);
 
             // Check if calculated hit time is shorter and update if it is
             if(possibleHit.collisionTime < hit.collisionTime){

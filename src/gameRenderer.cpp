@@ -9,7 +9,7 @@ void GameRenderer::setCameraTarget(Player& player){
     zoom = 2.0f;
     camera.rotation = 0.0f;
     cameraTarget = player.position;
-    camera.offset = (Vector2){ GetScreenWidth() / 2.0f + player.size.x/2, GetScreenHeight() / 2.0f + player.size.y/2}; // Center the view on the player
+    camera.offset = (Vector2){ GetScreenWidth() / 2.0f - player.size.x, GetScreenHeight() / 2.0f - player.size.y}; // Center the view on the player
     camera.zoom = zoom;
 }
 
@@ -31,6 +31,7 @@ void GameRenderer::renderGrid(Grid& mapGrid){
     // Render the visible blocks from the grid
     int xRenderAmount = (GetScreenWidth() / mapGrid.blockSize) / (2 * zoom) +2; // Calculate how many tiles are viewed by the camera
     int yRenderAmount = (GetScreenHeight() / mapGrid.blockSize) / (2 * zoom) +2; // Calculate how many tiles are viewed by the camera
+
     // Calculate the cameraTarget position on the grid
     size_t iCamera = cameraTarget.x / mapGrid.blockSize;
     size_t jCamera = cameraTarget.y / mapGrid.blockSize;
@@ -53,7 +54,7 @@ void GameRenderer::renderGrid(Grid& mapGrid){
                 case DIRT: DrawRectangle(block.position.x, block.position.y, mapGrid.blockSize, mapGrid.blockSize, BROWN); break;
                 case ROCK: DrawRectangle(block.position.x, block.position.y, mapGrid.blockSize, mapGrid.blockSize, GRAY); break;
             }
-            //DrawText(TextFormat("[%i,%i]", iBlock , jBlock), 2 + block.p.x, 6 + block.p.y, 8, LIGHTGRAY);
+            DrawText(TextFormat("[%i,%i]", iBlock , jBlock), 2 + block.position.x, 6 + block.position.y, 8, LIGHTGRAY);
 
             DrawRectangleLines(block.position.x, block.position.y, mapGrid.blockSize, mapGrid.blockSize, WHITE);
         }

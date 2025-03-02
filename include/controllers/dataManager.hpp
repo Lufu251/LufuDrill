@@ -24,7 +24,6 @@ private:
     // Directory names
     std::string configDirectory = "config";
     
-
     // Containers for data
     
 
@@ -38,6 +37,7 @@ public:
     float collisionRetention = 0.1f; // Remaing velocity after collision
     float velocityThreshhold = 0.05f; // If velocity is below this value it will be set to zero
     float onGroundResistance = 0.8f; // Multiplication factor when moving on ground
+    float touchingDistance = 1.0f; // Distance to check if a side should be considered as touching or not
 
     // Access the singleton instance
     static DataManager& getInstance();

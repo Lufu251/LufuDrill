@@ -51,18 +51,18 @@ std::vector<AABB> GameHandler::getPossibleCollisionsFromGrid(AABB& box, Grid& gr
     size_t jPlayer = box.getGridPosition(grid.blockSize).y;
 
     // Check how many tiles around the player need to be calculated
-    int gridDistancex = Vector2Length(box.velocity) / static_cast<float>(grid.blockSize) + std::ceil(box.size.x / grid.blockSize); // amount of tiles that need to be checked
-    int gridDistancey = Vector2Length(box.velocity) / static_cast<float>(grid.blockSize) + std::ceil(box.size.y / grid.blockSize); // amount of tiles that need to be checked
+    int gridDistanceX = Vector2Length(box.velocity) / static_cast<float>(grid.blockSize) + std::ceil(box.size.x / grid.blockSize); // amount of tiles that need to be checked
+    int gridDistanceY = Vector2Length(box.velocity) / static_cast<float>(grid.blockSize) + std::ceil(box.size.y / grid.blockSize); // amount of tiles that need to be checked
 
     // Loop blocks near player
-    for (int i = -gridDistancex; i <= gridDistancex; i++){
-        for (int j = -gridDistancey; j <= gridDistancey; j++){
+    for (int i = -gridDistanceX; i <= gridDistanceX; i++){
+        for (int j = -gridDistanceY; j <= gridDistanceY; j++){
             // Calculate the gridposition of the block that needs to be checked
             int iBlock = iPlayer + i;
             int jBlock = jPlayer + j;
 
             // Check if position is out of bound from grid and skip this loop
-            if (iBlock < 0 || iBlock >= grid.sizeX || jBlock < 0 || jBlock >= grid.sizeY){
+            if (iBlock < 0 || iBlock >= grid.sizeX -1 || jBlock < 0 || jBlock >= grid.sizeY){
                 // Out of bound
                 //std::cout << "Collision check: Grid position is out ofbound" << iBlock << " " << jBlock << std::endl;
                 continue;
@@ -76,7 +76,7 @@ std::vector<AABB> GameHandler::getPossibleCollisionsFromGrid(AABB& box, Grid& gr
     return blocks;
 }
 
-void GameHandler::collisionResponse(AABB& box, Grid& grid){
+void GameHandler::checkCollisionAndMove(AABB& box, Grid& grid){
     DataManager& dataManager = DataManager::getInstance();
     AABB boxClone = box;
 
@@ -84,26 +84,24 @@ void GameHandler::collisionResponse(AABB& box, Grid& grid){
     // Loop a cloned Player with the collision and end loop when movement is done
     while(Vector2Length(boxClone.velocity) > 0){
         
-        // Create a list with block that need to be checked
+        // Create a list with blocks that need to be checked
         std::vector<AABB> blocks = getPossibleCollisionsFromGrid(box, grid); // AABB from all blocks that can collide
         // Get the nearest collision from the List
         Hit hit = GetNearestCollisionFromList(boxClone, blocks);
 
         // When nearest is less then one a hit occured
         if(hit.collisionTime < 1.0f){
-            // Hit occured
-            
-            // Round position to prevent floating point inside of a block
+            // A hit occured
             if(hit.n.x < 0){
-                // LEFT
+                // RIGHT
                 //std::cout << "Collision on LEFT" << " x " << hit.x << " y " << hit.y << " distance " << hit.collisionTime << std::endl;
-                
+
                 // Dampening everytime a hit occures
                 boxClone.velocity.x *= dataManager.collisionRetention;
                 box.velocity.x *= dataManager.collisionRetention;
             }
             else if(hit.n.x > 0){
-                // RIGHT
+                // LEFT
                 //std::cout << "Collision on RIGHT" << " x " << hit.x << " y " << hit.y << " distance " << hit.collisionTime << std::endl;
 
                 // Dampening everytime a hit occures
@@ -111,7 +109,7 @@ void GameHandler::collisionResponse(AABB& box, Grid& grid){
                 box.velocity.x *= dataManager.collisionRetention;
             }
             if(hit.n.y < 0){
-                // TOP
+                // BOTTOM
                 //std::cout << "Collision on TOP" << " x " << hit.x << " y " << hit.y << " distance " << hit.collisionTime << std::endl;
 
                 // Dampening everytime a hit occures
@@ -123,7 +121,7 @@ void GameHandler::collisionResponse(AABB& box, Grid& grid){
                 box.velocity.x *= dataManager.onGroundResistance;
             }
             else if(hit.n.y > 0){
-                // DOWN
+                // TOP
                 //std::cout << "Collision on Bottom" << " x " << hit.x << " y " << hit.y << " distance " << hit.collisionTime << std::endl;
 
                 // Dampening everytime a hit occures
@@ -155,37 +153,64 @@ void GameHandler::collisionResponse(AABB& box, Grid& grid){
     box.position = boxClone.position; // Loop has ended player can now be set to the new position
 }
 
-void GameHandler::checkPlayerTouchingBlocks(AABB& box, Grid& grid){
-    bool up = false, right = false, down = false, left = false;
+// Check if AABB is on ground
+void GameHandler::checkTouching(AABB& box, Grid& grid){
+    DataManager& dataManager = DataManager::getInstance();
+    std::vector<AABB> blocks = getPossibleCollisionsFromGrid(box, grid); // AABB from all blocks that can collide
 
-    // Distance which is considered as touching
-    float epsilon = 0.1;
+    bool l = false, r = false, b = false, t = false;
 
-    // Get the player position on the grid
-    size_t iPlayer = box.getGridPosition(grid.blockSize).x;
-    size_t jPlayer = box.getGridPosition(grid.blockSize).y;
-
-    // Check how many tiles around the player need to be calculated
-    int gridDistancex = Vector2Length(box.velocity) / static_cast<float>(grid.blockSize) + std::ceil(box.size.x / grid.blockSize); // amount of tiles that need to be checked
-    int gridDistancey = Vector2Length(box.velocity) / static_cast<float>(grid.blockSize) + std::ceil(box.size.y / grid.blockSize); // amount of tiles that need to be checked
-
-    // Loop blocks near player
-    for (int i = -gridDistancex; i <= gridDistancex; i++){
-        for (int j = -gridDistancey; j <= gridDistancey; j++){
-            // Calculate the gridposition of the block that needs to be checked
-            int iBlock = iPlayer + i;
-            int jBlock = jPlayer + j;
-
-            // Check if position is out of bound from grid and skip this loop
-            if (iBlock < 0 || iBlock > grid.sizeX -1 || jBlock < 0 || jBlock > grid.sizeY -1){
-                // Out of bound
-                //std::cout << "Collision check: Grid position is out ofbound" << iBlock << " " << jBlock << std::endl;
-                continue;
-            }
-            else if(grid(iBlock, jBlock).mType > 0){ // Block is not empty
-                // Check block for touching side ---------------------------------------------------
-                Block& block = grid(iBlock, jBlock);
-            }
+    // Iterate the possible blocks
+    for(auto & block : blocks){
+        // Bottom
+        if(AABBCheck(box, AABB(Vector2Add(block.position, {0, -dataManager.touchingDistance}), block.size))){
+            b = true;
         }
+        // Top
+        if(AABBCheck(box, AABB(Vector2Add(block.position, {0, dataManager.touchingDistance}), block.size))){
+            t = true;
+        }
+        // Right
+        if(AABBCheck(box, AABB(Vector2Add(block.position, {-dataManager.touchingDistance, 0}), block.size))){
+            r = true;
+        }
+        // Top
+        if(AABBCheck(box, AABB(Vector2Add(block.position, {dataManager.touchingDistance, 0}), block.size))){
+            l = true;
+        }
+
+    }
+
+    // Update touching sides.
+    // Bottom
+    if(b){
+        box.bottom ++;
+    }
+    else{
+        box.bottom = 0;
+    }
+
+    // Top
+    if(t){
+        box.top ++;
+    }
+    else{
+        box.top = 0;
+    }
+
+    // Right
+    if(r){
+        box.right ++;
+    }
+    else{
+        box.right = 0;
+    }
+
+    // Left
+    if(l){
+        box.left ++;
+    }
+    else{
+        box.left = 0;
     }
 }
