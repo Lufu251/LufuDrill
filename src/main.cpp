@@ -58,15 +58,23 @@ int main(){
     mapGrid = Grid(100,100, 32);
     gameHandler.generateTerrain(mapGrid);
 
-    gameRenderer.setCameraTarget(player);
+    // Camera
+    gameRenderer.camera.zoom = 2.0f;
+    gameRenderer.camera.rotation = 0.0f;
+    gameRenderer.camera.target = player.position;
+    gameRenderer.setCameraOffset({GetScreenWidth() / 2.0f - player.size.x, GetScreenHeight() / 2.0f - player.size.y});
 
     while (!WindowShouldClose()){
         // Logic ----------------------------------------------------------------------------------
         float deltaTime = GetFrameTime();
 
-        // Update and smooth camera movement
-        gameRenderer.updateCameraOnWindowResize(player);
-        gameRenderer.updateCamera(player);
+        // Update camera offset when window is resized
+        if(IsWindowResized()){
+            gameRenderer.setCameraOffset({GetScreenWidth() / 2.0f - player.size.x, GetScreenHeight() / 2.0f - player.size.y});
+        }
+
+        // Update and smooth pan camera to the player position
+        gameRenderer.moveCameraToPlayer(player);
 
         // Movement input
         Vector2 movementInput{0,0};
@@ -75,11 +83,9 @@ int main(){
 
         // Calculate air resistance
         Vector2 airResistance = player.velocity - player.velocity * dataManager.airResistance;
-
         player.addForce(movementInput); // Add movementInput to player velocity
         player.addForce(dataManager.gravity); // Add gravity to player velocity
         player.addForce(Vector2Negate(airResistance)); // Add airResistance to player velocity
-        
 
         // Stop completely if below the threshold
         if (Vector2Length(player.velocity) < dataManager.velocityThreshhold) player.velocity = { 0.0f, 0.0f };
@@ -87,13 +93,8 @@ int main(){
         // Physics collision response and move player
         gameHandler.checkCollisionAndMove(player, mapGrid);
 
-        // Clamp player to gridMap
-        Vector2 positionBeforeClamp = player.position;
-        player.position.x = std::clamp(player.position.x, 0.f, static_cast<float>(mapGrid.sizeX * mapGrid.blockSize - player.size.x));
-        player.position.y = std::clamp(player.position.y, 0.f, static_cast<float>(mapGrid.sizeY * mapGrid.blockSize - player.size.y));
-        // If position was clamped set velocity to 0 in this axis
-        if(positionBeforeClamp.x != player.position.x) player.velocity.x = 0;
-        if(positionBeforeClamp.y != player.position.y) player.velocity.y = 0;
+        //Clamp player to grid
+        gameHandler.clampToGrid(player, mapGrid);
 
         // Check if player is touching a block on any side and count for how long it is touching
         gameHandler.checkTouching(player, mapGrid);

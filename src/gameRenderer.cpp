@@ -4,24 +4,12 @@ GameRenderer::GameRenderer(/* args */){}
 
 GameRenderer::~GameRenderer(){}
 
-void GameRenderer::setCameraTarget(Player& player){
-    // Camera initialization
-    zoom = 2.0f;
-    camera.rotation = 0.0f;
-    cameraTarget = player.position;
-    camera.offset = (Vector2){ GetScreenWidth() / 2.0f - player.size.x, GetScreenHeight() / 2.0f - player.size.y}; // Center the view on the player
-    camera.zoom = zoom;
+void GameRenderer::setCameraOffset(Vector2 offset){
+    camera.offset = offset;
 }
 
-void GameRenderer::updateCamera(Player& player){
-    cameraTarget = Vector2Lerp(cameraTarget, player.position, 0.6f);
-    camera.target = cameraTarget;
-}
-
-void GameRenderer::updateCameraOnWindowResize(Player& player){
-    if(IsWindowResized()){
-        camera.offset = (Vector2){ GetScreenWidth() / 2.0f - player.size.x, GetScreenHeight() / 2.0f - player.size.y}; // Center the view
-    }
+void GameRenderer::moveCameraToPlayer(Player& player){
+    camera.target = Vector2Lerp(camera.target, player.position, 0.6f);;
 }
 
 void GameRenderer::renderGrid(Grid& mapGrid){
@@ -29,12 +17,12 @@ void GameRenderer::renderGrid(Grid& mapGrid){
     BeginMode2D(camera);
 
     // Render the visible blocks from the grid
-    int xRenderAmount = (GetScreenWidth() / mapGrid.blockSize) / (2 * zoom) +2; // Calculate how many tiles are viewed by the camera
-    int yRenderAmount = (GetScreenHeight() / mapGrid.blockSize) / (2 * zoom) +2; // Calculate how many tiles are viewed by the camera
+    int xRenderAmount = (GetScreenWidth() / mapGrid.blockSize) / (2 * camera.zoom) +2; // Calculate how many tiles are viewed by the camera
+    int yRenderAmount = (GetScreenHeight() / mapGrid.blockSize) / (2 * camera.zoom) +2; // Calculate how many tiles are viewed by the camera
 
     // Calculate the cameraTarget position on the grid
-    size_t iCamera = cameraTarget.x / mapGrid.blockSize;
-    size_t jCamera = cameraTarget.y / mapGrid.blockSize;
+    size_t iCamera = camera.target.x / mapGrid.blockSize;
+    size_t jCamera = camera.target.y / mapGrid.blockSize;
 
     // Loop over the amount of blocks that are visible
     for (int i = -xRenderAmount; i <= xRenderAmount; i++){
@@ -54,9 +42,9 @@ void GameRenderer::renderGrid(Grid& mapGrid){
                 case DIRT: DrawRectangle(block.position.x, block.position.y, mapGrid.blockSize, mapGrid.blockSize, BROWN); break;
                 case ROCK: DrawRectangle(block.position.x, block.position.y, mapGrid.blockSize, mapGrid.blockSize, GRAY); break;
             }
-            DrawText(TextFormat("[%i,%i]", iBlock , jBlock), 2 + block.position.x, 6 + block.position.y, 8, LIGHTGRAY);
+            //DrawText(TextFormat("[%i,%i]", iBlock , jBlock), 2 + block.position.x, 6 + block.position.y, 8, LIGHTGRAY);
 
-            DrawRectangleLines(block.position.x, block.position.y, mapGrid.blockSize, mapGrid.blockSize, WHITE);
+            //DrawRectangleLines(block.position.x, block.position.y, mapGrid.blockSize, mapGrid.blockSize, WHITE);
         }
     }
     EndMode2D();

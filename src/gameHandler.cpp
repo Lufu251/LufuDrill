@@ -76,6 +76,16 @@ std::vector<AABB> GameHandler::getPossibleCollisionsFromGrid(AABB& box, Grid& gr
     return blocks;
 }
 
+void GameHandler::clampToGrid(AABB& box, Grid& grid){
+    // Clamp box to grid
+    Vector2 positionBeforeClamp = box.position;
+    box.position.x = std::clamp(box.position.x, 0.f, static_cast<float>(grid.sizeX * grid.blockSize - box.size.x));
+    box.position.y = std::clamp(box.position.y, 0.f, static_cast<float>(grid.sizeY * grid.blockSize - box.size.y));
+    // If position was clamped set velocity to 0 in this axis
+    if(positionBeforeClamp.x != box.position.x) box.velocity.x = 0;
+    if(positionBeforeClamp.y != box.position.y) box.velocity.y = 0;
+}
+
 void GameHandler::checkCollisionAndMove(AABB& box, Grid& grid){
     DataManager& dataManager = DataManager::getInstance();
     AABB boxClone = box;
