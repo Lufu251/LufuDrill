@@ -1,5 +1,8 @@
 #include <gameRenderer.hpp>
 
+#include <assetManager.hpp>
+#include <textureAtlas.hpp>
+
 GameRenderer::GameRenderer(/* args */){}
 
 GameRenderer::~GameRenderer(){}
@@ -13,6 +16,9 @@ void GameRenderer::moveCameraToPlayer(Player& player){
 }
 
 void GameRenderer::renderGrid(Grid& mapGrid){
+    AssetManager& assetManager = AssetManager::getInstance();
+    TextureAtlas& tileset = assetManager.getTextureAtlas("tileset");
+
     // Render game view with the camera ------------------------------------
     BeginMode2D(camera);
 
@@ -34,15 +40,16 @@ void GameRenderer::renderGrid(Grid& mapGrid){
                 continue;
             }
 
-            Block block = mapGrid(iBlock, jBlock); // get the current block
-
-            switch (block.mType)
-            {
-                case EMPTY: DrawRectangle(block.position.x, block.position.y, mapGrid.blockSize, mapGrid.blockSize, YELLOW); break;
-                case DIRT: DrawRectangle(block.position.x, block.position.y, mapGrid.blockSize, mapGrid.blockSize, BROWN); break;
-                case ROCK: DrawRectangle(block.position.x, block.position.y, mapGrid.blockSize, mapGrid.blockSize, GRAY); break;
+            Block* block = &mapGrid(iBlock, jBlock); // gSet the current block
+            switch (block->mType){
+                case EMPTY: DrawRectangle(block->position.x, block->position.y, mapGrid.blockSize, mapGrid.blockSize, RAYWHITE); break;
+                case DIRT: DrawTextureRec(tileset.texture, tileset.sections["DIRT"], block->position, BLACK); break;
+                case STONE: DrawTextureRec(tileset.texture, tileset.sections["STONE"], block->position, WHITE);; break;
+                case COPPERORE: DrawTextureRec(tileset.texture, tileset.sections["COPPERORE"], block->position, WHITE);; break;
+                case GOLDORE: DrawTextureRec(tileset.texture, tileset.sections["GOLDORE"], block->position, WHITE);; break;
+                case PLATINUMORE: DrawTextureRec(tileset.texture, tileset.sections["PLATINUMORE"], block->position, WHITE);; break;
             }
-            //DrawText(TextFormat("[%i,%i]", iBlock , jBlock), 2 + block.position.x, 6 + block.position.y, 8, LIGHTGRAY);
+            //DrawText(TextFormat("[%i,%i]", iBlock , jBlock), 2 + block->position.x, 6 + block->position.y, 6, LIGHTGRAY);
 
             //DrawRectangleLines(block.position.x, block.position.y, mapGrid.blockSize, mapGrid.blockSize, WHITE);
         }

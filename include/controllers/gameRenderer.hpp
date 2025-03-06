@@ -21,5 +21,4 @@ public:
     void moveCameraToPlayer(Player& player);
     void renderGrid(Grid& mapGrid);
     void renderPlayer(Player& player);
-
 };

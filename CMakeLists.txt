@@ -1,7 +1,7 @@
 # Minimum required version of CMake
 cmake_minimum_required(VERSION 3.14)
 cmake_policy(SET CMP0135 NEW)
-set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -fsanitize=address,undefined")
+#set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -fsanitize=address,undefined")
 
 # Project name and version
 project(MyCppProject VERSION 1.0)

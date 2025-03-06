@@ -15,9 +15,8 @@ const int startScreenHeight = 900;
 
 int main(){
     // Declaration ----------------------------------------------------------------------------------
-    // Set configuration flags before initializing the window
+    // Set window parameters
     SetConfigFlags(FLAG_WINDOW_RESIZABLE);
-    
     InitWindow(startScreenWidth, startScreenHeight, "LuFu_Drill");
     SetTargetFPS(60);
 
@@ -42,23 +41,24 @@ int main(){
     dataManager.searchDataDirectoryPath("data", 3);
 
     // Preload textures
-    assetManager.preloadTexture("tile.png");
+    assetManager.loadTextureAtlas("tileset");
 
     // Preload fonts
-    assetManager.preloadFont("Roboto-Regular.ttf", 32);
+    assetManager.loadFont("roboto-regular", "Roboto-Regular.ttf", 32);
 
-    fuelMenu = FuelMenu({100,100}, {600,600});
     playerGui = PlayerGui({0,0}, {static_cast<float>(GetScreenWidth()), static_cast<float>(GetScreenHeight())});
-    fuelMenu.initialize();
-    fuelMenu.disable();
     playerGui.initialize();
     playerGui.enable();
+
+    fuelMenu = FuelMenu({100,100}, {600,600});
+    fuelMenu.initialize();
+    fuelMenu.enable();
 
     player = Player({200,200}, {24,24}, {0,0});
     mapGrid = Grid(100,100, 32);
     gameHandler.generateTerrain(mapGrid);
 
-    // Camera
+    // Camera initialise
     gameRenderer.camera.zoom = 2.0f;
     gameRenderer.camera.rotation = 0.0f;
     gameRenderer.camera.target = player.position;
@@ -68,12 +68,12 @@ int main(){
         // Logic ----------------------------------------------------------------------------------
         float deltaTime = GetFrameTime();
 
-        // Update camera offset when window is resized
+        // Do updates on screen resize
         if(IsWindowResized()){
             gameRenderer.setCameraOffset({GetScreenWidth() / 2.0f - player.size.x, GetScreenHeight() / 2.0f - player.size.y});
         }
 
-        // Update and smooth pan camera to the player position
+        // Update and pan camera in the direction of the player
         gameRenderer.moveCameraToPlayer(player);
 
         // Movement input
@@ -112,7 +112,7 @@ int main(){
         // Draw ----------------------------------------------------------------------------------
         BeginDrawing();
             // Clear Screen for the new render cycle
-            ClearBackground(LIGHTGRAY);
+            ClearBackground(PINK);
             gameRenderer.renderGrid(mapGrid);
             gameRenderer.renderPlayer(player);
 
