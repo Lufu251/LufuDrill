@@ -40,7 +40,7 @@ int main(){
     assetManager.searchAssetsDirectoryPath("assets", 3);
     dataManager.searchDataDirectoryPath("data", 3);
 
-    // Preload textures
+    // Preload textureAtlas
     assetManager.loadTextureAtlas("tileset");
 
     // Preload fonts
@@ -55,7 +55,7 @@ int main(){
     fuelMenu.enable();
 
     player = Player({200,200}, {24,24}, {0,0});
-    mapGrid = Grid(100,100, 32);
+    mapGrid = Grid(200,1000, 32);
     gameHandler.generateTerrain(mapGrid);
 
     // Camera initialise

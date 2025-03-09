@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include <algorithm>
+#include <random>
 
 #include <dataManager.hpp>
 
@@ -17,29 +18,68 @@ void GameHandler::handleInput(Vector2& rDirection){
 }
 
 void GameHandler::generateTerrain(Grid& grid){
+    // Pre init
     for (size_t x = 0; x < grid.sizeX; x++){
-            for (size_t y = 0; y < grid.sizeY; y++){
-                if(y > 15 && x != 25){
-                    grid(x,y) = Block(ROCK, {static_cast<float>(x * grid.blockSize), static_cast<float>(y * grid.blockSize)}, {static_cast<float>(grid.blockSize), static_cast<float>(grid.blockSize)});
-                }
-                else{
-                    grid(x,y) = Block(EMPTY, {static_cast<float>(x * grid.blockSize), static_cast<float>(y * grid.blockSize)}, {static_cast<float>(grid.blockSize), static_cast<float>(grid.blockSize)});
-                }
-            }
+        for (size_t y = 0; y < grid.sizeY; y++){
+            grid(x,y) = Block(EMPTY, {static_cast<float>(x * grid.blockSize), static_cast<float>(y * grid.blockSize)}, {static_cast<float>(grid.blockSize), static_cast<float>(grid.blockSize)});
         }
+    }
 
-        grid(10,5).mType = ROCK; grid(15,15).mType = ROCK; grid(15,14).mType = ROCK;
+    for (size_t x = 0; x < grid.sizeX; x++){
+        for (size_t y = 0; y < grid.sizeY; y++){
+            std::random_device dev;
+            std::mt19937 rng(dev());
+            std::uniform_int_distribution<std::mt19937::result_type> dist6(1,10);
 
-        grid(0,15).mType = ROCK; grid(0,14).mType = ROCK; grid(0,13).mType = ROCK; grid(0,12).mType = ROCK;
-        grid(0,11).mType = ROCK; grid(0,10).mType = ROCK; grid(0,9).mType = ROCK; grid(0,8).mType = ROCK; 
+            // Create a tunnel to the bottom
+            if(x == 20){
+                grid(x,y).mType = EMPTY;
+                continue;
+            }
 
-        grid(19,15).mType = ROCK; grid(19,14).mType = ROCK; grid(19,13).mType = ROCK; grid(19,12).mType = ROCK;
-        
-        grid(10,14).mType = ROCK;
+            // Generate some air pockets
+            if(dist6(rng) >= 10){
+                grid(x,y).mType = EMPTY;
+                continue;
+            }
 
-        grid(12,14).mType = ROCK; grid(13,14).mType = ROCK;
-
-        grid(8,10).mType = ROCK; grid(9,10).mType = ROCK;
+            // Normal generation
+            // Air layer
+            if(y < 15){
+                grid(x,y).mType = EMPTY;
+                continue;
+            }
+            // Dirt layer
+            if(y < 100){
+                if(dist6(rng) == 10){
+                    grid(x,y).mType = COPPERORE;
+                    continue;
+                }
+                grid(x,y).mType = DIRT;
+                continue;
+            }
+            // Upper stone layer
+            if(y < 500){
+                if(dist6(rng) == 10){
+                    grid(x,y).mType = GOLDORE;
+                    continue;
+                }
+                grid(x,y).mType = STONE;
+                continue;
+            }
+            // Lower stone layer
+            if(y < 1000){
+                if(dist6(rng) == 10){
+                    grid(x,y).mType = PLATINUMORE;
+                    continue;
+                }
+                grid(x,y).mType = STONE;
+                continue;
+            }
+            // Anything Deeper Layer
+            grid(x,y).mType = STONE;
+        }
+    }
 }
 
 std::vector<AABB> GameHandler::getPossibleCollisionsFromGrid(AABB& box, Grid& grid){
@@ -163,7 +203,7 @@ void GameHandler::checkCollisionAndMove(AABB& box, Grid& grid){
     box.position = boxClone.position; // Loop has ended player can now be set to the new position
 }
 
-// Check if AABB is on ground
+// Check if AABB is touching blocks on any side
 void GameHandler::checkTouching(AABB& box, Grid& grid){
     DataManager& dataManager = DataManager::getInstance();
     std::vector<AABB> blocks = getPossibleCollisionsFromGrid(box, grid); // AABB from all blocks that can collide

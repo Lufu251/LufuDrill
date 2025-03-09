@@ -2,8 +2,11 @@
 
 #include <iostream>
 #include <string>
+#include <vector>
 
 #include <raylib.h>
+
+#include <tools.hpp>
 
 class DataManager
 {
@@ -25,7 +28,13 @@ private:
     std::string configDirectory = "config";
     
     // Containers for data
-    
+    // Equ containers
+    std::vector<Drill> drills; // Stores all drills that can be bought
+    std::vector<FuelTank> fuelTanks; // Stores all fuelTanks that can be bought
+    std::vector<Hull> hulls; // Stores all huels that can be bought
+    std::vector<Storage> storages; // Stores all storages that can be bought
+    std::vector<Engine> engines; // Stores all engines that can be bought
+    std::vector<equpiment> equpiments; // Stores all tools that can be bought
 
 public:
     // Variables

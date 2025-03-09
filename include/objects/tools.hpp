@@ -1,43 +1,35 @@
+#pragma once
+
 #include <string>
 
-class Drill
-{
-private:
-    std::string type;
-    float hardness;
-    
+class Drill{
 public:
+    int power;
+
     Drill(/* args */){}
     ~Drill(){}
 };
 
 
 class FuelTank{
-private:
-    std::string type;
+public:
     float fuel;
     float fuelMax;
 
-public:
     FuelTank(/* args */){}
     ~FuelTank(){}
 };
 
 class Hull{
-private:
-    std::string type;
+public:
     float health;
     float healthMax;
 
-public:
     Hull(/* args */){}
     ~Hull(){}
 };
 
 class Storage{
-private:
-    std::string type;
-
 public:
     Storage(/* args */){}
 
@@ -45,11 +37,15 @@ public:
 };
 
 class Engine{
-private:
-    std::string type;
+public:
     float power;
 
-public:
     Engine(/* args */){}
     ~Engine(){}
+};
+
+class equpiment{
+public:
+    equpiment(/* args */){}
+    ~equpiment(){}
 };

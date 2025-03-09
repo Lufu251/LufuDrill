@@ -43,7 +43,7 @@ void GameRenderer::renderGrid(Grid& mapGrid){
             Block* block = &mapGrid(iBlock, jBlock); // gSet the current block
             switch (block->mType){
                 case EMPTY: DrawRectangle(block->position.x, block->position.y, mapGrid.blockSize, mapGrid.blockSize, RAYWHITE); break;
-                case DIRT: DrawTextureRec(tileset.texture, tileset.sections["DIRT"], block->position, BLACK); break;
+                case DIRT: DrawTextureRec(tileset.texture, tileset.sections["DIRT"], block->position, WHITE); break;
                 case STONE: DrawTextureRec(tileset.texture, tileset.sections["STONE"], block->position, WHITE);; break;
                 case COPPERORE: DrawTextureRec(tileset.texture, tileset.sections["COPPERORE"], block->position, WHITE);; break;
                 case GOLDORE: DrawTextureRec(tileset.texture, tileset.sections["GOLDORE"], block->position, WHITE);; break;
