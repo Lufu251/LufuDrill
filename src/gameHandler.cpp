@@ -38,7 +38,7 @@ void GameHandler::generateTerrain(Grid& grid){
             }
 
             // Generate some air pockets
-            if(dist6(rng) >= 10){
+            if(y > 15 && dist6(rng) >= 10){
                 grid(x,y).mType = EMPTY;
                 continue;
             }

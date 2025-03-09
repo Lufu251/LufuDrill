@@ -4,6 +4,8 @@
 
 class Drill{
 public:
+    std::string name;
+    int cost;
     int power;
 
     Drill(/* args */){}
@@ -13,6 +15,8 @@ public:
 
 class FuelTank{
 public:
+    std::string name;
+    int cost;
     float fuel;
     float fuelMax;
 
@@ -22,6 +26,8 @@ public:
 
 class Hull{
 public:
+    std::string name;
+    int cost;
     float health;
     float healthMax;
 
@@ -29,23 +35,31 @@ public:
     ~Hull(){}
 };
 
-class Storage{
+class CargoBay{
 public:
-    Storage(/* args */){}
+    std::string name;
+    int cost;
+    int capacity;
 
-    ~Storage(){}
+    CargoBay(/* args */){}
+    ~CargoBay(){}
 };
 
 class Engine{
 public:
+    std::string name;
+    int cost;
     float power;
 
     Engine(/* args */){}
     ~Engine(){}
 };
 
-class equpiment{
+class Equpiment{
 public:
-    equpiment(/* args */){}
-    ~equpiment(){}
+    std::string name;
+    int cost;
+
+    Equpiment(/* args */){}
+    ~Equpiment(){}
 };

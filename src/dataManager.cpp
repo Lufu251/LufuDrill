@@ -2,6 +2,10 @@
 
 #include <stdexcept>
 #include <filesystem>
+#include <fstream>
+#include <sstream>
+
+#include <nlohmann/json.hpp>
 
 // Access the singleton instance
 DataManager& DataManager::getInstance() {
@@ -27,4 +31,12 @@ void DataManager::searchDataDirectoryPath(std::string folderName, int searchDept
     if(dataPath == ""){
         throw std::runtime_error("Failed to find directory: " + folderName);
     }
+}
+
+void DataManager::loadSettingConfig(){
+    
+}
+
+void DataManager::loadToolConfig(){
+    std::ifstream f("example.json");
 }

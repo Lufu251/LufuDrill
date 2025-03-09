@@ -32,9 +32,9 @@ private:
     std::vector<Drill> drills; // Stores all drills that can be bought
     std::vector<FuelTank> fuelTanks; // Stores all fuelTanks that can be bought
     std::vector<Hull> hulls; // Stores all huels that can be bought
-    std::vector<Storage> storages; // Stores all storages that can be bought
+    std::vector<CargoBay> cargoBays; // Stores all storages that can be bought
     std::vector<Engine> engines; // Stores all engines that can be bought
-    std::vector<equpiment> equpiments; // Stores all tools that can be bought
+    std::vector<Equpiment> equpiments; // Stores all tools that can be bought
 
 public:
     // Variables
@@ -54,5 +54,9 @@ public:
     // Search for a directory and set the path to this directory
     void searchDataDirectoryPath(std::string dir, int searchDepth);
 
+    // Loading setting configuration
+    void loadSettingConfig();
 
+    // Loading data
+    void loadToolConfig();
 };

@@ -11,7 +11,7 @@ private:
     Drill drill;
     FuelTank fuelTank;
     Hull hull;
-    Storage storage;
+    CargoBay cargoBay;
     Engine engine;
 
 public:
