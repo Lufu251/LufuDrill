@@ -9,21 +9,25 @@
 #include <gameHandler.hpp>
 #include <gameRenderer.hpp>
 
-
-const int startScreenWidth = 1200;
-const int startScreenHeight = 900;
-
 int main(){
     // Declaration ----------------------------------------------------------------------------------
+
+
+
     // Set window parameters
     SetConfigFlags(FLAG_WINDOW_RESIZABLE);
-    InitWindow(startScreenWidth, startScreenHeight, "LuFu_Drill");
+    
+    InitWindow(500, 500, "LuFu_Drill");
     SetTargetFPS(60);
+    //SetWindowMinSize(500, 500);
+    // SetWindowIcon(Image image);
+    //ToggleFullscreen(); // Toggle window state: fullscreen/windowed, resizes monitor to match window resolution
+    //ToggleBorderlessWindowed(); // Toggle window state: borderless windowed, resizes window to match monitor resolution
 
+    // Load DataManager and AssetManager befor anything else!
     // Access singleton classes
     AssetManager& assetManager = AssetManager::getInstance();
     DataManager& dataManager = DataManager::getInstance();
-
 
     GameHandler gameHandler;
     GameRenderer gameRenderer;
@@ -36,15 +40,22 @@ int main(){
     Player player;
     Grid mapGrid;
     
-    // Initialization ----------------------------------------------------------------------------------
+    // Initialization ---------------------------------------------------------------------------------
+    // AssetManager
     assetManager.searchAssetsDirectoryPath("assets", 3);
-    dataManager.searchDataDirectoryPath("data", 3);
-
     // Preload textureAtlas
     assetManager.loadTextureAtlas("tileset");
-
-    // Preload fonts
+    assetManager.loadTextureAtlas("particleset");
+    // Preload font
     assetManager.loadFont("roboto-regular", "Roboto-Regular.ttf", 32);
+
+    // DataManager
+    dataManager.searchDataDirectoryPath("data", 3);
+    // Load tools configuration
+    dataManager.loadToolConfig("tools.json");
+    dataManager.loadSettingConfig("settings.json");
+
+    SetWindowSize(dataManager.screenWidth, dataManager.screenHeight);
 
     playerGui = PlayerGui({0,0}, {static_cast<float>(GetScreenWidth()), static_cast<float>(GetScreenHeight())});
     playerGui.initialize();
@@ -112,7 +123,7 @@ int main(){
         // Draw ----------------------------------------------------------------------------------
         BeginDrawing();
             // Clear Screen for the new render cycle
-            ClearBackground(PINK);
+            ClearBackground(PURPLE);
             gameRenderer.renderGrid(mapGrid);
             gameRenderer.renderPlayer(player);
 

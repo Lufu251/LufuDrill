@@ -33,10 +33,57 @@ void DataManager::searchDataDirectoryPath(std::string folderName, int searchDept
     }
 }
 
-void DataManager::loadSettingConfig(){
-    
+void DataManager::loadSettingConfig(const std::string& name){
+    std::ifstream file(dataPath + "/" + configDirectory + "/" + name);
+
+    // Check if opening file failed
+    if (!file) {
+        std::cerr << "Error opening file!\n";
+    }
+
+    nlohmann::json settings;
+    file >> settings;
+
+    // Parse each setting section
+
+    // GENERAL
+
+    // WINDOW
+    screenWidth = settings["window"]["screenWidth"];
+    screenHeight = settings["window"]["screenHeight"];
+
+    // PHYSICS
+
 }
 
-void DataManager::loadToolConfig(){
-    std::ifstream f("example.json");
+void DataManager::loadToolConfig(const std::string& name){
+    std::ifstream file(dataPath + "/" + configDirectory + "/" + name);
+
+    // Check if opening file failed
+    if (!file) {
+        std::cerr << "Error opening file!\n";
+    }
+
+    nlohmann::json jsonData;
+    file >> jsonData;
+
+    // Parse each tool type
+    for (const auto& item : jsonData["drill"]) {
+        drills.emplace_back(item["name"], item["cost"], item["power"]);
+    }
+    for (const auto& item : jsonData["fueltank"]) {
+        fuelTanks.emplace_back(item["name"], item["cost"], item["fuel"]);
+    }
+    for (const auto& item : jsonData["hull"]) {
+        hulls.emplace_back(item["name"], item["cost"], item["health"]);
+    }
+    for (const auto& item : jsonData["cargobay"]) {
+        cargoBays.emplace_back(item["name"], item["cost"], item["capacity"]);
+    }
+    for (const auto& item : jsonData["engine"]) {
+        engines.emplace_back(item["name"], item["cost"], item["power"]);
+    }
+    for (const auto& item : jsonData["equipment"]) {
+        equipments.emplace_back(item["name"], item["cost"]);
+    }
 }

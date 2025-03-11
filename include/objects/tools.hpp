@@ -2,64 +2,78 @@
 
 #include <string>
 
-class Drill{
+// Base class
+class Tool {
 public:
     std::string name;
     int cost;
+
+    Tool(){}
+    Tool(std::string name, int cost) : name(name), cost(cost) {}
+};
+
+class Drill : public Tool{
+public:
     int power;
 
-    Drill(/* args */){}
+    Drill(){}
+    Drill(std::string name, int cost, int power) : Tool(name, cost), power(power) {}
     ~Drill(){}
 };
 
 
-class FuelTank{
+class FuelTank: public Tool{
 public:
     std::string name;
     int cost;
     float fuel;
     float fuelMax;
 
-    FuelTank(/* args */){}
+    FuelTank(){}
+    FuelTank(std::string name, int cost, int fuel) : Tool(name, cost), fuel(fuel) {}
     ~FuelTank(){}
 };
 
-class Hull{
+class Hull: public Tool{
 public:
     std::string name;
     int cost;
     float health;
     float healthMax;
 
-    Hull(/* args */){}
+    Hull(){}
+    Hull(std::string name, int cost, int health) : Tool(name, cost), health(health) {}
     ~Hull(){}
 };
 
-class CargoBay{
+class CargoBay: public Tool{
 public:
     std::string name;
     int cost;
     int capacity;
 
-    CargoBay(/* args */){}
+    CargoBay(){}
+    CargoBay(std::string name, int cost, int capacity) : Tool(name, cost), capacity(capacity) {}
     ~CargoBay(){}
 };
 
-class Engine{
+class Engine: public Tool{
 public:
     std::string name;
     int cost;
     float power;
 
-    Engine(/* args */){}
+    Engine(){}
+    Engine(std::string name, int cost, int power) : Tool(name, cost), power(power) {}
     ~Engine(){}
 };
 
-class Equpiment{
+class Equipment: public Tool{
 public:
     std::string name;
     int cost;
 
-    Equpiment(/* args */){}
-    ~Equpiment(){}
+    Equipment(){}
+    Equipment(std::string name, int cost) : Tool(name, cost) {}
+    ~Equipment(){}
 };

@@ -1,3 +1,20 @@
 {
-    
-}
+    "general": {
+        "draft": "draft"
+    },
+    "window": {
+        "screenWidth": 600,
+        "screenHeight": 600,
+        "fullscreen": false,
+        "resizable": true
+    },
+    "physics": {
+        "gravity": 0.4,
+        "airResistance": 0.985,
+        "collisionRetention": 0.1,
+        "velocityThreshhold": 0.05,
+        "onGroundResistance": 0.8,
+        "touchingDistance": 1
+    }
+  }
+  

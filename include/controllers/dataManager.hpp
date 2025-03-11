@@ -34,9 +34,13 @@ private:
     std::vector<Hull> hulls; // Stores all huels that can be bought
     std::vector<CargoBay> cargoBays; // Stores all storages that can be bought
     std::vector<Engine> engines; // Stores all engines that can be bought
-    std::vector<Equpiment> equpiments; // Stores all tools that can be bought
+    std::vector<Equipment> equipments; // Stores all tools that can be bought
 
 public:
+    // Window settings
+    int screenWidth;
+    int screenHeight;
+
     // Variables
     float movementSpeed = 0.6f;
 
@@ -55,8 +59,8 @@ public:
     void searchDataDirectoryPath(std::string dir, int searchDepth);
 
     // Loading setting configuration
-    void loadSettingConfig();
+    void loadSettingConfig(const std::string& name);
 
     // Loading data
-    void loadToolConfig();
+    void loadToolConfig(const std::string& name);
 };
