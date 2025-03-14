@@ -158,7 +158,7 @@ public:
             // Check if max chars is not reached
             if(keyCount < LUFUGUI_MAX_CHARS){
                 // Filter which keys can be typed
-                if ((key >= 48) && (key <= 57) || (key >= 65) && (key <= 90) || (key >= 97) && (key <= 122) || (key == 45) || (key == 95)){ // Allow key 0-9 || A-Z || a-z || - || _
+                if (((key >= 48) && (key <= 57)) || ((key >= 65) && (key <= 90)) || ((key >= 97) && (key <= 122)) || (key == 45) || (key == 95)){ // Allow key 0-9 || A-Z || a-z || - || _
                     // Check if any key is pressed
                     if(key != 0){
                         text[keyCount] = (char)key;

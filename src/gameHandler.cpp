@@ -98,8 +98,8 @@ std::vector<AABB> GameHandler::getPossibleCollisionsFromGrid(AABB& box, Grid& gr
     for (int i = -gridDistanceX; i <= gridDistanceX; i++){
         for (int j = -gridDistanceY; j <= gridDistanceY; j++){
             // Calculate the gridposition of the block that needs to be checked
-            int iBlock = iPlayer + i;
-            int jBlock = jPlayer + j;
+            size_t iBlock = iPlayer + i;
+            size_t jBlock = jPlayer + j;
 
             // Check if position is out of bound from grid and skip this loop
             if (iBlock < 0 || iBlock >= grid.gridSizeX -1 || jBlock < 0 || jBlock >= grid.gridSizeY){

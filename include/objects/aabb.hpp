@@ -38,7 +38,7 @@ public:
     float collisionTime;
     
     Hit(){}
-    Hit(Vector2 position, float time, Vector2 normal) : p(position), collisionTime(time), n(normal) {}
+    Hit(Vector2 position, float time, Vector2 normal) : p(position), n(normal), collisionTime(time) {}
 };
 
 // Returns a hit from two AABB's if below 1 a hit occured
@@ -115,7 +115,7 @@ inline Hit sweptAABB(const AABB& b1, const AABB& b2){
     */
 
     // if there was no collision
-    if (entryTime > exitTime || xEntry < 0.0f && yEntry < 0.0f || xEntry > 1.0f || yEntry > 1.0f) { 
+    if (entryTime > exitTime || (xEntry < 0.0f && yEntry < 0.0f) || xEntry > 1.0f || yEntry > 1.0f) { 
         hit.n.x = 0.0f;
         hit.n.y = 0.0f;
         hit.collisionTime = 1.0f;
