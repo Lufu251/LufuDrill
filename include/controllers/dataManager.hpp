@@ -7,6 +7,8 @@
 #include <raylib.h>
 
 #include <tools.hpp>
+#include <grid.hpp>
+#include <player.hpp>
 
 class DataManager
 {
@@ -26,6 +28,7 @@ private:
 
     // Directory names
     std::string configDirectory = "config";
+    std::string savesDirectory = "saves";
     
     // Containers for data
     // Equ containers
@@ -37,6 +40,10 @@ private:
     std::vector<Equipment> equipments; // Stores all tools that can be bought
 
 public:
+    // GameState
+    Player player;
+    Grid map;
+
     // Window settings
     int screenWidth;
     int screenHeight;
@@ -57,6 +64,11 @@ public:
 
     // Search for a directory and set the path to this directory
     void searchDataDirectoryPath(std::string dir, size_t searchDepth);
+
+    // Load gamestate
+    void loadGameState(const std::string& name);
+    // Save gamestate
+    void saveGameState(const std::string& name);
 
     // Loading setting configuration
     void loadSettingConfig(const std::string& name);

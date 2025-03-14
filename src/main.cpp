@@ -14,8 +14,6 @@
 int main(){
     // Declaration ----------------------------------------------------------------------------------
 
-
-
     // Set window parameters
     SetConfigFlags(FLAG_WINDOW_RESIZABLE);
     
@@ -38,23 +36,6 @@ int main(){
     PlayerGui playerGui;
     FuelMenu fuelMenu;
 
-    // Member variables for game state
-    Player player;
-    Grid mapGrid;
-
-    // Convert the Grid object to JSON
-    nlohmann::json j = mapGrid;
-
-    // Write JSON to a file
-    std::ofstream file("../../data/saves/test.map");
-    if (file.is_open()) {
-        file << j.dump(4); // Pretty print with 4 spaces indentation
-        file.close();
-        std::cout << "Map data saved to grid_data.json\n";
-    } else {
-        std::cerr << "Failed to open file for writing!\n";
-    }
-    
     // Initialization ---------------------------------------------------------------------------------
     // AssetManager
     assetManager.searchAssetsDirectoryPath("assets", 3);
@@ -80,15 +61,18 @@ int main(){
     fuelMenu.initialize();
     fuelMenu.enable();
 
-    player = Player({200,200}, {24,24}, {0,0});
-    mapGrid = Grid(200,1000, 32);
-    gameHandler.generateTerrain(mapGrid);
+    dataManager.player = Player({200,200}, {24,24}, {0,0});
+    //dataManager.map = Grid(200,1000, 32);
+    gameHandler.generateTerrain(dataManager.map);
+
+    // Load Map from file
+    dataManager.loadGameState("test.save");
 
     // Camera initialise
     gameRenderer.camera.zoom = 2.0f;
     gameRenderer.camera.rotation = 0.0f;
-    gameRenderer.camera.target = player.position;
-    gameRenderer.setCameraOffset({GetScreenWidth() / 2.0f - player.size.x, GetScreenHeight() / 2.0f - player.size.y});
+    gameRenderer.camera.target = dataManager.player.position;
+    gameRenderer.setCameraOffset({GetScreenWidth() / 2.0f - dataManager.player.size.x, GetScreenHeight() / 2.0f - dataManager.player.size.y});
 
     while (!WindowShouldClose()){
         // Logic ----------------------------------------------------------------------------------
@@ -96,11 +80,11 @@ int main(){
 
         // Do updates on screen resize
         if(IsWindowResized()){
-            gameRenderer.setCameraOffset({GetScreenWidth() / 2.0f - player.size.x, GetScreenHeight() / 2.0f - player.size.y});
+            gameRenderer.setCameraOffset({GetScreenWidth() / 2.0f - dataManager.player.size.x, GetScreenHeight() / 2.0f - dataManager.player.size.y});
         }
 
         // Update and pan camera in the direction of the player
-        gameRenderer.moveCameraToPlayer(player);
+        gameRenderer.moveCameraToPlayer(dataManager.player);
 
         // Movement input
         Vector2 movementInput{0,0};
@@ -108,28 +92,28 @@ int main(){
         movementInput = Vector2Scale(movementInput, dataManager.movementSpeed); // Multiply by speed
 
         // Calculate air resistance
-        Vector2 airResistance = player.velocity - player.velocity * dataManager.airResistance;
-        player.addForce(movementInput); // Add movementInput to player velocity
-        player.addForce(dataManager.gravity); // Add gravity to player velocity
-        player.addForce(Vector2Negate(airResistance)); // Add airResistance to player velocity
+        Vector2 airResistance = dataManager.player.velocity - dataManager.player.velocity * dataManager.airResistance;
+        dataManager.player.addForce(movementInput); // Add movementInput to player velocity
+        dataManager.player.addForce(dataManager.gravity); // Add gravity to player velocity
+        dataManager.player.addForce(Vector2Negate(airResistance)); // Add airResistance to player velocity
 
         // Stop completely if below the threshold
-        if (Vector2Length(player.velocity) < dataManager.velocityThreshhold) player.velocity = { 0.0f, 0.0f };
+        if (Vector2Length(dataManager.player.velocity) < dataManager.velocityThreshhold) dataManager.player.velocity = { 0.0f, 0.0f };
 
         // Physics collision response and move player
-        gameHandler.checkCollisionAndMove(player, mapGrid);
+        gameHandler.checkCollisionAndMove(dataManager.player, dataManager.map);
 
         //Clamp player to grid
-        gameHandler.clampToGrid(player, mapGrid);
+        gameHandler.clampToGrid(dataManager.player, dataManager.map);
 
         // Check if player is touching a block on any side and count for how long it is touching
-        gameHandler.checkTouching(player, mapGrid);
+        gameHandler.checkTouching(dataManager.player, dataManager.map);
 
         // Print touching sides
-        if(player.left) std::cout << "Player LEFT " << player.left << std::endl;
-        if(player.right) std::cout << "Player RIGHT " << player.right << std::endl;
-        if(player.top) std::cout << "Player TOP " << player.top << std::endl;
-        if(player.bottom) std::cout << "Player BOTTOM " << player.bottom << std::endl;
+        if(dataManager.player.left) std::cout << "Player LEFT " << dataManager.player.left << std::endl;
+        if(dataManager.player.right) std::cout << "Player RIGHT " << dataManager.player.right << std::endl;
+        if(dataManager.player.top) std::cout << "Player TOP " << dataManager.player.top << std::endl;
+        if(dataManager.player.bottom) std::cout << "Player BOTTOM " << dataManager.player.bottom << std::endl;
 
         // Update Gui
         playerGui.update();
@@ -139,8 +123,8 @@ int main(){
         BeginDrawing();
             // Clear Screen for the new render cycle
             ClearBackground(PURPLE);
-            gameRenderer.renderGrid(mapGrid);
-            gameRenderer.renderPlayer(player);
+            gameRenderer.renderGrid(dataManager.map);
+            gameRenderer.renderPlayer(dataManager.player);
 
             fuelMenu.render();
             playerGui.render();

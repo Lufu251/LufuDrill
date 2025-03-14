@@ -33,6 +33,54 @@ void DataManager::searchDataDirectoryPath(std::string folderName, size_t searchD
     }
 }
 
+void DataManager::loadGameState(const std::string& name){
+    // Read JSON from a file
+    std::ifstream fromFile(dataPath + "/" + savesDirectory + "/" + name);
+    if (!fromFile.is_open()) {
+        std::cerr << "Failed to open file!\n";
+    }
+
+    nlohmann::json json;
+    fromFile >> json; // Parse JSON from file
+    fromFile.close();
+
+    // Load Map ---------------------------------------------------
+    map = json.get<Grid>(); // Convert JSON to Grid object
+    // Init map, set position and size ob aabb
+    for (size_t x = 0; x < map.gridSizeX; x++){
+        for (size_t y = 0; y < map.gridSizeY; y++){
+            map(x,y).position = {static_cast<float>(x * map.blockSize), static_cast<float>(y * map.blockSize)};
+            map(x,y).size = {static_cast<float>(map.blockSize), static_cast<float>(map.blockSize)};
+        }
+    }
+
+    // Load Player ---------------------------------------------------
+
+
+    // Load Other ---------------------------------------------------
+    // ...
+}
+
+void DataManager::saveGameState(const std::string& name){
+    // Write JSON to a file
+    nlohmann::json json = map;
+    json = {
+        {"map", map}, // Convert the Grid object to JSON
+        {"player", map}
+    }; 
+
+
+    // Write JSON to a file
+    std::ofstream toFile(dataPath + "/" + savesDirectory + "/" + name);
+    if (toFile.is_open()) {
+        toFile << json.dump(4); // Pretty print with 4 spaces indentation
+        toFile.close();
+        std::cout << "GameState data saved to grid_data.json\n";
+    } else {
+        std::cerr << "Failed to open file!\n";
+    }
+}
+
 void DataManager::loadSettingConfig(const std::string& name){
     std::ifstream file(dataPath + "/" + configDirectory + "/" + name);
 
