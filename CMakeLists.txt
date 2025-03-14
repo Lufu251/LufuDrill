@@ -10,6 +10,9 @@ project(MyCppProject VERSION 1.0)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
+# Enable all compiler warnings
+add_compile_options(-Wall)
+
 # Set raygui variables
 set(RAYGUI_HEADER_URL "https://raw.githubusercontent.com/raysan5/raygui/refs/heads/master/src/raygui.h")
 set(RAYGUI_HEADER_PATH "${CMAKE_BINARY_DIR}/raygui.h")
