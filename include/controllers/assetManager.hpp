@@ -52,7 +52,7 @@ public:
     void loadFont(const std::string& name, const std::string& filename, int fontSize);
 
     // Search for a directory and set the path to this directory
-    void searchAssetsDirectoryPath(std::string dir, int searchDepth);
+    void searchAssetsDirectoryPath(std::string dir, size_t searchDepth);
 
     // Set directories for assets
     void setTexturesDirectory(const std::string& folderName);

@@ -83,10 +83,10 @@ public:
     void render(){
         Color color = BASE_COLOR;
         if(mIsHovered){
-            color = ColorBrightness(color, -0.2);
+            color = ColorBrightness(color, -0.2f);
         }
         if(mIsPressed){
-            color = ColorBrightness(color, -0.4);
+            color = ColorBrightness(color, -0.4f);
         }
         DrawRectangleV(mPosition, mSize, color);
         DrawRectangleLinesEx(Rectangle{mPosition.x, mPosition.y, mSize.x, mSize.y}, 2, BLACK);
@@ -132,11 +132,11 @@ class TextBox : public GuiElement{
 private:
     char text[LUFUGUI_MAX_CHARS + 1] = "\0";
     int keyCount = 0;
-    int mTextSize = 20;
+    float mTextSize = 20;
     Font& mFont;
 
 public:
-    TextBox(const Vector2& rPosition, const Vector2& rSize, const int& rtextSize, Font& rFont) : GuiElement(rPosition, rSize), mTextSize(rtextSize), mFont(rFont) {}
+    TextBox(const Vector2& rPosition, const Vector2& rSize, const float& rtextSize, Font& rFont) : GuiElement(rPosition, rSize), mTextSize(rtextSize), mFont(rFont) {}
     //using GuiElement::GuiElement;
 
     void update(){

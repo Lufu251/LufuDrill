@@ -27,8 +27,8 @@ void GameRenderer::renderGrid(Grid& mapGrid){
     int yRenderAmount = (GetScreenHeight() / mapGrid.blockSize) / (2 * camera.zoom) +2; // Calculate how many tiles are viewed by the camera
 
     // Calculate the cameraTarget position on the grid
-    size_t iCamera = camera.target.x / mapGrid.blockSize;
-    size_t jCamera = camera.target.y / mapGrid.blockSize;
+    int iCamera = camera.target.x / mapGrid.blockSize;
+    int jCamera = camera.target.y / mapGrid.blockSize;
 
     // Loop over the amount of blocks that are visible
     for (int i = -xRenderAmount; i <= xRenderAmount; i++){
@@ -36,7 +36,7 @@ void GameRenderer::renderGrid(Grid& mapGrid){
             int iBlock = iCamera + i;
             int jBlock = jCamera + j;
             // Clamp to grid size
-            if(iBlock < 0 || iBlock >= mapGrid.sizeX || jBlock < 0 || jBlock >= mapGrid.sizeY){
+            if(iBlock < 0 || iBlock >= mapGrid.gridSizeX || jBlock < 0 || jBlock >= mapGrid.gridSizeY){
                 continue;
             }
 

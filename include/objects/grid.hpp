@@ -7,20 +7,20 @@
 
 class Grid
 {
-private:
+public:
     std::vector<Block> gridData;
 public:
     size_t blockSize;
-    size_t sizeX, sizeY;
+    size_t gridSizeX, gridSizeY;
 
     Grid(){}
-    Grid(size_t x, size_t y, size_t bS) : sizeX(x), sizeY(y), gridData(x*y), blockSize(bS){}
+    Grid(size_t x, size_t y, size_t bS) : gridSizeX(x), gridSizeY(y), gridData(x*y), blockSize(bS){}
 
     ~Grid(){}
 
     Block& operator() (size_t x, size_t y){
-        assert(x < sizeX);
-        assert(y < sizeY);
-        return gridData[sizeX * y + x];
+        assert(x < gridSizeX);
+        assert(y < gridSizeY);
+        return gridData[gridSizeX * y + x];
     }
 };

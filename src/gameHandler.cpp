@@ -12,21 +12,21 @@ GameHandler::~GameHandler(){}
 
 void GameHandler::handleInput(Vector2& rDirection){
     // Player input
-    if(IsKeyDown(KEY_A)) rDirection.x += -0.5;
-    if(IsKeyDown(KEY_D)) rDirection.x += 0.5;
+    if(IsKeyDown(KEY_A)) rDirection.x += -0.5f;
+    if(IsKeyDown(KEY_D)) rDirection.x += 0.5f;
     if(IsKeyDown(KEY_W)) rDirection.y += -1;
 }
 
 void GameHandler::generateTerrain(Grid& grid){
     // Pre init
-    for (size_t x = 0; x < grid.sizeX; x++){
-        for (size_t y = 0; y < grid.sizeY; y++){
+    for (size_t x = 0; x < grid.gridSizeX; x++){
+        for (size_t y = 0; y < grid.gridSizeY; y++){
             grid(x,y) = Block(EMPTY, {static_cast<float>(x * grid.blockSize), static_cast<float>(y * grid.blockSize)}, {static_cast<float>(grid.blockSize), static_cast<float>(grid.blockSize)});
         }
     }
 
-    for (size_t x = 0; x < grid.sizeX; x++){
-        for (size_t y = 0; y < grid.sizeY; y++){
+    for (size_t x = 0; x < grid.gridSizeX; x++){
+        for (size_t y = 0; y < grid.gridSizeY; y++){
             std::random_device dev;
             std::mt19937 rng(dev());
             std::uniform_int_distribution<std::mt19937::result_type> dist6(1,10);
@@ -102,7 +102,7 @@ std::vector<AABB> GameHandler::getPossibleCollisionsFromGrid(AABB& box, Grid& gr
             int jBlock = jPlayer + j;
 
             // Check if position is out of bound from grid and skip this loop
-            if (iBlock < 0 || iBlock >= grid.sizeX -1 || jBlock < 0 || jBlock >= grid.sizeY){
+            if (iBlock < 0 || iBlock >= grid.gridSizeX -1 || jBlock < 0 || jBlock >= grid.gridSizeY){
                 // Out of bound
                 //std::cout << "Collision check: Grid position is out ofbound" << iBlock << " " << jBlock << std::endl;
                 continue;
@@ -119,8 +119,8 @@ std::vector<AABB> GameHandler::getPossibleCollisionsFromGrid(AABB& box, Grid& gr
 void GameHandler::clampToGrid(AABB& box, Grid& grid){
     // Clamp box to grid
     Vector2 positionBeforeClamp = box.position;
-    box.position.x = std::clamp(box.position.x, 0.f, static_cast<float>(grid.sizeX * grid.blockSize - box.size.x));
-    box.position.y = std::clamp(box.position.y, 0.f, static_cast<float>(grid.sizeY * grid.blockSize - box.size.y));
+    box.position.x = std::clamp(box.position.x, 0.f, static_cast<float>(grid.gridSizeX * grid.blockSize - box.size.x));
+    box.position.y = std::clamp(box.position.y, 0.f, static_cast<float>(grid.gridSizeY * grid.blockSize - box.size.y));
     // If position was clamped set velocity to 0 in this axis
     if(positionBeforeClamp.x != box.position.x) box.velocity.x = 0;
     if(positionBeforeClamp.y != box.position.y) box.velocity.y = 0;

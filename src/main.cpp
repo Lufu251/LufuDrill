@@ -9,6 +9,8 @@
 #include <gameHandler.hpp>
 #include <gameRenderer.hpp>
 
+#include <fstream>
+
 int main(){
     // Declaration ----------------------------------------------------------------------------------
 
@@ -68,7 +70,7 @@ int main(){
     player = Player({200,200}, {24,24}, {0,0});
     mapGrid = Grid(200,1000, 32);
     gameHandler.generateTerrain(mapGrid);
-
+    
     // Camera initialise
     gameRenderer.camera.zoom = 2.0f;
     gameRenderer.camera.rotation = 0.0f;

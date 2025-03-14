@@ -56,7 +56,7 @@ public:
     static DataManager& getInstance();
 
     // Search for a directory and set the path to this directory
-    void searchDataDirectoryPath(std::string dir, int searchDepth);
+    void searchDataDirectoryPath(std::string dir, size_t searchDepth);
 
     // Loading setting configuration
     void loadSettingConfig(const std::string& name);

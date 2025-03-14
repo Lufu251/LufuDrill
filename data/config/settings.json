@@ -3,8 +3,8 @@
         "draft": "draft"
     },
     "window": {
-        "screenWidth": 600,
-        "screenHeight": 600,
+        "screenWidth": 1920,
+        "screenHeight": 1080,
         "fullscreen": false,
         "resizable": true
     },
