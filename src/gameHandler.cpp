@@ -102,7 +102,7 @@ std::vector<AABB> GameHandler::getPossibleCollisionsFromGrid(AABB& box, Grid& gr
             size_t jBlock = jPlayer + j;
 
             // Check if position is out of bound from grid and skip this loop
-            if (iBlock < 0 || iBlock >= grid.gridSizeX -1 || jBlock < 0 || jBlock >= grid.gridSizeY){
+            if (iBlock < 0 || iBlock >= grid.gridSizeX || jBlock < 0 || jBlock >= grid.gridSizeY){
                 // Out of bound
                 //std::cout << "Collision check: Grid position is out ofbound" << iBlock << " " << jBlock << std::endl;
                 continue;
