@@ -3,6 +3,8 @@
 #include <vector>
 #include <cassert>
 
+#include <nlohmann/json.hpp>
+
 #include <block.hpp>
 
 class Grid

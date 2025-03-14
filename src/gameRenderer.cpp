@@ -33,14 +33,14 @@ void GameRenderer::renderGrid(Grid& mapGrid){
     // Loop over the amount of blocks that are visible
     for (int i = -xRenderAmount; i <= xRenderAmount; i++){
         for (int j = -yRenderAmount; j <= yRenderAmount; j++){
-            int iBlock = iCamera + i;
-            int jBlock = jCamera + j;
+            size_t iBlock = iCamera + i;
+            size_t jBlock = jCamera + j;
             // Clamp to grid size
             if(iBlock < 0 || iBlock >= mapGrid.gridSizeX || jBlock < 0 || jBlock >= mapGrid.gridSizeY){
                 continue;
             }
 
-            Block* block = &mapGrid(iBlock, jBlock); // gSet the current block
+            Block* block = &mapGrid(iBlock, jBlock); // Set the current block
             switch (block->mType){
                 case EMPTY: DrawRectangle(block->position.x, block->position.y, mapGrid.blockSize, mapGrid.blockSize, RAYWHITE); break;
                 case DIRT: DrawTextureRec(tileset.texture, tileset.sections["DIRT"], block->position, WHITE); break;

@@ -41,6 +41,19 @@ int main(){
     // Member variables for game state
     Player player;
     Grid mapGrid;
+
+    // Convert the Grid object to JSON
+    nlohmann::json j = mapGrid;
+
+    // Write JSON to a file
+    std::ofstream file("../../data/saves/test.map");
+    if (file.is_open()) {
+        file << j.dump(4); // Pretty print with 4 spaces indentation
+        file.close();
+        std::cout << "Map data saved to grid_data.json\n";
+    } else {
+        std::cerr << "Failed to open file for writing!\n";
+    }
     
     // Initialization ---------------------------------------------------------------------------------
     // AssetManager
@@ -70,7 +83,7 @@ int main(){
     player = Player({200,200}, {24,24}, {0,0});
     mapGrid = Grid(200,1000, 32);
     gameHandler.generateTerrain(mapGrid);
-    
+
     // Camera initialise
     gameRenderer.camera.zoom = 2.0f;
     gameRenderer.camera.rotation = 0.0f;
@@ -79,7 +92,7 @@ int main(){
 
     while (!WindowShouldClose()){
         // Logic ----------------------------------------------------------------------------------
-        float deltaTime = GetFrameTime();
+        //float deltaTime = GetFrameTime();
 
         // Do updates on screen resize
         if(IsWindowResized()){
