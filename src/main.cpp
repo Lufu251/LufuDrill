@@ -62,11 +62,12 @@ int main(){
     fuelMenu.enable();
 
     dataManager.player = Player({200,200}, {24,24}, {0,0});
-    //dataManager.map = Grid(200,1000, 32);
+    dataManager.map = Grid(200,1000, 32);
     gameHandler.generateTerrain(dataManager.map);
 
     // Load Map from file
     dataManager.loadGameState("test.save");
+    //dataManager.saveGameState("test.save");
 
     // Camera initialise
     gameRenderer.camera.zoom = 2.0f;

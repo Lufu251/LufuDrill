@@ -45,7 +45,7 @@ void DataManager::loadGameState(const std::string& name){
     fromFile.close();
 
     // Load Map ---------------------------------------------------
-    map = json.get<Grid>(); // Convert JSON to Grid object
+    json.at("map").get_to(map); // Convert JSON to Grid object
     // Init map, set position and size ob aabb
     for (size_t x = 0; x < map.gridSizeX; x++){
         for (size_t y = 0; y < map.gridSizeY; y++){
@@ -55,7 +55,7 @@ void DataManager::loadGameState(const std::string& name){
     }
 
     // Load Player ---------------------------------------------------
-
+    //json.at("player").get_to(player);
 
     // Load Other ---------------------------------------------------
     // ...
@@ -65,8 +65,7 @@ void DataManager::saveGameState(const std::string& name){
     // Write JSON to a file
     nlohmann::json json = map;
     json = {
-        {"map", map}, // Convert the Grid object to JSON
-        {"player", map}
+        {"map", map} // Convert the Grid object to JSON
     }; 
 
 
