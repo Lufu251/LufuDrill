@@ -21,6 +21,7 @@ public:
     void initialize() override{
         //AssetManager& assetManager = AssetManager::getInstance();
         Font font = GetFontDefault();
+        guiElements["testText"] = std::make_shared<Text>(mPosition + Vector2{100,500}, Vector2{160,40}, "Test Text", 15, font);
         guiElements["closeButton"] = std::make_shared<Button>(mPosition + Vector2{580,0}, Vector2{20,20});
         guiElements["testTextButton"] = std::make_shared<TextButton>(mPosition + Vector2{100,100}, Vector2{160,40}, "Test Text", 15, font);
         guiElements["testButton"] = std::make_shared<Button>(mPosition + Vector2{100,400}, Vector2{160,40});
