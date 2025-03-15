@@ -10,10 +10,7 @@ public:
     bool mIsActive = false;
     Font mFont;
 
-    GuiContext(){
-
-    }
-    
+    GuiContext(){ }
     GuiContext(const Vector2& rPosition, const Vector2& rSize):mPosition{rPosition}, mSize{rSize}{}
     ~GuiContext(){}
     

@@ -1,7 +1,7 @@
 # Minimum required version of CMake
 cmake_minimum_required(VERSION 3.14)
 cmake_policy(SET CMP0135 NEW)
-#set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -fsanitize=address,undefined")
+set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -fsanitize=address,undefined")
 
 # Project name and version
 project(MyCppProject VERSION 1.0)
@@ -10,7 +10,7 @@ project(MyCppProject VERSION 1.0)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
-# Enable all compiler warnings
+# Enable compiler warnings
 add_compile_options(-Wall)
 
 # Set raygui variables
@@ -61,8 +61,10 @@ add_executable(${PROJECT_NAME} ${SOURCES})
 
 # Include directories for header files
 target_include_directories(${PROJECT_NAME} PRIVATE 
-    ${CMAKE_SOURCE_DIR}/include/controllers 
+    ${CMAKE_SOURCE_DIR}/include/controllers
     ${CMAKE_SOURCE_DIR}/include/objects
+    ${CMAKE_SOURCE_DIR}/include/scenes
+    ${CMAKE_SOURCE_DIR}/include/gui
     ${CMAKE_BINARY_DIR} 
 )
 

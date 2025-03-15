@@ -18,7 +18,7 @@ private:
 public:
     using GuiContext::GuiContext;
 
-    void initialize(){
+    void initialize() override{
         AssetManager& assetManager = AssetManager::getInstance();
         guiElements["closeButton"] = std::make_shared<Button>(mPosition + Vector2{580,0}, Vector2{20,20});
         guiElements["testButton"] = std::make_shared<Button>(mPosition + Vector2{100,100}, Vector2{80,20});
