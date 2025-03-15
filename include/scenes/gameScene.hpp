@@ -30,8 +30,6 @@ public:
         // Preload textureAtlas
         assetManager.loadTextureAtlas("tileset");
         assetManager.loadTextureAtlas("particleset");
-        // Preload font
-        assetManager.loadFont("roboto-regular", "Roboto-Regular.ttf", 32);
 
         // Load tools configuration
         dataManager.loadToolConfig("tools.json");
@@ -56,7 +54,7 @@ public:
         gameHandler.generateTerrain(dataManager.map);*/
 
         // Load Map from file
-        dataManager.loadGameState("test.save");
+        dataManager.loadGameState("save.sv");
         //dataManager.saveGameState("test.save");
     }
 

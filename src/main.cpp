@@ -14,11 +14,20 @@
 
 int main(){
     // Declaration ----------------------------------------------------------------------------------
+    // Access singleton classes
+    AssetManager& assetManager = AssetManager::getInstance();
+    DataManager& dataManager = DataManager::getInstance();
+    // AssetManager and DataManager search path
+    assetManager.searchAssetsDirectoryPath("assets", 3);
+    dataManager.searchDataDirectoryPath("data", 3);
+
+    // Preload font
+    assetManager.loadFont("roboto-regular", "Roboto-Regular.ttf", 16);
 
     // Set window parameters
     SetConfigFlags(FLAG_WINDOW_RESIZABLE);
     
-    InitWindow(500, 500, "LuFu_Drill");
+    InitWindow(dataManager.screenWidth, dataManager.screenHeight, "LuFu_Drill");
     SetTargetFPS(60);
     //SetWindowMinSize(500, 500);
     // SetWindowIcon(Image image);
@@ -29,17 +38,7 @@ int main(){
     std::unique_ptr<Scene> activeScene;
     activeScene = std::make_unique<GameScene>();
 
-    // Load DataManager and AssetManager befor anything else!
-    // Access singleton classes
-    AssetManager& assetManager = AssetManager::getInstance();
-    DataManager& dataManager = DataManager::getInstance();
-
     // Initialization ---------------------------------------------------------------------------------
-    // AssetManager and DataManager search path
-    assetManager.searchAssetsDirectoryPath("assets", 3);
-    dataManager.searchDataDirectoryPath("data", 3);
-
-    SetWindowSize(dataManager.screenWidth, dataManager.screenHeight);
 
     // initialize activeScene
     activeScene->initialize();

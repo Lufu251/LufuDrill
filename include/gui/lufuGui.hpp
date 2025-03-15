@@ -3,8 +3,27 @@
 #include <raylib.h>
 #include <raymath.h>
 
-#define LUFUGUI_MAX_CHARS 64
-#define BASE_COLOR BLUE
+// Define Style
+// -------------------------------------------------------
+// BASE
+#define BASE_COLOR (Color){ 0, 121, 241, 255 }
+#define BASE_BORDER_COLOR (Color){ 0, 0, 0, 255 }
+#define BASE_TEXT_COLOR (Color){ 0, 0, 0, 255 }
+
+// HOVER
+#define HOVERED_COLOR (Color){ 0, 101, 221, 255 }
+#define HOVERED_BORDER_COLOR (Color){ 0, 0, 0, 255 }
+#define HOVERED_TEXT_COLOR (Color){ 0, 0, 0, 255 }
+
+// ACTIVATED
+#define ACTIVATED_COLOR (Color){ 0, 81, 101, 255 }
+#define ACTIVATED_BORDER_COLOR (Color){ 0, 0, 0, 255 }
+#define ACTIVATED_TEXT_COLOR (Color){ 0, 0, 0, 255 }
+
+// GENERAL
+#define BORDER_SIZE 2
+#define TEXT_SPACING 2
+// -------------------------------------------------------
 
 class GuiElement{
     public:
@@ -15,20 +34,19 @@ class GuiElement{
     bool mIsPressed = false;
     bool mIsLongPressed = false;
     bool mIsSelected = false;
+    bool mIsToggled = false;
 
+    GuiElement(){}
     GuiElement(const Vector2& rPosition, const Vector2& rSize):mPosition{rPosition}, mSize{rSize}{}
+    
     virtual ~GuiElement(){}
 
     virtual void render() = 0;
+    virtual void update() = 0;
 
-    virtual void update(){
-        updateHovered();
-        updatePressed();
-        updateDown();
-        updateSelect();
-    }
+    protected:
+    
 
-    private:
     // Check if the element is hovered.
     void updateHovered(){
         Vector2 mouseP = GetMousePosition();
@@ -67,57 +85,6 @@ class GuiElement{
             mIsSelected = false;
         }
     }
-};
-
-class Button : public GuiElement{
-private:
-    /* data */
-public:
-    using GuiElement::GuiElement;
-
-    void update(){
-        GuiElement::update();
-        // TODO add functions for this specific element
-    }
-
-    void render(){
-        Color color = BASE_COLOR;
-        if(mIsHovered){
-            color = ColorBrightness(color, -0.2f);
-        }
-        if(mIsPressed){
-            color = ColorBrightness(color, -0.4f);
-        }
-        DrawRectangleV(mPosition, mSize, color);
-        DrawRectangleLinesEx(Rectangle{mPosition.x, mPosition.y, mSize.x, mSize.y}, 2, BLACK);
-    }
-};
-
-class Toggle : public GuiElement{
-private:
-
-public:
-    bool mIsToggled = false;
-
-    using GuiElement::GuiElement;
-
-    void update(){
-        GuiElement::update();
-        updateToggled();
-        // TODO add functions for this specific element
-    }
-
-    void render(){
-        Color color = BASE_COLOR;
-        DrawRectangleV(mPosition, mSize, color);
-
-        if(mIsToggled){
-            DrawLineEx(mPosition, mPosition + mSize, 2, BLACK);
-            DrawLineEx(mPosition + Vector2{mSize.x, 0.f}, mPosition + Vector2{0.f, mSize.y}, 2, BLACK);
-            
-        }
-        DrawRectangleLinesEx(Rectangle{mPosition.x, mPosition.y, mSize.x, mSize.y}, 2, BLACK);
-    }
 
     // Check if the element is Selected. Pressed and Hovered must be called before this.
     void updateToggled(){
@@ -125,55 +92,120 @@ public:
             mIsToggled = !mIsToggled;
         }
     }
-
 };
 
-class TextBox : public GuiElement{
+class Text : public GuiElement{
 private:
-    char text[LUFUGUI_MAX_CHARS + 1] = "\0";
-    int keyCount = 0;
-    float mTextSize = 20;
-    Font& mFont;
+    std::string mText;
+    float mTextSize;
+    Font mFont;
+    Vector2 mTextMeasure = MeasureTextEx(mFont, mText.c_str(), mTextSize, TEXT_SPACING);
 
 public:
-    TextBox(const Vector2& rPosition, const Vector2& rSize, const float& rtextSize, Font& rFont) : GuiElement(rPosition, rSize), mTextSize(rtextSize), mFont(rFont) {}
-    //using GuiElement::GuiElement;
+    Text(){}
+    Text(const Vector2& rPosition, const Vector2& rSize, const std::string& rtext, const float& rtextSize, Font& rFont) : GuiElement(rPosition, rSize), mText(rtext), mTextSize(rtextSize), mFont(rFont){}
 
     void update(){
-        GuiElement::update();
-        updateText();
+        // Do nothing only displays text
+    }
+
+    void render(){
+        Vector2 textOffset = (mSize - mTextMeasure) /2;
+        DrawTextEx(mFont, mText.c_str(), mPosition + textOffset , mTextSize, TEXT_SPACING, BASE_TEXT_COLOR);
+    }
+};
+
+class TextButton : public GuiElement{
+private:
+    std::string mText;
+    float mTextSize;
+    Font mFont;
+    Vector2 mTextMeasure = MeasureTextEx(mFont, mText.c_str(), mTextSize, TEXT_SPACING);
+
+public:
+    TextButton(){}
+    TextButton(const Vector2& rPosition, const Vector2& rSize, const std::string& rtext, const float& rtextSize, Font& rFont) : GuiElement(rPosition, rSize), mText(rtext), mTextSize(rtextSize), mFont(rFont){}
+
+    void update(){
+        updateHovered();
+        updatePressed();
+        updateDown();
+    }
+
+    void render(){
+        Vector2 textOffset = (mSize - mTextMeasure) /2;
+        if(mIsPressed){
+            DrawRectangleV(mPosition, mSize, ACTIVATED_COLOR);
+            DrawRectangleLinesEx(Rectangle{mPosition.x, mPosition.y, mSize.x, mSize.y}, BORDER_SIZE, ACTIVATED_BORDER_COLOR);
+            DrawTextEx(mFont, mText.c_str(), mPosition + textOffset , mTextSize, TEXT_SPACING, ACTIVATED_TEXT_COLOR);
+        }
+        else if(mIsHovered){
+            DrawRectangleV(mPosition, mSize, HOVERED_COLOR);
+            DrawRectangleLinesEx(Rectangle{mPosition.x, mPosition.y, mSize.x, mSize.y}, BORDER_SIZE, HOVERED_BORDER_COLOR);
+            DrawTextEx(mFont, mText.c_str(), mPosition + textOffset , mTextSize, TEXT_SPACING, HOVERED_TEXT_COLOR);
+        }
+        else{
+            DrawRectangleV(mPosition, mSize, BASE_COLOR);
+            DrawRectangleLinesEx(Rectangle{mPosition.x, mPosition.y, mSize.x, mSize.y}, BORDER_SIZE, BASE_BORDER_COLOR);
+            DrawTextEx(mFont, mText.c_str(), mPosition + textOffset , mTextSize, TEXT_SPACING, BASE_TEXT_COLOR);
+        }
+    }
+};
+
+class Button : public GuiElement{
+private:
+
+public:
+    Button(){}
+    Button(const Vector2& rPosition, const Vector2& rSize) : GuiElement(rPosition, rSize){}
+
+    void update(){
+        updateHovered();
+        updatePressed();
+        updateDown();
+    }
+
+    void render(){
+        if(mIsPressed){
+            DrawRectangleV(mPosition, mSize, ACTIVATED_COLOR);
+            DrawRectangleLinesEx(Rectangle{mPosition.x, mPosition.y, mSize.x, mSize.y}, BORDER_SIZE, ACTIVATED_BORDER_COLOR);
+        }
+        else if(mIsHovered){
+            DrawRectangleV(mPosition, mSize, HOVERED_COLOR);
+            DrawRectangleLinesEx(Rectangle{mPosition.x, mPosition.y, mSize.x, mSize.y}, BORDER_SIZE, HOVERED_BORDER_COLOR);
+        }
+        else{
+            DrawRectangleV(mPosition, mSize, BASE_COLOR);
+            DrawRectangleLinesEx(Rectangle{mPosition.x, mPosition.y, mSize.x, mSize.y}, BORDER_SIZE, BASE_BORDER_COLOR);
+        }
+    }
+};
+
+class Toggle : public GuiElement{
+private:
+
+public:
+    using GuiElement::GuiElement;
+
+    void update(){
+        updateHovered();
+        updatePressed();
+        updateDown();
+        updateSelect();
+        updateToggled();
         // TODO add functions for this specific element
     }
 
     void render(){
-        DrawRectangleV(mPosition, mSize, BASE_COLOR);
-        DrawTextEx(mFont, text, mPosition + Vector2{2,0}, mTextSize, 1, BLACK);
-        DrawRectangleLinesEx(Rectangle{mPosition.x, mPosition.y, mSize.x, mSize.y}, 2, BLACK);
-    }
-
-    void updateText(){
-        int key = GetCharPressed();
-        // Only type when element is selected
-        if(mIsSelected){
-            // Check if max chars is not reached
-            if(keyCount < LUFUGUI_MAX_CHARS){
-                // Filter which keys can be typed
-                if (((key >= 48) && (key <= 57)) || ((key >= 65) && (key <= 90)) || ((key >= 97) && (key <= 122)) || (key == 45) || (key == 95)){ // Allow key 0-9 || A-Z || a-z || - || _
-                    // Check if any key is pressed
-                    if(key != 0){
-                        text[keyCount] = (char)key;
-                        keyCount ++;
-                    }
-                }
-            }
+        if(mIsToggled){
+            DrawRectangleV(mPosition, mSize, BASE_COLOR);
+            DrawRectangleLinesEx(Rectangle{mPosition.x, mPosition.y, mSize.x, mSize.y}, 2, BASE_BORDER_COLOR);
+            DrawLineEx(mPosition + Vector2{1,1}, mPosition + mSize, 2, BASE_BORDER_COLOR);
+            DrawLineEx(mPosition + Vector2{mSize.x, 0.f}, mPosition + Vector2{0.f, mSize.y} + Vector2{1,-1}, 2, BASE_BORDER_COLOR);
         }
-
-        if(IsKeyPressed(KEY_BACKSPACE)){
-            // Check if text is already empty and nothing can be erased
-            if(keyCount > 0){
-                keyCount --;
-                text[keyCount] = '\0';
-            }
+        else{
+            DrawRectangleV(mPosition, mSize, BASE_COLOR);
+            DrawRectangleLinesEx(Rectangle{mPosition.x, mPosition.y, mSize.x, mSize.y}, 2, BASE_BORDER_COLOR);
         }
     }
 };
