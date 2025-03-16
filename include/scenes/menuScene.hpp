@@ -13,9 +13,11 @@
 
 class MenuScene : public Scene{
 private:
-    std::map<std::string, std::shared_ptr<GuiElement>> guiElements;
-
     Vector2 anchor;
+    lufu_gui::Text titelText;
+    lufu_gui::TextButton startTextButton;
+    lufu_gui::TextButton resumeTextButton;
+    lufu_gui::TextButton exitTextButton;
 
     // Access singleton classes
     AssetManager& assetManager = AssetManager::getInstance();
@@ -29,10 +31,11 @@ public:
         // Set anchor to the middle of the screen
         anchor = {GetScreenWidth() / 2.0f, GetScreenHeight() / 2.0f};
 
-        guiElements["titelTextBox"] = std::make_shared<TextBox>(anchor - Vector2{200,100}, Vector2{200,50}, 60, assetManager.getFont("roboto-regular"));
-        guiElements["startTextBox"] = std::make_shared<TextBox>(anchor + Vector2{200,300}, Vector2{100,20}, 18, assetManager.getFont("roboto-regular"));
-        guiElements["resumeTextBox"] = std::make_shared<TextBox>(anchor + Vector2{200,500}, Vector2{100,20}, 18, assetManager.getFont("roboto-regular"));
-        guiElements["exitTextBox"] = std::make_shared<TextBox>(anchor + Vector2{200,700}, Vector2{100,20}, 18, assetManager.getFont("roboto-regular"));
+        Font font = GetFontDefault();
+        titelText = lufu_gui::Text(anchor - Vector2{200,100}, Vector2{200,50},"LufuDrill", 32, font);
+        startTextButton = lufu_gui::TextButton(anchor + Vector2{200,300}, Vector2{100,20},"Start", 16, font);
+        resumeTextButton = lufu_gui::TextButton(anchor + Vector2{200,500}, Vector2{100,20},"Resume", 16, font);
+        exitTextButton = lufu_gui::TextButton(anchor + Vector2{200,700}, Vector2{100,20},"Exit", 16, font);
     }
 
     void update() override {
@@ -41,15 +44,10 @@ public:
             anchor = {GetScreenWidth() / 2.0f, GetScreenHeight() / 2.0f};
         }
 
-        for(auto [key, guiElement] : guiElements){
-            guiElement->update();
-        }
     }
 
     void render() override {
     // Draw GuiElements
-        for(auto [key, guiElement] : guiElements){
-            guiElement->render();
-        }
+
     }
 };

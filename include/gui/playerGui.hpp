@@ -12,7 +12,6 @@
 
 class PlayerGui : virtual public GuiContext{
 private:
-    std::map<std::string, std::shared_ptr<GuiElement>> guiElements;
     
 public:
     using GuiContext::GuiContext;

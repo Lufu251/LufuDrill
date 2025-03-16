@@ -5,6 +5,7 @@
 
 #include <scene.hpp>
 #include <gameScene.hpp>
+#include <menuScene.hpp>
 #include <assetManager.hpp>
 #include <dataManager.hpp>
 #include <gameHandler.hpp>

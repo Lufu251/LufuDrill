@@ -13,12 +13,12 @@
 
 class FuelMenu : virtual public GuiContext{
 private:
-    Text testText;
-    Button closeButton;
-    TextButton testTextButton;
-    Button testButton;
-    Toggle testToggle;
-    ProgressBar testProgressBar;
+    lufu_gui::Text testText;
+    lufu_gui::Button closeButton;
+    lufu_gui::TextButton testTextButton;
+    lufu_gui::Button testButton;
+    lufu_gui::Toggle testToggle;
+    lufu_gui::ProgressBar testProgressBar;
     
 public:
     using GuiContext::GuiContext;
@@ -26,12 +26,12 @@ public:
     void initialize() override{
         //AssetManager& assetManager = AssetManager::getInstance();
         Font font = GetFontDefault();
-        testText = Text(mPosition + Vector2{100,500}, Vector2{160,40}, "Test Text", 15, font);
-        closeButton = Button(mPosition + Vector2{580,0}, Vector2{20,20});
-        testTextButton = TextButton(mPosition + Vector2{100,100}, Vector2{160,40}, "Test Text", 15, font);
-        testButton = Button(mPosition + Vector2{100,400}, Vector2{160,40});
-        testToggle = Toggle(mPosition + Vector2{500,100}, Vector2{20,20});
-        testProgressBar = ProgressBar(mPosition + Vector2{10,10}, Vector2{400,20});
+        testText = lufu_gui::Text(mPosition + Vector2{100,500}, Vector2{160,40}, "Test Text", 15, font);
+        closeButton = lufu_gui::Button(mPosition + Vector2{580,0}, Vector2{20,20});
+        testTextButton = lufu_gui::TextButton(mPosition + Vector2{100,100}, Vector2{160,40}, "Test Text", 15, font);
+        testButton = lufu_gui::Button(mPosition + Vector2{100,400}, Vector2{160,40});
+        testToggle = lufu_gui::Toggle(mPosition + Vector2{500,100}, Vector2{20,20});
+        testProgressBar = lufu_gui::ProgressBar(mPosition + Vector2{10,10}, Vector2{400,20});
     }
 
     void update() override {
