@@ -31,7 +31,7 @@ int main(void){
     InitWindow(dataManager.screenWidth, dataManager.screenHeight, "LuFu_Drill");
     SetExitKey(KEY_NULL);
     SetTargetFPS(60);
-    SetWindowMinSize(500, 500);
+    SetWindowMinSize(800, 800);
     // SetWindowIcon(Image image);
     //ToggleFullscreen(); // Toggle window state: fullscreen/windowed, resizes monitor to match window resolution
     //ToggleBorderlessWindowed(); // Toggle window state: borderless windowed, resizes window to match monitor resolution

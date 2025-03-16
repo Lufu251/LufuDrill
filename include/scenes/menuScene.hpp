@@ -45,7 +45,7 @@ public:
         
         // Update anchor to be in the middle of the window
         if(IsWindowResized()){
-            anchor = {GetScreenWidth() / 2.0f, GetScreenHeight() / 2.0f};
+            anchor = {GetScreenWidth() / 2.0f, GetScreenHeight() / 2.0f - 200};
         }
 
         titelText.setPosition(anchor + Vector2{0,0} - titelText.mSize /2);
