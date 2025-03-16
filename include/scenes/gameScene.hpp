@@ -33,7 +33,6 @@ public:
 
         // Load tools configuration
         dataManager.loadToolConfig("tools.json");
-        dataManager.loadSettingConfig("settings.json");
 
         playerGui = PlayerGui({0,0}, {static_cast<float>(GetScreenWidth()), static_cast<float>(GetScreenHeight())});
         playerGui.initialize();
@@ -50,15 +49,13 @@ public:
         gameRenderer.setCameraOffset({GetScreenWidth() / 2.0f - dataManager.player.size.x, GetScreenHeight() / 2.0f - dataManager.player.size.y});
 
         dataManager.player = Player({200,200}, {24,24}, {0,0});
-        /*dataManager.map = Grid(200,1000, 32);
-        gameHandler.generateTerrain(dataManager.map);*/
+        
 
-        // Load Map from file
-        dataManager.loadGameState("save.sv");
-        //dataManager.saveGameState("test.save");
+        
     }
 
     void update() override {
+        //float deltaTime = GetFrameTime();
         // Do updates on screen resize
         if(IsWindowResized()){
             gameRenderer.setCameraOffset({GetScreenWidth() / 2.0f - dataManager.player.size.x, GetScreenHeight() / 2.0f - dataManager.player.size.y});
@@ -102,6 +99,9 @@ public:
     }
 
     void render() override {
+        // Clear Screen for the new render cycle
+        ClearBackground(PURPLE);
+
         gameRenderer.renderGrid(dataManager.map);
         gameRenderer.renderPlayer(dataManager.player);
 

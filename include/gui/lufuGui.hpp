@@ -39,8 +39,19 @@ namespace lufu_gui{
         bool mIsSelected = false;
         bool mIsToggled = false;
 
+        virtual void update() = 0;
+        virtual void render() = 0;
+
+        void setPosition(const Vector2& rPosition){
+            mPosition = rPosition;
+        }
+        void setSize(const Vector2& rSize){
+            mSize = rSize;
+        }
+
         protected:
         GuiElement(){}
+        GuiElement(const Vector2& rPosition):mPosition{rPosition}{}
         GuiElement(const Vector2& rPosition, const Vector2& rSize):mPosition{rPosition}, mSize{rSize}{}
         
         virtual ~GuiElement(){}
@@ -97,19 +108,19 @@ namespace lufu_gui{
         std::string mText;
         float mTextSize;
         Font mFont;
-        Vector2 mTextMeasure = MeasureTextEx(mFont, mText.c_str(), mTextSize, TEXT_SPACING);
 
     public:
         Text(){}
-        Text(const Vector2& rPosition, const Vector2& rSize, const std::string& rtext, const float& rtextSize, Font& rFont) : GuiElement(rPosition, rSize), mText(rtext), mTextSize(rtextSize), mFont(rFont){}
+        Text(const Vector2& rPosition, const std::string& rtext, const float& rtextSize, Font& rFont) : mText(rtext), mTextSize(rtextSize), mFont(rFont){
+            mSize = MeasureTextEx(mFont, mText.c_str(), mTextSize, TEXT_SPACING);
+        }
 
-        void update(){
+        void update() override{
             // Do nothing only displays text
         }
 
-        void render(){
-            Vector2 textOffset = (mSize - mTextMeasure) /2;
-            DrawTextEx(mFont, mText.c_str(), mPosition + textOffset , mTextSize, TEXT_SPACING, BASE_TEXT_COLOR);
+        void render() override{
+            DrawTextEx(mFont, mText.c_str(), mPosition , mTextSize, TEXT_SPACING, BASE_TEXT_COLOR);
         }
     };
 
@@ -121,14 +132,18 @@ namespace lufu_gui{
         ProgressBar(){}
         ProgressBar(const Vector2& rPosition, const Vector2& rSize) : GuiElement(rPosition, rSize){}
 
-        void update(const float& rProgress){
-            mProgress = rProgress;
+        void update() override{
+            
         }
 
-        void render(){
+        void render() override{
             DrawRectangleV(mPosition, mSize, BASE_COLOR);
             DrawRectangleV(mPosition, Vector2Multiply(mSize, {mProgress, 1}), SECONDARY_COLOR);
             DrawRectangleLinesEx(Rectangle{mPosition.x, mPosition.y, mSize.x, mSize.y}, BORDER_SIZE, BASE_BORDER_COLOR);
+        }
+
+        void setProgress(const float& rProgress){
+            mProgress = rProgress;
         }
     };
 
@@ -143,13 +158,13 @@ namespace lufu_gui{
         TextButton(){}
         TextButton(const Vector2& rPosition, const Vector2& rSize, const std::string& rtext, const float& rtextSize, Font& rFont) : GuiElement(rPosition, rSize), mText(rtext), mTextSize(rtextSize), mFont(rFont){}
 
-        void update(){
+        void update() override{
             updateHovered();
             updatePressed();
             updateDown();
         }
 
-        void render(){
+        void render() override{
             Vector2 textOffset = (mSize - mTextMeasure) /2;
             if(mIsPressed){
                 DrawRectangleV(mPosition, mSize, ACTIVATED_COLOR);
@@ -181,13 +196,13 @@ namespace lufu_gui{
         Button(){}
         Button(const Vector2& rPosition, const Vector2& rSize) : GuiElement(rPosition, rSize){}
 
-        void update(){
+        void update() override{
             updateHovered();
             updatePressed();
             updateDown();
         }
 
-        void render(){
+        void render() override{
             if(mIsPressed){
                 DrawRectangleV(mPosition, mSize, ACTIVATED_COLOR);
                 DrawRectangleLinesEx(Rectangle{mPosition.x, mPosition.y, mSize.x, mSize.y}, BORDER_SIZE, ACTIVATED_BORDER_COLOR);
@@ -214,7 +229,7 @@ namespace lufu_gui{
         Toggle(){}
         Toggle(const Vector2& rPosition, const Vector2& rSize) : GuiElement(rPosition, rSize){}
 
-        void update(){
+        void update() override{
             updateHovered();
             updatePressed();
             updateDown();
@@ -222,7 +237,7 @@ namespace lufu_gui{
             // TODO add functions for this specific element
         }
 
-        void render(){
+        void render() override{
             if(mIsToggled){
                 DrawRectangleV(mPosition, mSize, BASE_COLOR);
                 DrawRectangleLinesEx(Rectangle{mPosition.x, mPosition.y, mSize.x, mSize.y}, 2, BASE_BORDER_COLOR);

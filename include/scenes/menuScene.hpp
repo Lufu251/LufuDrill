@@ -10,6 +10,8 @@
 #include <lufuGui.hpp>
 #include <assetManager.hpp>
 #include <dataManager.hpp>
+#include <gameHandler.hpp>
+#include <gameScene.hpp>
 
 class MenuScene : public Scene{
 private:
@@ -32,22 +34,60 @@ public:
         anchor = {GetScreenWidth() / 2.0f, GetScreenHeight() / 2.0f};
 
         Font font = GetFontDefault();
-        titelText = lufu_gui::Text(anchor - Vector2{200,100}, Vector2{200,50},"LufuDrill", 32, font);
-        startTextButton = lufu_gui::TextButton(anchor + Vector2{200,300}, Vector2{100,20},"Start", 16, font);
-        resumeTextButton = lufu_gui::TextButton(anchor + Vector2{200,500}, Vector2{100,20},"Resume", 16, font);
-        exitTextButton = lufu_gui::TextButton(anchor + Vector2{200,700}, Vector2{100,20},"Exit", 16, font);
+        titelText = lufu_gui::Text({0,0},"LufuDrill", 50, font);
+        startTextButton = lufu_gui::TextButton({0,0}, {200,40},"Start", 20, font);
+        resumeTextButton = lufu_gui::TextButton({0,0}, {200,40},"Resume", 20, font);
+        exitTextButton = lufu_gui::TextButton({0,0}, {200,40},"Exit", 20, font);
     }
 
     void update() override {
+        GameHandler gameHandler;
+        
         // Update anchor to be in the middle of the window
         if(IsWindowResized()){
             anchor = {GetScreenWidth() / 2.0f, GetScreenHeight() / 2.0f};
         }
 
+        titelText.setPosition(anchor + Vector2{0,-200} - titelText.mSize /2);
+        startTextButton.setPosition(anchor + Vector2{0,0} - startTextButton.mSize /2);
+        resumeTextButton.setPosition(anchor + Vector2{0,50} - resumeTextButton.mSize /2);
+        exitTextButton.setPosition(anchor + Vector2{0,200} - exitTextButton.mSize /2);
+
+        titelText.update();
+        startTextButton.update();
+        resumeTextButton.update();
+        exitTextButton.update();
+
+        if(startTextButton.mIsPressed){
+            // Generate map
+            dataManager.map = Grid(200,1000, 32);
+            gameHandler.generateTerrain(dataManager.map);
+
+            // Load scene
+            dataManager.activeScene = std::make_unique<GameScene>();
+            dataManager.activeScene->initialize();
+        }
+        if(resumeTextButton.mIsPressed){
+            // Load Map from file
+            dataManager.loadGameState("save.sv");
+
+            // Load scene
+            dataManager.activeScene = std::make_unique<GameScene>();
+            dataManager.activeScene->initialize();
+        }
+        if(exitTextButton.mIsPressed){
+            dataManager.windowOpen = false;
+        }
     }
 
     void render() override {
-    // Draw GuiElements
+        // Clear Screen for the new render cycle
+        ClearBackground(RAYWHITE);
 
+        // Draw GuiElements
+        titelText.render();
+        startTextButton.render();
+        resumeTextButton.render();
+        exitTextButton.render();
     }
 };

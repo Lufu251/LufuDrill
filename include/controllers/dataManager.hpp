@@ -9,6 +9,7 @@
 #include <tools.hpp>
 #include <grid.hpp>
 #include <player.hpp>
+#include <scene.hpp>
 
 class DataManager
 {
@@ -19,9 +20,6 @@ private:
     // Disable copy and assignment
     DataManager(const DataManager&) = delete;
     DataManager& operator=(const DataManager&) = delete;
-
-    // Private helper methods for loading
-    
 
     // Private string for data folder path
     std::string dataPath;
@@ -40,6 +38,12 @@ private:
     std::vector<Equipment> equipments; // Stores all tools that can be bought
 
 public:
+    // Scene
+    std::unique_ptr<Scene> activeScene;
+
+    // Window is still running
+    bool windowOpen = true;
+
     // GameState
     Player player;
     Grid map;

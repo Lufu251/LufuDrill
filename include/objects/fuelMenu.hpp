@@ -26,7 +26,7 @@ public:
     void initialize() override{
         //AssetManager& assetManager = AssetManager::getInstance();
         Font font = GetFontDefault();
-        testText = lufu_gui::Text(mPosition + Vector2{100,500}, Vector2{160,40}, "Test Text", 15, font);
+        testText = lufu_gui::Text(mPosition + Vector2{100,500}, "Test Text", 15, font);
         closeButton = lufu_gui::Button(mPosition + Vector2{580,0}, Vector2{20,20});
         testTextButton = lufu_gui::TextButton(mPosition + Vector2{100,100}, Vector2{160,40}, "Test Text", 15, font);
         testButton = lufu_gui::Button(mPosition + Vector2{100,400}, Vector2{160,40});
@@ -36,15 +36,15 @@ public:
 
     void update() override {
         // Check if menu is active
-            if(mIsActive){
-            
+        if(mIsActive){
             // Update GuiElements
             testText.update();
             closeButton.update();
             testTextButton.update();
             testButton.update();
             testToggle.update();
-            testProgressBar.update(0.5f);
+            testProgressBar.update();
+            testProgressBar.setProgress(0.5f);
 
             if(closeButton.mIsPressed){
                 disable();
