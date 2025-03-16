@@ -12,8 +12,9 @@
 
 #include <fstream>
 
-int main(){
-    // Declaration ----------------------------------------------------------------------------------
+int main(void){
+    // Declaration
+    // ----------------------------------------------------------------------------------
     // Access singleton classes
     AssetManager& assetManager = AssetManager::getInstance();
     DataManager& dataManager = DataManager::getInstance();
@@ -38,19 +39,22 @@ int main(){
     std::unique_ptr<Scene> activeScene;
     activeScene = std::make_unique<GameScene>();
 
-    // Initialization ---------------------------------------------------------------------------------
+    // Initialization
+    // ---------------------------------------------------------------------------------
 
     // initialize activeScene
     activeScene->initialize();
 
     while (!WindowShouldClose()){
-        // Logic ----------------------------------------------------------------------------------
+        // Logic
+        // ----------------------------------------------------------------------------------
         //float deltaTime = GetFrameTime();
 
         // Update activeScene
         activeScene->update();
         
-        // Draw ----------------------------------------------------------------------------------
+        // Draw
+        // ----------------------------------------------------------------------------------
         BeginDrawing();
             // Clear Screen for the new render cycle
             ClearBackground(PURPLE);
@@ -63,6 +67,11 @@ int main(){
 
     // Cleanup resources and close raylib
     assetManager.cleanup();
-    CloseWindow();
+
+    // De-Initialization
+    //--------------------------------------------------------------------------------------
+    CloseWindow();        // Close window and OpenGL context
+    //--------------------------------------------------------------------------------------
+
     return 0;
 }

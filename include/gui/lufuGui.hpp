@@ -21,6 +21,7 @@
 #define ACTIVATED_TEXT_COLOR (Color){ 0, 0, 0, 255 }
 
 // GENERAL
+#define SECONDARY_COLOR (Color){ 255, 0, 0, 255 }
 #define BORDER_SIZE 2
 #define TEXT_SPACING 2
 // -------------------------------------------------------
@@ -35,17 +36,12 @@ class GuiElement{
     bool mIsLongPressed = false;
     bool mIsSelected = false;
     bool mIsToggled = false;
-
+    
+    protected:
     GuiElement(){}
     GuiElement(const Vector2& rPosition, const Vector2& rSize):mPosition{rPosition}, mSize{rSize}{}
     
     virtual ~GuiElement(){}
-
-    virtual void render() = 0;
-    virtual void update() = 0;
-
-    protected:
-    
 
     // Check if the element is hovered.
     void updateHovered(){
@@ -115,6 +111,25 @@ public:
     }
 };
 
+class ProgressBar : public GuiElement{
+private:
+    float mProgress = 0;
+
+public:
+    ProgressBar(){}
+    ProgressBar(const Vector2& rPosition, const Vector2& rSize) : GuiElement(rPosition, rSize){}
+
+    void update(const float& rProgress){
+        mProgress = rProgress;
+    }
+
+    void render(){
+        DrawRectangleV(mPosition, mSize, BASE_COLOR);
+        DrawRectangleV(mPosition, Vector2Multiply(mSize, {mProgress, 1}), SECONDARY_COLOR);
+        DrawRectangleLinesEx(Rectangle{mPosition.x, mPosition.y, mSize.x, mSize.y}, BORDER_SIZE, BASE_BORDER_COLOR);
+    }
+};
+
 class TextButton : public GuiElement{
 private:
     std::string mText;
@@ -135,6 +150,11 @@ public:
     void render(){
         Vector2 textOffset = (mSize - mTextMeasure) /2;
         if(mIsPressed){
+            DrawRectangleV(mPosition, mSize, ACTIVATED_COLOR);
+            DrawRectangleLinesEx(Rectangle{mPosition.x, mPosition.y, mSize.x, mSize.y}, BORDER_SIZE, ACTIVATED_BORDER_COLOR);
+            DrawTextEx(mFont, mText.c_str(), mPosition + textOffset , mTextSize, TEXT_SPACING, ACTIVATED_TEXT_COLOR);
+        }
+        else if(mIsLongPressed){
             DrawRectangleV(mPosition, mSize, ACTIVATED_COLOR);
             DrawRectangleLinesEx(Rectangle{mPosition.x, mPosition.y, mSize.x, mSize.y}, BORDER_SIZE, ACTIVATED_BORDER_COLOR);
             DrawTextEx(mFont, mText.c_str(), mPosition + textOffset , mTextSize, TEXT_SPACING, ACTIVATED_TEXT_COLOR);
@@ -170,6 +190,10 @@ public:
             DrawRectangleV(mPosition, mSize, ACTIVATED_COLOR);
             DrawRectangleLinesEx(Rectangle{mPosition.x, mPosition.y, mSize.x, mSize.y}, BORDER_SIZE, ACTIVATED_BORDER_COLOR);
         }
+        else if(mIsLongPressed){
+            DrawRectangleV(mPosition, mSize, ACTIVATED_COLOR);
+            DrawRectangleLinesEx(Rectangle{mPosition.x, mPosition.y, mSize.x, mSize.y}, BORDER_SIZE, ACTIVATED_BORDER_COLOR);
+        }
         else if(mIsHovered){
             DrawRectangleV(mPosition, mSize, HOVERED_COLOR);
             DrawRectangleLinesEx(Rectangle{mPosition.x, mPosition.y, mSize.x, mSize.y}, BORDER_SIZE, HOVERED_BORDER_COLOR);
@@ -185,13 +209,13 @@ class Toggle : public GuiElement{
 private:
 
 public:
-    using GuiElement::GuiElement;
+    Toggle(){}
+    Toggle(const Vector2& rPosition, const Vector2& rSize) : GuiElement(rPosition, rSize){}
 
     void update(){
         updateHovered();
         updatePressed();
         updateDown();
-        updateSelect();
         updateToggled();
         // TODO add functions for this specific element
     }
@@ -209,3 +233,10 @@ public:
         }
     }
 };
+
+
+
+/*
+TODO
+ProgressBar
+*/

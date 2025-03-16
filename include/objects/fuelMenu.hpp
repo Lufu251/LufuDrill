@@ -13,7 +13,12 @@
 
 class FuelMenu : virtual public GuiContext{
 private:
-    std::map<std::string, std::shared_ptr<GuiElement>> guiElements;
+    Text testText;
+    Button closeButton;
+    TextButton testTextButton;
+    Button testButton;
+    Toggle testToggle;
+    ProgressBar testProgressBar;
     
 public:
     using GuiContext::GuiContext;
@@ -21,11 +26,12 @@ public:
     void initialize() override{
         //AssetManager& assetManager = AssetManager::getInstance();
         Font font = GetFontDefault();
-        guiElements["testText"] = std::make_shared<Text>(mPosition + Vector2{100,500}, Vector2{160,40}, "Test Text", 15, font);
-        guiElements["closeButton"] = std::make_shared<Button>(mPosition + Vector2{580,0}, Vector2{20,20});
-        guiElements["testTextButton"] = std::make_shared<TextButton>(mPosition + Vector2{100,100}, Vector2{160,40}, "Test Text", 15, font);
-        guiElements["testButton"] = std::make_shared<Button>(mPosition + Vector2{100,400}, Vector2{160,40});
-        guiElements["testToggle"] = std::make_shared<Toggle>(mPosition + Vector2{500,100}, Vector2{20,20});
+        testText = Text(mPosition + Vector2{100,500}, Vector2{160,40}, "Test Text", 15, font);
+        closeButton = Button(mPosition + Vector2{580,0}, Vector2{20,20});
+        testTextButton = TextButton(mPosition + Vector2{100,100}, Vector2{160,40}, "Test Text", 15, font);
+        testButton = Button(mPosition + Vector2{100,400}, Vector2{160,40});
+        testToggle = Toggle(mPosition + Vector2{500,100}, Vector2{20,20});
+        testProgressBar = ProgressBar(mPosition + Vector2{10,10}, Vector2{400,20});
     }
 
     void update() override {
@@ -33,11 +39,14 @@ public:
             if(mIsActive){
             
             // Update GuiElements
-            for(auto & [key, guiElement] : guiElements){
-                guiElement->update();
-            }
+            testText.update();
+            closeButton.update();
+            testTextButton.update();
+            testButton.update();
+            testToggle.update();
+            testProgressBar.update(0.5f);
 
-            if(guiElements["closeButton"]->mIsPressed){
+            if(closeButton.mIsPressed){
                 disable();
             }
         }
@@ -49,9 +58,12 @@ public:
             DrawRectangleV(mPosition, mSize, GREEN);
 
             // Draw GuiElements
-            for(auto [key, guiElement] : guiElements){
-                guiElement->render();
-            }
+            testText.render();
+            closeButton.render();
+            testTextButton.render();
+            testButton.render();
+            testToggle.render();
+            testProgressBar.render();
         }
     }
 };

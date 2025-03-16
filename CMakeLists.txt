@@ -30,15 +30,15 @@ FetchContent_MakeAvailable(raylib)
 
 # --------------- RAYGUI ---------------
 # Set raygui variables
-#set(RAYGUI_HEADER_URL "https://raw.githubusercontent.com/raysan5/raygui/refs/heads/master/src/raygui.h")
-#set(RAYGUI_HEADER_PATH "${CMAKE_BINARY_DIR}/raygui.h")
+set(RAYGUI_HEADER_URL "https://raw.githubusercontent.com/raysan5/raygui/refs/heads/master/src/raygui.h")
+set(RAYGUI_HEADER_PATH "${CMAKE_BINARY_DIR}/raygui.h")
 
 # Download raygui.h if it doesn't exist in the build directory
-#message(STATUS "Downloading Raylib...")
-#if(NOT EXISTS "${RAYGUI_HEADER_PATH}")
-#    message(STATUS "Downloading raygui.h")
-#    file(DOWNLOAD ${RAYGUI_HEADER_URL} ${RAYGUI_HEADER_PATH})
-#endif()
+message(STATUS "Downloading Raylib...")
+if(NOT EXISTS "${RAYGUI_HEADER_PATH}")
+    message(STATUS "Downloading raygui.h")
+    file(DOWNLOAD ${RAYGUI_HEADER_URL} ${RAYGUI_HEADER_PATH})
+endif()
 
 # --------------- nlohmann_json ---------------
 message(STATUS "Fetching nlohmann_json...")
