@@ -111,7 +111,7 @@ namespace lufu_gui{
 
     public:
         Text(){}
-        Text(const Vector2& rPosition, const std::string& rtext, const float& rtextSize, Font& rFont) : mText(rtext), mTextSize(rtextSize), mFont(rFont){
+        Text(const Vector2& rPosition, const std::string& rtext, const float& rtextSize, Font& rFont) : GuiElement(rPosition),mText(rtext), mTextSize(rtextSize), mFont(rFont){
             mSize = MeasureTextEx(mFont, mText.c_str(), mTextSize, TEXT_SPACING);
         }
 

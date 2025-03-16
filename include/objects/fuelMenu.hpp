@@ -13,12 +13,9 @@
 
 class FuelMenu : virtual public GuiContext{
 private:
-    lufu_gui::Text testText;
+    lufu_gui::Text titelText;
     lufu_gui::Button closeButton;
-    lufu_gui::TextButton testTextButton;
-    lufu_gui::Button testButton;
-    lufu_gui::Toggle testToggle;
-    lufu_gui::ProgressBar testProgressBar;
+    lufu_gui::TextButton buyFuelTextButton;
     
 public:
     using GuiContext::GuiContext;
@@ -26,25 +23,18 @@ public:
     void initialize() override{
         //AssetManager& assetManager = AssetManager::getInstance();
         Font font = GetFontDefault();
-        testText = lufu_gui::Text(mPosition + Vector2{100,500}, "Test Text", 15, font);
-        closeButton = lufu_gui::Button(mPosition + Vector2{580,0}, Vector2{20,20});
-        testTextButton = lufu_gui::TextButton(mPosition + Vector2{100,100}, Vector2{160,40}, "Test Text", 15, font);
-        testButton = lufu_gui::Button(mPosition + Vector2{100,400}, Vector2{160,40});
-        testToggle = lufu_gui::Toggle(mPosition + Vector2{500,100}, Vector2{20,20});
-        testProgressBar = lufu_gui::ProgressBar(mPosition + Vector2{10,10}, Vector2{400,20});
+        titelText = lufu_gui::Text(mPosition + Vector2{5,5}, "Fuel Station", 40, font);
+        closeButton = lufu_gui::Button(mPosition + Vector2{575,5}, Vector2{20,20});
+        buyFuelTextButton = lufu_gui::TextButton(mPosition + Vector2{20,100}, Vector2{100,30}, "Buy Fuel", 20, font);
     }
 
     void update() override {
         // Check if menu is active
         if(mIsActive){
             // Update GuiElements
-            testText.update();
+            titelText.update();
             closeButton.update();
-            testTextButton.update();
-            testButton.update();
-            testToggle.update();
-            testProgressBar.update();
-            testProgressBar.setProgress(0.5f);
+            buyFuelTextButton.update();
 
             if(closeButton.mIsPressed){
                 disable();
@@ -55,15 +45,12 @@ public:
     void render() override {
         // Check if menu is activ
         if(mIsActive){
-            DrawRectangleV(mPosition, mSize, GREEN);
+            DrawRectangleV(mPosition, mSize, GRAY);
 
             // Draw GuiElements
-            testText.render();
+            titelText.render();
             closeButton.render();
-            testTextButton.render();
-            testButton.render();
-            testToggle.render();
-            testProgressBar.render();
+            buyFuelTextButton.render();
         }
     }
 };

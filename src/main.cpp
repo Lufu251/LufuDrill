@@ -26,8 +26,6 @@ int main(void){
     dataManager.searchDataDirectoryPath("data", 3);
     dataManager.loadSettingConfig("settings.json");
 
-    
-
     // Set window parameters
     SetConfigFlags(FLAG_WINDOW_RESIZABLE);
     InitWindow(dataManager.screenWidth, dataManager.screenHeight, "LuFu_Drill");

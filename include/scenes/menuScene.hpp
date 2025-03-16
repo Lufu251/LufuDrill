@@ -31,11 +31,11 @@ public:
 
     void initialize() override{
         // Set anchor to the middle of the screen
-        anchor = {GetScreenWidth() / 2.0f, GetScreenHeight() / 2.0f};
+        anchor = {GetScreenWidth() / 2.0f, GetScreenHeight() / 2.0f - 200};
 
         Font font = GetFontDefault();
         titelText = lufu_gui::Text({0,0},"LufuDrill", 50, font);
-        startTextButton = lufu_gui::TextButton({0,0}, {200,40},"Start", 20, font);
+        startTextButton = lufu_gui::TextButton({0,0}, {200,40},"Start New Game", 20, font);
         resumeTextButton = lufu_gui::TextButton({0,0}, {200,40},"Resume", 20, font);
         exitTextButton = lufu_gui::TextButton({0,0}, {200,40},"Exit", 20, font);
     }
@@ -48,10 +48,10 @@ public:
             anchor = {GetScreenWidth() / 2.0f, GetScreenHeight() / 2.0f};
         }
 
-        titelText.setPosition(anchor + Vector2{0,-200} - titelText.mSize /2);
-        startTextButton.setPosition(anchor + Vector2{0,0} - startTextButton.mSize /2);
-        resumeTextButton.setPosition(anchor + Vector2{0,50} - resumeTextButton.mSize /2);
-        exitTextButton.setPosition(anchor + Vector2{0,200} - exitTextButton.mSize /2);
+        titelText.setPosition(anchor + Vector2{0,0} - titelText.mSize /2);
+        startTextButton.setPosition(anchor + Vector2{0,200} - startTextButton.mSize /2);
+        resumeTextButton.setPosition(anchor + Vector2{0,250} - resumeTextButton.mSize /2);
+        exitTextButton.setPosition(anchor + Vector2{0,400} - exitTextButton.mSize /2);
 
         titelText.update();
         startTextButton.update();
