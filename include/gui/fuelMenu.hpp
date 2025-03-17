@@ -23,15 +23,19 @@ public:
     void initialize() override{
         //AssetManager& assetManager = AssetManager::getInstance();
         Font font = GetFontDefault();
-        titelText = lufu_gui::Text(mPosition + Vector2{5,5}, "Fuel Station", 40, font);
-        closeButton = lufu_gui::Button(mPosition + Vector2{575,5}, Vector2{20,20});
-        buyFuelTextButton = lufu_gui::TextButton(mPosition + Vector2{20,100}, Vector2{100,30}, "Buy Fuel", 20, font);
+        titelText = lufu_gui::Text("Gas Station", 40, font);
+        closeButton = lufu_gui::Button(Vector2{20,20});
+        buyFuelTextButton = lufu_gui::TextButton(Vector2{100,30}, "Buy Fuel", 20, font);
     }
 
     void update() override {
         // Check if menu is active
         if(mIsActive){
             // Update GuiElements
+            titelText.setPosition(mPosition + Vector2{5,5});
+            closeButton.setPosition(mPosition + Vector2{575,5});
+            buyFuelTextButton.setPosition(mPosition + Vector2{20,100});
+
             titelText.update();
             closeButton.update();
             buyFuelTextButton.update();

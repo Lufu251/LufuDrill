@@ -34,10 +34,10 @@ public:
         anchor = {GetScreenWidth() / 2.0f, GetScreenHeight() / 2.0f - 200};
 
         Font font = GetFontDefault();
-        titelText = lufu_gui::Text({0,0},"LufuDrill", 50, font);
-        startTextButton = lufu_gui::TextButton({0,0}, {200,40},"Start New Game", 20, font);
-        resumeTextButton = lufu_gui::TextButton({0,0}, {200,40},"Resume", 20, font);
-        exitTextButton = lufu_gui::TextButton({0,0}, {200,40},"Exit", 20, font);
+        titelText = lufu_gui::Text("LufuDrill", 50, font);
+        startTextButton = lufu_gui::TextButton({200,40},"Start New Game", 20, font);
+        resumeTextButton = lufu_gui::TextButton({200,40},"Resume", 20, font);
+        exitTextButton = lufu_gui::TextButton({200,40},"Exit", 20, font);
     }
 
     void update() override {

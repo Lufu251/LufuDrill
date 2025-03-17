@@ -28,10 +28,10 @@ public:
         Font font = GetFontDefault();
         anchorLowerLeftCorner = {0, static_cast<float>(GetScreenHeight() - 200)};
 
-        fuelBarText = lufu_gui::Text(anchorLowerLeftCorner + Vector2{5,0}, "Fuel:", 20, font);
-        fuelBar = lufu_gui::ProgressBar(anchorLowerLeftCorner + Vector2{5,20}, Vector2{190,20});
-        hullBarText = lufu_gui::Text(anchorLowerLeftCorner + Vector2{5,45}, "Hull:", 20, font);
-        hullBar = lufu_gui::ProgressBar(anchorLowerLeftCorner + Vector2{5,65}, Vector2{190,20});
+        fuelBarText = lufu_gui::Text("Fuel:", 20, font);
+        fuelBar = lufu_gui::ProgressBar(Vector2{190,20});
+        hullBarText = lufu_gui::Text("Hull:", 20, font);
+        hullBar = lufu_gui::ProgressBar(Vector2{190,20});
     }
 
     void update() override {
@@ -43,6 +43,11 @@ public:
         }
         // Check if menu is active
         if(mIsActive){
+            fuelBarText.setPosition(anchorLowerLeftCorner + Vector2{5,0});
+            fuelBar.setPosition(anchorLowerLeftCorner + Vector2{5,20});
+            hullBarText.setPosition(anchorLowerLeftCorner + Vector2{5,45});
+            hullBar.setPosition(anchorLowerLeftCorner + Vector2{5,65});
+
             fuelBarText.update();
             fuelBar.update();
             hullBarText.update();

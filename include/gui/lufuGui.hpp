@@ -51,8 +51,7 @@ namespace lufu_gui{
 
         protected:
         GuiElement(){}
-        GuiElement(const Vector2& rPosition):mPosition{rPosition}{}
-        GuiElement(const Vector2& rPosition, const Vector2& rSize):mPosition{rPosition}, mSize{rSize}{}
+        GuiElement(const Vector2& rSize) : mSize{rSize}{}
         
         virtual ~GuiElement(){}
 
@@ -111,7 +110,7 @@ namespace lufu_gui{
 
     public:
         Text(){}
-        Text(const Vector2& rPosition, const std::string& rtext, const float& rtextSize, Font& rFont) : GuiElement(rPosition),mText(rtext), mTextSize(rtextSize), mFont(rFont){
+        Text(const std::string& rtext, const float& rtextSize, Font& rFont) : mText(rtext), mTextSize(rtextSize), mFont(rFont){
             mSize = MeasureTextEx(mFont, mText.c_str(), mTextSize, TEXT_SPACING);
         }
 
@@ -130,7 +129,7 @@ namespace lufu_gui{
 
     public:
         ProgressBar(){}
-        ProgressBar(const Vector2& rPosition, const Vector2& rSize) : GuiElement(rPosition, rSize){}
+        ProgressBar(const Vector2& rSize) : GuiElement(rSize){}
 
         void update() override{
             
@@ -156,7 +155,7 @@ namespace lufu_gui{
 
     public:
         TextButton(){}
-        TextButton(const Vector2& rPosition, const Vector2& rSize, const std::string& rtext, const float& rtextSize, Font& rFont) : GuiElement(rPosition, rSize), mText(rtext), mTextSize(rtextSize), mFont(rFont){}
+        TextButton(const Vector2& rSize, const std::string& rtext, const float& rtextSize, Font& rFont) : GuiElement(rSize), mText(rtext), mTextSize(rtextSize), mFont(rFont){}
 
         void update() override{
             updateHovered();
@@ -194,7 +193,7 @@ namespace lufu_gui{
 
     public:
         Button(){}
-        Button(const Vector2& rPosition, const Vector2& rSize) : GuiElement(rPosition, rSize){}
+        Button(const Vector2& rSize) : GuiElement(rSize){}
 
         void update() override{
             updateHovered();
@@ -227,7 +226,7 @@ namespace lufu_gui{
 
     public:
         Toggle(){}
-        Toggle(const Vector2& rPosition, const Vector2& rSize) : GuiElement(rPosition, rSize){}
+        Toggle(const Vector2& rSize) : GuiElement(rSize){}
 
         void update() override{
             updateHovered();
