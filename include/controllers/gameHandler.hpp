@@ -13,6 +13,11 @@
 
 class GameHandler
 {
+private:
+    // Access singleton classes
+    AssetManager& assetManager = AssetManager::getInstance();
+    DataManager& dataManager = DataManager::getInstance();
+
 public:
     GameHandler(/* args */);
     ~GameHandler();
@@ -24,4 +29,5 @@ public:
     std::vector<AABB> getPossibleCollisionsFromGrid(AABB& box, Grid& grid);
     void checkCollisionAndMove(AABB& box, Grid& grid);
     void checkTouching(AABB& box, Grid& grid);
+    void checkBuildingTriggers();
 };

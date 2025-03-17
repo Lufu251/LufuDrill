@@ -8,6 +8,7 @@
 #include <fuelMenu.hpp>
 #include <dataManager.hpp>
 #include <assetManager.hpp>
+#include <buildings.hpp>
 
 class GameScene : public Scene{
 private:
@@ -42,6 +43,10 @@ public:
         fuelMenu.initialize();
         fuelMenu.enable();
 
+        dataManager.gasStation = Building({400, 380}, {100, 100}, fuelMenu);
+        dataManager.trader = Building({1000, 380}, {100, 100}, fuelMenu);
+        dataManager.shop = Building({1600, 380}, {100, 100}, fuelMenu);
+
         // Camera initialise
         gameRenderer.camera.zoom = 2.0f;
         gameRenderer.camera.rotation = 0.0f;
@@ -49,9 +54,6 @@ public:
         gameRenderer.setCameraOffset({GetScreenWidth() / 2.0f - dataManager.player.size.x, GetScreenHeight() / 2.0f - dataManager.player.size.y});
 
         dataManager.player = Player({200,200}, {24,24}, {0,0});
-        
-
-        
     }
 
     void update() override {
@@ -62,7 +64,7 @@ public:
         }
 
         // Update and pan camera in the direction of the player
-        gameRenderer.moveCameraToPlayer(dataManager.player);
+        gameRenderer.moveCameraToPlayer();
 
         // Movement input
         Vector2 movementInput{0,0};
@@ -87,6 +89,8 @@ public:
         // Check if player is touching a block on any side and count for how long it is touching
         gameHandler.checkTouching(dataManager.player, dataManager.map);
 
+        gameHandler.checkBuildingTriggers();
+
         // Print touching sides
         if(dataManager.player.left) std::cout << "Player LEFT " << dataManager.player.left << std::endl;
         if(dataManager.player.right) std::cout << "Player RIGHT " << dataManager.player.right << std::endl;
@@ -102,8 +106,9 @@ public:
         // Clear Screen for the new render cycle
         ClearBackground(PURPLE);
 
-        gameRenderer.renderGrid(dataManager.map);
-        gameRenderer.renderPlayer(dataManager.player);
+        gameRenderer.renderGrid();
+        gameRenderer.renderBuildings();
+        gameRenderer.renderPlayer();
 
         fuelMenu.render();
         playerGui.render();

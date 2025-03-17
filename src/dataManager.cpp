@@ -27,7 +27,6 @@ void DataManager::searchDataDirectoryPath(std::string folderName, size_t searchD
         }
         currentDir = currentDir.parent_path(); // Move up one level
     }
-
     if(dataPath == ""){
         throw std::runtime_error("Failed to find directory: " + folderName);
     }

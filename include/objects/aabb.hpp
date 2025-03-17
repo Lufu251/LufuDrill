@@ -158,7 +158,7 @@ inline Hit sweptAABB(const AABB& b1, const AABB& b2){
 }
 
 // Checks for a regular AABB to AABB collision
-inline bool AABBCheck(AABB b1, AABB b2){ 
+inline bool AABBIntersection(AABB b1, AABB b2){ 
   return !(b1.position.x + b1.size.x < b2.position.x || b1.position.x > b2.position.x + b2.size.x || b1.position.y + b1.size.y < b2.position.y || b1.position.y > b2.position.y + b2.size.y); 
 }
 
@@ -181,7 +181,7 @@ inline Hit GetNearestCollisionFromList(AABB& box, std::vector<AABB>& blocks){
     for(auto b : blocks){
         // Broad-Phasing with standard AABB check
         AABB broadphase = GetSweptBroadphaseBox(box); // create the broadphase AABB from the player position and velocity
-        if(AABBCheck(broadphase, b)){
+        if(AABBIntersection(broadphase, b)){
             // Hit is very likely
             // Do a swept AABB test and get distance to collisionpoint
             Hit possibleHit = sweptAABB(box, b);

@@ -10,6 +10,7 @@
 #include <grid.hpp>
 #include <player.hpp>
 #include <scene.hpp>
+#include <buildings.hpp>
 
 class DataManager
 {
@@ -47,6 +48,9 @@ public:
     // GameState
     Player player;
     Grid map;
+    Building gasStation;
+    Building trader;
+    Building shop;
 
     // Window settings
     int screenWidth;

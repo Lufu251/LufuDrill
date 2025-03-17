@@ -5,10 +5,15 @@
 
 #include <player.hpp>
 #include <grid.hpp>
+#include <assetManager.hpp>
+#include <dataManager.hpp>
 
 class GameRenderer
 {
 private:
+    // Access singleton classes
+    AssetManager& assetManager = AssetManager::getInstance();
+    DataManager& dataManager = DataManager::getInstance();
 
 public:
     // View
@@ -17,8 +22,9 @@ public:
     GameRenderer(/* args */);
     ~GameRenderer();
 
-    void setCameraOffset(Vector2 offset);
-    void moveCameraToPlayer(Player& player);
-    void renderGrid(Grid& mapGrid);
-    void renderPlayer(Player& player);
+    void setCameraOffset(const Vector2& offset);
+    void moveCameraToPlayer();
+    void renderGrid();
+    void renderBuildings();
+    void renderPlayer();
 };

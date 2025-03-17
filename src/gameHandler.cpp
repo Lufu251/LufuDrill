@@ -5,6 +5,7 @@
 #include <random>
 
 #include <dataManager.hpp>
+#include <aabb.hpp>
 
 GameHandler::GameHandler(/* args */){}
 
@@ -213,19 +214,19 @@ void GameHandler::checkTouching(AABB& box, Grid& grid){
     // Iterate the possible blocks
     for(auto & block : blocks){
         // Bottom
-        if(AABBCheck(box, AABB(Vector2Add(block.position, {0, -dataManager.touchingDistance}), block.size))){
+        if(AABBIntersection(box, AABB(Vector2Add(block.position, {0, -dataManager.touchingDistance}), block.size))){
             b = true;
         }
         // Top
-        if(AABBCheck(box, AABB(Vector2Add(block.position, {0, dataManager.touchingDistance}), block.size))){
+        if(AABBIntersection(box, AABB(Vector2Add(block.position, {0, dataManager.touchingDistance}), block.size))){
             t = true;
         }
         // Right
-        if(AABBCheck(box, AABB(Vector2Add(block.position, {-dataManager.touchingDistance, 0}), block.size))){
+        if(AABBIntersection(box, AABB(Vector2Add(block.position, {-dataManager.touchingDistance, 0}), block.size))){
             r = true;
         }
         // Top
-        if(AABBCheck(box, AABB(Vector2Add(block.position, {dataManager.touchingDistance, 0}), block.size))){
+        if(AABBIntersection(box, AABB(Vector2Add(block.position, {dataManager.touchingDistance, 0}), block.size))){
             l = true;
         }
 
@@ -263,4 +264,10 @@ void GameHandler::checkTouching(AABB& box, Grid& grid){
     else{
         box.left = 0;
     }
+}
+
+void GameHandler::checkBuildingTriggers(){
+    dataManager.gasStation.checkTrigger(dataManager.player);
+    dataManager.shop.checkTrigger(dataManager.player);
+    dataManager.trader.checkTrigger(dataManager.player);
 }
