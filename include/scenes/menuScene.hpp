@@ -2,11 +2,10 @@
 
 #include <scene.hpp>
 
-#include <raygui.h>
 #include <raylib.h>
-
 #include <map>
 #include <memory>
+
 #include <lufuGui.hpp>
 #include <assetManager.hpp>
 #include <dataManager.hpp>
