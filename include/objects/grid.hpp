@@ -6,6 +6,7 @@
 #include <nlohmann/json.hpp>
 
 #include <block.hpp>
+#include <buildings.hpp>
 
 class Grid
 {

@@ -8,8 +8,7 @@
 #include <assetManager.hpp>
 #include <dataManager.hpp>
 
-class GameRenderer
-{
+class GameRenderer{
 private:
 
 public:
@@ -20,8 +19,8 @@ public:
     ~GameRenderer();
 
     void setCameraOffset(const Vector2& offset);
-    void moveCameraToPlayer();
-    void renderGrid();
-    void renderBuildings();
+    void moveCameraToPosition(const Vector2& position);
+    void renderMapGrid(Grid& map);
+    void renderMapBuildings();
     void renderPlayer();
 };

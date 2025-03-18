@@ -8,7 +8,6 @@
 #include <fuelMenu.hpp>
 #include <dataManager.hpp>
 #include <assetManager.hpp>
-#include <buildings.hpp>
 
 class GameScene : public Scene{
 private:
@@ -60,7 +59,7 @@ public:
         }
 
         // Update and pan camera in the direction of the player
-        gameRenderer.moveCameraToPlayer();
+        gameRenderer.moveCameraToPosition(DataManager::getInstance().player.position);
 
         // Movement input
         Vector2 movementInput{0,0};
@@ -102,8 +101,8 @@ public:
         // Clear Screen for the new render cycle
         ClearBackground(PURPLE);
 
-        gameRenderer.renderGrid();
-        gameRenderer.renderBuildings();
+        gameRenderer.renderMapGrid(DataManager::getInstance().map);
+        gameRenderer.renderMapBuildings();
         gameRenderer.renderPlayer();
 
         fuelMenu.render();

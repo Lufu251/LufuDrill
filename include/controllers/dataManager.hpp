@@ -48,6 +48,7 @@ public:
     // GameState
     Player player;
     Grid map;
+    
     Building gasStation;
     Building trader;
     Building shop;

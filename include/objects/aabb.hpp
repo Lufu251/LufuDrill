@@ -15,7 +15,7 @@ public:
     Vector2 size;
     Vector2 velocity;
 
-    // Zero means not touching. Any other numbers show for how many frames it is touching
+    // Zero means not touching. Any other number shows for how many frames it is touching
     size_t top, right, bottom, left;
 
 
@@ -93,27 +93,6 @@ inline Hit sweptAABB(const AABB& b1, const AABB& b2){
     float entryTime = std::max(xEntry, yEntry);
     float exitTime = std::min(xExit, yExit);
 
-    /*
-    std::cout << std::endl;
-    std::cout << "Player" << std::endl;
-    std::cout << "Position X " << b1.p.x << std::endl;
-    std::cout << "Position Y " << b1.p.y << std::endl;
-    std::cout << "Velocity X  " << b1.v.x << std::endl;
-    std::cout << "Velocity Y " << b1.v.y << std::endl;
-    std::cout << std::endl;
-    std::cout << "xInvEntry " << xInvEntry << std::endl;
-    std::cout << "yInvEntry " << yInvEntry << std::endl;
-    std::cout << "xInvExit " << xInvExit << std::endl;
-    std::cout << "yInvExit " << yInvExit << std::endl;
-    std::cout << "xEntry " << xEntry << std::endl;
-    std::cout << "yEntry " << yEntry << std::endl;
-    std::cout << "xExit " << xExit << std::endl;
-    std::cout << "yExit " << yExit << std::endl;
-
-    std::cout << "entryTime " << entryTime << std::endl;
-    std::cout << "exitTime " << exitTime << std::endl;
-    */
-
     // if there was no collision
     if (entryTime > exitTime || (xEntry < 0.0f && yEntry < 0.0f) || xEntry > 1.0f || yEntry > 1.0f) { 
         hit.n.x = 0.0f;
@@ -158,12 +137,12 @@ inline Hit sweptAABB(const AABB& b1, const AABB& b2){
 }
 
 // Checks for a regular AABB to AABB collision
-inline bool AABBIntersection(AABB b1, AABB b2){ 
+inline bool AABBIntersection(AABB b1, AABB b2){
   return !(b1.position.x + b1.size.x < b2.position.x || b1.position.x > b2.position.x + b2.size.x || b1.position.y + b1.size.y < b2.position.y || b1.position.y > b2.position.y + b2.size.y); 
 }
 
 // Returns the broadphasebox from a AABB
-inline AABB GetSweptBroadphaseBox(AABB b1){ 
+inline AABB GetSweptBroadphaseBox(AABB b1){
   AABB broadphasebox;
   broadphasebox.position.x = b1.velocity.x > 0 ? b1.position.x : b1.position.x + b1.velocity.x;
   broadphasebox.position.y = b1.velocity.y > 0 ? b1.position.y : b1.position.y + b1.velocity.y;
@@ -191,10 +170,6 @@ inline Hit GetNearestCollisionFromList(AABB& box, std::vector<AABB>& blocks){
                 // Collision and it is the nearest so far. Update values
                 //std::cout << "Is nearest hit: " << iBlock << " " << jBlock << " " << collisionTime << std::endl;
                 hit = possibleHit;
-            }
-            else{
-                // Collision but it is not the nearest. No values updated
-                //std::cout << "Is not nearest hit: " << iBlock << " " << jBlock << " " << collisionTime << std::endl;
             }
         }
     }
