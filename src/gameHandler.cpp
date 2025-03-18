@@ -267,7 +267,7 @@ void GameHandler::checkTouching(AABB& box, Grid& grid){
 }
 
 void GameHandler::checkBuildingTriggers(){
-    dataManager.gasStation.checkTrigger(dataManager.player);
-    dataManager.shop.checkTrigger(dataManager.player);
-    dataManager.trader.checkTrigger(dataManager.player);
+    DataManager::getInstance().gasStation.checkTrigger(DataManager::getInstance().player);
+    DataManager::getInstance().shop.checkTrigger(DataManager::getInstance().player);
+    DataManager::getInstance().trader.checkTrigger(DataManager::getInstance().player);
 }

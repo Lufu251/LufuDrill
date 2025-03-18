@@ -16,19 +16,16 @@
 int main(void){
     // Declaration
     // ----------------------------------------------------------------------------------
-    // Access singleton classes
-    AssetManager& assetManager = AssetManager::getInstance();
-    DataManager& dataManager = DataManager::getInstance();
     // AssetManager and DataManager
-    assetManager.searchAssetsDirectoryPath("assets", 3);
-    assetManager.loadFont("roboto-regular", "Roboto-Regular.ttf", 16);
+    AssetManager::getInstance().searchAssetsDirectoryPath("assets", 3);
+    AssetManager::getInstance().loadFont("roboto-regular", "Roboto-Regular.ttf", 16);
 
-    dataManager.searchDataDirectoryPath("data", 3);
-    dataManager.loadSettingConfig("settings.json");
+    DataManager::getInstance().searchDataDirectoryPath("data", 3);
+    DataManager::getInstance().loadSettingConfig("settings.json");
 
     // Set window parameters
     SetConfigFlags(FLAG_WINDOW_RESIZABLE);
-    InitWindow(dataManager.screenWidth, dataManager.screenHeight, "LuFu_Drill");
+    InitWindow(DataManager::getInstance().screenWidth, DataManager::getInstance().screenHeight, "LuFu_Drill");
     SetExitKey(KEY_NULL);
     SetTargetFPS(60);
     SetWindowMinSize(800, 800);
@@ -37,31 +34,31 @@ int main(void){
     //ToggleBorderlessWindowed(); // Toggle window state: borderless windowed, resizes window to match monitor resolution
 
     // Declare scene
-    dataManager.activeScene = std::make_unique<MenuScene>();
+    DataManager::getInstance().activeScene = std::make_unique<MenuScene>();
 
     // Initialization
     // ---------------------------------------------------------------------------------
-    dataManager.activeScene->initialize();
+    DataManager::getInstance().activeScene->initialize();
 
-    while (dataManager.windowOpen){
+    while (DataManager::getInstance().windowOpen){
         // Logic
         // ----------------------------------------------------------------------------------
         // Check window should close
-        if(WindowShouldClose()) dataManager.windowOpen = false;
+        if(WindowShouldClose()) DataManager::getInstance().windowOpen = false;
 
         // Update activeScene
-        dataManager.activeScene->update();
+        DataManager::getInstance().activeScene->update();
         
         // Draw
         // ----------------------------------------------------------------------------------
         BeginDrawing();
             // Render activeScene
-            dataManager.activeScene->render();
+            DataManager::getInstance().activeScene->render();
         EndDrawing();
     }
 
     // Cleanup resources and close raylib
-    assetManager.cleanup();
+    AssetManager::getInstance().cleanup();
 
     // De-Initialization
     //--------------------------------------------------------------------------------------

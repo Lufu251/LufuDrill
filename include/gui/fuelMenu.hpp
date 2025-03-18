@@ -21,7 +21,6 @@ public:
     using GuiContext::GuiContext;
 
     void initialize() override{
-        //AssetManager& assetManager = AssetManager::getInstance();
         Font font = GetFontDefault();
         titelText = lufu_gui::Text("Gas Station", 40, font);
         closeButton = lufu_gui::Button(Vector2{20,20});

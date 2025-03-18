@@ -7,7 +7,6 @@
 #include <memory>
 
 #include <lufuGui.hpp>
-#include <assetManager.hpp>
 #include <dataManager.hpp>
 #include <gameHandler.hpp>
 #include <gameScene.hpp>
@@ -19,10 +18,6 @@ private:
     lufu_gui::TextButton startTextButton;
     lufu_gui::TextButton resumeTextButton;
     lufu_gui::TextButton exitTextButton;
-
-    // Access singleton classes
-    AssetManager& assetManager = AssetManager::getInstance();
-    DataManager& dataManager = DataManager::getInstance();
 
 public:
     MenuScene(/* args */){}
@@ -59,23 +54,23 @@ public:
 
         if(startTextButton.mIsPressed){
             // Generate map
-            dataManager.map = Grid(200,1000, 32);
-            gameHandler.generateTerrain(dataManager.map);
+            DataManager::getInstance().map = Grid(200,1000, 32);
+            gameHandler.generateTerrain(DataManager::getInstance().map);
 
             // Load scene
-            dataManager.activeScene = std::make_unique<GameScene>();
-            dataManager.activeScene->initialize();
+            DataManager::getInstance().activeScene = std::make_unique<GameScene>();
+            DataManager::getInstance().activeScene->initialize();
         }
         if(resumeTextButton.mIsPressed){
             // Load Map from file
-            dataManager.loadGameState("save.sv");
+            DataManager::getInstance().loadGameState("save.sv");
 
             // Load scene
-            dataManager.activeScene = std::make_unique<GameScene>();
-            dataManager.activeScene->initialize();
+            DataManager::getInstance().activeScene = std::make_unique<GameScene>();
+            DataManager::getInstance().activeScene->initialize();
         }
         if(exitTextButton.mIsPressed){
-            dataManager.windowOpen = false;
+            DataManager::getInstance().windowOpen = false;
         }
     }
 

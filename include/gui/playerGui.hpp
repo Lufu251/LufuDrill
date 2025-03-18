@@ -35,8 +35,6 @@ public:
     }
 
     void update() override {
-        // Access singleton classes
-        DataManager& dataManager = DataManager::getInstance();
         // Update anchor to be in the middle of the window
         if(IsWindowResized()){
             anchorLowerLeftCorner = {0, static_cast<float>(GetScreenHeight() - 200)};
@@ -53,8 +51,8 @@ public:
             hullBarText.update();
             hullBar.update();
 
-            fuelBar.setProgress(dataManager.player.fuelTank.fuel / dataManager.player.fuelTank.fuelMax);
-            hullBar.setProgress(dataManager.player.hull.health / dataManager.player.hull.healthMax);
+            fuelBar.setProgress(DataManager::getInstance().player.fuelTank.fuel / DataManager::getInstance().player.fuelTank.fuelMax);
+            hullBar.setProgress(DataManager::getInstance().player.hull.health / DataManager::getInstance().player.hull.healthMax);
         }
     }
 

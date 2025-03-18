@@ -11,9 +11,6 @@
 class GameRenderer
 {
 private:
-    // Access singleton classes
-    AssetManager& assetManager = AssetManager::getInstance();
-    DataManager& dataManager = DataManager::getInstance();
 
 public:
     // View

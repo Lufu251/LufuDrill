@@ -14,9 +14,6 @@
 class GameHandler
 {
 private:
-    // Access singleton classes
-    AssetManager& assetManager = AssetManager::getInstance();
-    DataManager& dataManager = DataManager::getInstance();
 
 public:
     GameHandler(/* args */);

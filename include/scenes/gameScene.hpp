@@ -19,21 +19,17 @@ private:
     PlayerGui playerGui;
     FuelMenu fuelMenu;
 
-    // Access singleton classes
-    AssetManager& assetManager = AssetManager::getInstance();
-    DataManager& dataManager = DataManager::getInstance();
-
 public:
     GameScene(/* args */){}
     ~GameScene(){}
 
     void initialize() override{
         // Preload textureAtlas
-        assetManager.loadTextureAtlas("tileset");
-        assetManager.loadTextureAtlas("particleset");
+        AssetManager::getInstance().loadTextureAtlas("tileset");
+        AssetManager::getInstance().loadTextureAtlas("particleset");
 
         // Load tools configuration
-        dataManager.loadToolConfig("tools.json");
+        DataManager::getInstance().loadToolConfig("tools.json");
 
         playerGui = PlayerGui({0,0}, {static_cast<float>(GetScreenWidth()), static_cast<float>(GetScreenHeight())});
         playerGui.initialize();
@@ -43,24 +39,24 @@ public:
         fuelMenu.initialize();
         fuelMenu.enable();
 
-        dataManager.gasStation = Building({400, 380}, {100, 100}, fuelMenu);
-        dataManager.trader = Building({1000, 380}, {100, 100}, fuelMenu);
-        dataManager.shop = Building({1600, 380}, {100, 100}, fuelMenu);
+        DataManager::getInstance().gasStation = Building({400, 380}, {100, 100}, fuelMenu);
+        DataManager::getInstance().trader = Building({1000, 380}, {100, 100}, fuelMenu);
+        DataManager::getInstance().shop = Building({1600, 380}, {100, 100}, fuelMenu);
 
         // Camera initialise
         gameRenderer.camera.zoom = 2.0f;
         gameRenderer.camera.rotation = 0.0f;
-        gameRenderer.camera.target = dataManager.player.position;
-        gameRenderer.setCameraOffset({GetScreenWidth() / 2.0f - dataManager.player.size.x, GetScreenHeight() / 2.0f - dataManager.player.size.y});
+        gameRenderer.camera.target = DataManager::getInstance().player.position;
+        gameRenderer.setCameraOffset({GetScreenWidth() / 2.0f - DataManager::getInstance().player.size.x, GetScreenHeight() / 2.0f - DataManager::getInstance().player.size.y});
 
-        dataManager.player = Player({200,200}, {24,24}, {0,0});
+        DataManager::getInstance().player = Player({200,200}, {24,24}, {0,0});
     }
 
     void update() override {
         //float deltaTime = GetFrameTime();
         // Do updates on screen resize
         if(IsWindowResized()){
-            gameRenderer.setCameraOffset({GetScreenWidth() / 2.0f - dataManager.player.size.x, GetScreenHeight() / 2.0f - dataManager.player.size.y});
+            gameRenderer.setCameraOffset({GetScreenWidth() / 2.0f - DataManager::getInstance().player.size.x, GetScreenHeight() / 2.0f - DataManager::getInstance().player.size.y});
         }
 
         // Update and pan camera in the direction of the player
@@ -69,33 +65,33 @@ public:
         // Movement input
         Vector2 movementInput{0,0};
         gameHandler.handleInput(movementInput);
-        movementInput = Vector2Scale(movementInput, dataManager.movementSpeed); // Multiply by speed
+        movementInput = Vector2Scale(movementInput, DataManager::getInstance().movementSpeed); // Multiply by speed
 
         // Calculate air resistance
-        Vector2 airResistance = dataManager.player.velocity - dataManager.player.velocity * dataManager.airResistance;
-        dataManager.player.addForce(movementInput); // Add movementInput to player velocity
-        dataManager.player.addForce(dataManager.gravity); // Add gravity to player velocity
-        dataManager.player.addForce(Vector2Negate(airResistance)); // Add airResistance to player velocity
+        Vector2 airResistance = DataManager::getInstance().player.velocity - DataManager::getInstance().player.velocity * DataManager::getInstance().airResistance;
+        DataManager::getInstance().player.addForce(movementInput); // Add movementInput to player velocity
+        DataManager::getInstance().player.addForce(DataManager::getInstance().gravity); // Add gravity to player velocity
+        DataManager::getInstance().player.addForce(Vector2Negate(airResistance)); // Add airResistance to player velocity
 
         // Stop completely if below the threshold
-        if (Vector2Length(dataManager.player.velocity) < dataManager.velocityThreshhold) dataManager.player.velocity = { 0.0f, 0.0f };
+        if (Vector2Length(DataManager::getInstance().player.velocity) < DataManager::getInstance().velocityThreshhold) DataManager::getInstance().player.velocity = { 0.0f, 0.0f };
 
         // Physics collision response and move player
-        gameHandler.checkCollisionAndMove(dataManager.player, dataManager.map);
+        gameHandler.checkCollisionAndMove(DataManager::getInstance().player, DataManager::getInstance().map);
 
         //Clamp player to grid
-        gameHandler.clampToGrid(dataManager.player, dataManager.map);
+        gameHandler.clampToGrid(DataManager::getInstance().player, DataManager::getInstance().map);
 
         // Check if player is touching a block on any side and count for how long it is touching
-        gameHandler.checkTouching(dataManager.player, dataManager.map);
+        gameHandler.checkTouching(DataManager::getInstance().player, DataManager::getInstance().map);
 
         gameHandler.checkBuildingTriggers();
 
         // Print touching sides
-        if(dataManager.player.left) std::cout << "Player LEFT " << dataManager.player.left << std::endl;
-        if(dataManager.player.right) std::cout << "Player RIGHT " << dataManager.player.right << std::endl;
-        if(dataManager.player.top) std::cout << "Player TOP " << dataManager.player.top << std::endl;
-        if(dataManager.player.bottom) std::cout << "Player BOTTOM " << dataManager.player.bottom << std::endl;
+        if(DataManager::getInstance().player.left) std::cout << "Player LEFT " << DataManager::getInstance().player.left << std::endl;
+        if(DataManager::getInstance().player.right) std::cout << "Player RIGHT " << DataManager::getInstance().player.right << std::endl;
+        if(DataManager::getInstance().player.top) std::cout << "Player TOP " << DataManager::getInstance().player.top << std::endl;
+        if(DataManager::getInstance().player.bottom) std::cout << "Player BOTTOM " << DataManager::getInstance().player.bottom << std::endl;
 
         // Update Gui
         playerGui.update();

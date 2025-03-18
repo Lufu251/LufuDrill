@@ -13,7 +13,7 @@ DataManager& DataManager::getInstance() {
     return instance;
 }
 
-// Search for a directory starting from the working directory. The AssetManager will look for resources in this directory
+// Search for a directory starting from the working directory. The DataManager will look for resources in this directory
 void DataManager::searchDataDirectoryPath(std::string folderName, size_t searchDepth){
     std::filesystem::path currentDir = GetWorkingDirectory();
     std::cout << "Searching for " << folderName << " directory starting from " << currentDir << std::endl;
