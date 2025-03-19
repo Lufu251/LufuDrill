@@ -54,8 +54,8 @@ public:
 
         if(startTextButton.mIsPressed){
             // Generate map
-            DataManager::getInstance().map = Grid(200,1000, 32);
-            gameHandler.generateTerrain(DataManager::getInstance().map);
+            DataManager::getInstance().world = World(200,1000, 32);
+            gameHandler.generateTerrain(DataManager::getInstance().world);
 
             // Load scene
             DataManager::getInstance().activeScene = std::make_unique<GameScene>();

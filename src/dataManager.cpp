@@ -44,12 +44,12 @@ void DataManager::loadGameState(const std::string& name){
     fromFile.close();
 
     // Load Map ---------------------------------------------------
-    json.at("map").get_to(map); // Convert JSON to Grid object
+    json.at("world").get_to(world); // Convert JSON to Grid object
     // Init map, set position and size ob aabb
-    for (size_t x = 0; x < map.gridSizeX; x++){
-        for (size_t y = 0; y < map.gridSizeY; y++){
-            map(x,y).position = {static_cast<float>(x * map.blockSize), static_cast<float>(y * map.blockSize)};
-            map(x,y).size = {static_cast<float>(map.blockSize), static_cast<float>(map.blockSize)};
+    for (size_t x = 0; x < world.mGrid.gridSizeX; x++){
+        for (size_t y = 0; y < world.mGrid.gridSizeY; y++){
+            world.mGrid(x,y).position = {static_cast<float>(x * world.mBlockSize), static_cast<float>(y * world.mBlockSize)};
+            world.mGrid(x,y).size = {static_cast<float>(world.mBlockSize), static_cast<float>(world.mBlockSize)};
         }
     }
 
@@ -62,9 +62,9 @@ void DataManager::loadGameState(const std::string& name){
 
 void DataManager::saveGameState(const std::string& name){
     // Write JSON to a file
-    nlohmann::json json = map;
+    nlohmann::json json = world;
     json = {
-        {"map", map} // Convert the Grid object to JSON
+        {"map", world} // Convert the Grid object to JSON
     }; 
 
 

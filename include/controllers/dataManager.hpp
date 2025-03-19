@@ -7,7 +7,7 @@
 #include <raylib.h>
 
 #include <tools.hpp>
-#include <grid.hpp>
+#include <world.hpp>
 #include <player.hpp>
 #include <scene.hpp>
 #include <buildings.hpp>
@@ -47,7 +47,7 @@ public:
 
     // GameState
     Player player;
-    Grid map;
+    World world;
     
     Building gasStation;
     Building trader;

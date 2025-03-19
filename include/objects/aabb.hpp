@@ -16,7 +16,7 @@ public:
     Vector2 velocity;
 
     // Zero means not touching. Any other number shows for how many frames it is touching
-    size_t top, right, bottom, left;
+    int top, right, bottom, left;
 
 
     AABB(/* args */) {}

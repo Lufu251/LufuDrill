@@ -37,10 +37,25 @@ public:
         fuelMenu = FuelMenu({100,100}, {600,600});
         fuelMenu.initialize();
         fuelMenu.enable();
-
-        DataManager::getInstance().gasStation = Building({400, 380}, {100, 100}, fuelMenu);
-        DataManager::getInstance().trader = Building({1000, 380}, {100, 100}, fuelMenu);
-        DataManager::getInstance().shop = Building({1600, 380}, {100, 100}, fuelMenu);
+        
+        for (auto& building : DataManager::getInstance().world.buildings){
+            switch (building.mType)
+            {
+            case GAS_STATION:
+                building.setMenuToTrigger(fuelMenu);
+                break;
+            case TRADER:
+                building.setMenuToTrigger(fuelMenu);
+                break;
+            case SHOP:
+                building.setMenuToTrigger(fuelMenu);
+                break;
+            default:
+                break;
+            }
+        }
+        
+        
 
         // Camera initialise
         gameRenderer.camera.zoom = 2.0f;
@@ -76,15 +91,15 @@ public:
         if (Vector2Length(DataManager::getInstance().player.velocity) < DataManager::getInstance().velocityThreshhold) DataManager::getInstance().player.velocity = { 0.0f, 0.0f };
 
         // Physics collision response and move player
-        gameHandler.checkCollisionAndMove(DataManager::getInstance().player, DataManager::getInstance().map);
+        gameHandler.checkCollisionAndMove(DataManager::getInstance().player, DataManager::getInstance().world);
 
         //Clamp player to grid
-        gameHandler.clampToGrid(DataManager::getInstance().player, DataManager::getInstance().map);
+        gameHandler.clampToGrid(DataManager::getInstance().player, DataManager::getInstance().world);
 
         // Check if player is touching a block on any side and count for how long it is touching
-        gameHandler.checkTouching(DataManager::getInstance().player, DataManager::getInstance().map);
+        gameHandler.checkTouching(DataManager::getInstance().player, DataManager::getInstance().world);
 
-        gameHandler.checkBuildingTriggers();
+        gameHandler.checkBuildingTriggers(DataManager::getInstance().player, DataManager::getInstance().world);
 
         // Print touching sides
         if(DataManager::getInstance().player.left) std::cout << "Player LEFT " << DataManager::getInstance().player.left << std::endl;
@@ -101,7 +116,7 @@ public:
         // Clear Screen for the new render cycle
         ClearBackground(PURPLE);
 
-        gameRenderer.renderMapGrid(DataManager::getInstance().map);
+        gameRenderer.renderMapGrid(DataManager::getInstance().world);
         gameRenderer.renderMapBuildings();
         gameRenderer.renderPlayer();
 

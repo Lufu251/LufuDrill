@@ -6,6 +6,8 @@
 
 #include <dataManager.hpp>
 #include <aabb.hpp>
+#include <world.hpp>
+#include <buildings.hpp>
 
 GameHandler::GameHandler(/* args */){}
 
@@ -18,82 +20,87 @@ void GameHandler::handleInput(Vector2& rDirection){
     if(IsKeyDown(KEY_W)) rDirection.y += -1;
 }
 
-void GameHandler::generateTerrain(Grid& grid){
+void GameHandler::generateTerrain(World& world){
     // Pre init
-    for (size_t x = 0; x < grid.gridSizeX; x++){
-        for (size_t y = 0; y < grid.gridSizeY; y++){
-            grid(x,y) = Block(EMPTY, {static_cast<float>(x * grid.blockSize), static_cast<float>(y * grid.blockSize)}, {static_cast<float>(grid.blockSize), static_cast<float>(grid.blockSize)});
+    for (size_t x = 0; x < world.mGrid.gridSizeX; x++){
+        for (size_t y = 0; y < world.mGrid.gridSizeY; y++){
+            world.mGrid(x,y) = Block(EMPTY, {static_cast<float>(x * world.mBlockSize), static_cast<float>(y * world.mBlockSize)}, {static_cast<float>(world.mBlockSize), static_cast<float>(world.mBlockSize)});
         }
     }
 
-    for (size_t x = 0; x < grid.gridSizeX; x++){
-        for (size_t y = 0; y < grid.gridSizeY; y++){
+    // Place buildings
+    world.buildings.push_back(Building(GAS_STATION ,{400, 380}, {100, 100}));
+    world.buildings.push_back(Building(TRADER ,{800, 380}, {100, 100}));
+    world.buildings.push_back(Building(SHOP ,{1200, 380}, {100, 100}));
+
+    for (size_t x = 0; x < world.mGrid.gridSizeX; x++){
+        for (size_t y = 0; y < world.mGrid.gridSizeY; y++){
             std::random_device dev;
             std::mt19937 rng(dev());
             std::uniform_int_distribution<std::mt19937::result_type> dist6(1,10);
 
             // Create a tunnel to the bottom
             if(x == 20){
-                grid(x,y).mType = EMPTY;
+                world.mGrid(x,y).mType = EMPTY;
                 continue;
             }
 
             // Generate some air pockets
             if(y > 15 && dist6(rng) >= 10){
-                grid(x,y).mType = EMPTY;
+                world.mGrid(x,y).mType = EMPTY;
                 continue;
             }
 
             // Normal generation
             // Air layer
             if(y < 15){
-                grid(x,y).mType = EMPTY;
+                world.mGrid(x,y).mType = EMPTY;
                 continue;
             }
             // Dirt layer
             if(y < 100){
                 if(dist6(rng) == 10){
-                    grid(x,y).mType = COPPERORE;
+                    world.mGrid(x,y).mType = COPPERORE;
                     continue;
                 }
-                grid(x,y).mType = DIRT;
+                world.mGrid(x,y).mType = DIRT;
                 continue;
             }
             // Upper stone layer
             if(y < 500){
                 if(dist6(rng) == 10){
-                    grid(x,y).mType = GOLDORE;
+                    world.mGrid(x,y).mType = GOLDORE;
                     continue;
                 }
-                grid(x,y).mType = STONE;
+                world.mGrid(x,y).mType = STONE;
                 continue;
             }
             // Lower stone layer
             if(y < 1000){
                 if(dist6(rng) == 10){
-                    grid(x,y).mType = PLATINUMORE;
+                    world.mGrid(x,y).mType = PLATINUMORE;
                     continue;
                 }
-                grid(x,y).mType = STONE;
+                world.mGrid(x,y).mType = STONE;
                 continue;
             }
             // Anything Deeper Layer
-            grid(x,y).mType = STONE;
+            world.mGrid(x,y).mType = STONE;
         }
     }
 }
 
-std::vector<AABB> GameHandler::getPossibleCollisionsFromGrid(AABB& box, Grid& grid){
+std::vector<AABB> GameHandler::getPossibleCollisionsFromGrid(AABB& box, World& world){
     std::vector<AABB> blocks;
     blocks.reserve(9);
 
     // Get the player position on the grid
-    size_t iPlayer = box.getGridPosition(grid.blockSize).x;
-    size_t jPlayer = box.getGridPosition(grid.blockSize).y;
+    size_t iPlayer = box.getGridPosition(world.mBlockSize).x;
+    size_t jPlayer = box.getGridPosition(world.mBlockSize).y;
 
     // Check how many tiles around the player need to be calculated
-    int gridDistanceX = Vector2Length(box.velocity) / static_cast<float>(grid.blockSize) + std::ceil(box.size.x / grid.blockSize); // amount of tiles that need to be checked
-    int gridDistanceY = Vector2Length(box.velocity) / static_cast<float>(grid.blockSize) + std::ceil(box.size.y / grid.blockSize); // amount of tiles that need to be checked
+    int gridDistanceX = Vector2Length(box.velocity) / static_cast<float>(world.mBlockSize) + std::ceil(box.size.x / world.mBlockSize); // amount of tiles that need to be checked
+    int gridDistanceY = Vector2Length(box.velocity) / static_cast<float>(world.mBlockSize) + std::ceil(box.size.y / world.mBlockSize); // amount of tiles that need to be checked
 
     // Loop blocks near player
     for (int i = -gridDistanceX; i <= gridDistanceX; i++){
@@ -103,40 +110,37 @@ std::vector<AABB> GameHandler::getPossibleCollisionsFromGrid(AABB& box, Grid& gr
             size_t jBlock = jPlayer + j;
 
             // Check if position is out of bound from grid and skip this loop
-            if (iBlock < 0 || iBlock >= grid.gridSizeX || jBlock < 0 || jBlock >= grid.gridSizeY){
+            if (iBlock < 0 || iBlock >= world.mGrid.gridSizeX || jBlock < 0 || jBlock >= world.mGrid.gridSizeY){
                 // Out of bound
-                //std::cout << "Collision check: Grid position is out ofbound" << iBlock << " " << jBlock << std::endl;
                 continue;
             }
-            else if(grid(iBlock, jBlock).mType > 0){ // In bound block needs to be checked
+            else if(world.mGrid(iBlock, jBlock).mType > 0){ // In bound block needs to be checked
                 // Add block to the list
-                blocks.push_back(grid(iBlock, jBlock));
+                blocks.push_back(world.mGrid(iBlock, jBlock));
             }
         }
     }
     return blocks;
 }
 
-void GameHandler::clampToGrid(AABB& box, Grid& grid){
+void GameHandler::clampToGrid(AABB& box, World& world){
     // Clamp box to grid
     Vector2 positionBeforeClamp = box.position;
-    box.position.x = std::clamp(box.position.x, 0.f, static_cast<float>(grid.gridSizeX * grid.blockSize - box.size.x));
-    box.position.y = std::clamp(box.position.y, 0.f, static_cast<float>(grid.gridSizeY * grid.blockSize - box.size.y));
+    box.position.x = std::clamp(box.position.x, 0.f, static_cast<float>(world.mGrid.gridSizeX * world.mBlockSize - box.size.x));
+    box.position.y = std::clamp(box.position.y, 0.f, static_cast<float>(world.mGrid.gridSizeY * world.mBlockSize - box.size.y));
     // If position was clamped set velocity to 0 in this axis
     if(positionBeforeClamp.x != box.position.x) box.velocity.x = 0;
     if(positionBeforeClamp.y != box.position.y) box.velocity.y = 0;
 }
 
-void GameHandler::checkCollisionAndMove(AABB& box, Grid& grid){
+void GameHandler::checkCollisionAndMove(AABB& box, World& world){
     DataManager& dataManager = DataManager::getInstance();
     AABB boxClone = box;
 
-    //std::cout << std::endl << "------------- Collision START -------------" << std::endl;
     // Loop a cloned Player with the collision and end loop when movement is done
     while(Vector2Length(boxClone.velocity) > 0){
-        
         // Create a list with blocks that need to be checked
-        std::vector<AABB> blocks = getPossibleCollisionsFromGrid(box, grid); // AABB from all blocks that can collide
+        std::vector<AABB> blocks = getPossibleCollisionsFromGrid(box, world); // AABB from all blocks that can collide
         // Get the nearest collision from the List
         Hit hit = GetNearestCollisionFromList(boxClone, blocks);
 
@@ -145,24 +149,18 @@ void GameHandler::checkCollisionAndMove(AABB& box, Grid& grid){
             // A hit occured
             if(hit.n.x < 0){
                 // RIGHT
-                //std::cout << "Collision on LEFT" << " x " << hit.x << " y " << hit.y << " distance " << hit.collisionTime << std::endl;
-
                 // Dampening everytime a hit occures
                 boxClone.velocity.x *= dataManager.collisionRetention;
                 box.velocity.x *= dataManager.collisionRetention;
             }
             else if(hit.n.x > 0){
                 // LEFT
-                //std::cout << "Collision on RIGHT" << " x " << hit.x << " y " << hit.y << " distance " << hit.collisionTime << std::endl;
-
                 // Dampening everytime a hit occures
                 boxClone.velocity.x *= dataManager.collisionRetention;
                 box.velocity.x *= dataManager.collisionRetention;
             }
             if(hit.n.y < 0){
                 // BOTTOM
-                //std::cout << "Collision on TOP" << " x " << hit.x << " y " << hit.y << " distance " << hit.collisionTime << std::endl;
-
                 // Dampening everytime a hit occures
                 boxClone.velocity.y *= dataManager.collisionRetention;
                 box.velocity.y *= dataManager.collisionRetention;
@@ -173,8 +171,6 @@ void GameHandler::checkCollisionAndMove(AABB& box, Grid& grid){
             }
             else if(hit.n.y > 0){
                 // TOP
-                //std::cout << "Collision on Bottom" << " x " << hit.x << " y " << hit.y << " distance " << hit.collisionTime << std::endl;
-
                 // Dampening everytime a hit occures
                 boxClone.velocity.y *= dataManager.collisionRetention;
                 box.velocity.y *= dataManager.collisionRetention;
@@ -197,77 +193,63 @@ void GameHandler::checkCollisionAndMove(AABB& box, Grid& grid){
             // No hit occured do a regular move
             boxClone.position += boxClone.velocity; // regulary add velocity
             boxClone.velocity = {0 , 0}; // Reset velocity all movement has been done / END Loop
-
-            //std::cout << "------------- Collision END -------------" << std::endl;
         }
     }
     box.position = boxClone.position; // Loop has ended player can now be set to the new position
 }
 
 // Check if AABB is touching blocks on any side
-void GameHandler::checkTouching(AABB& box, Grid& grid){
+void GameHandler::checkTouching(AABB& box, World& world){
     DataManager& dataManager = DataManager::getInstance();
-    std::vector<AABB> blocks = getPossibleCollisionsFromGrid(box, grid); // AABB from all blocks that can collide
+    std::vector<AABB> blocks = getPossibleCollisionsFromGrid(box, world); // AABB from all blocks that can collide
 
-    bool l = false, r = false, b = false, t = false;
+    bool left = false, right = false, bottom = false, top = false;
 
     // Iterate the possible blocks
     for(auto & block : blocks){
         // Bottom
         if(AABBIntersection(box, AABB(Vector2Add(block.position, {0, -dataManager.touchingDistance}), block.size))){
-            b = true;
+            bottom = true;
         }
         // Top
         if(AABBIntersection(box, AABB(Vector2Add(block.position, {0, dataManager.touchingDistance}), block.size))){
-            t = true;
+            top = true;
         }
         // Right
         if(AABBIntersection(box, AABB(Vector2Add(block.position, {-dataManager.touchingDistance, 0}), block.size))){
-            r = true;
+            right = true;
         }
         // Top
         if(AABBIntersection(box, AABB(Vector2Add(block.position, {dataManager.touchingDistance, 0}), block.size))){
-            l = true;
+            left = true;
         }
-
     }
 
     // Update touching sides.
     // Bottom
-    if(b){
-        box.bottom ++;
-    }
-    else{
-        box.bottom = 0;
-    }
+    if(bottom){ box.bottom ++; }
+    else{ box.bottom = 0; }
 
     // Top
-    if(t){
-        box.top ++;
-    }
-    else{
-        box.top = 0;
-    }
+    if(top){ box.top ++; }
+    else{ box.top = 0; }
 
     // Right
-    if(r){
-        box.right ++;
-    }
-    else{
-        box.right = 0;
-    }
+    if(right){ box.right ++; }
+    else{ box.right = 0; }
 
     // Left
-    if(l){
-        box.left ++;
-    }
-    else{
-        box.left = 0;
-    }
+    if(left){ box.left ++; }
+    else{ box.left = 0; }
+
+    box.bottom = std::clamp(box.bottom, 0, 1000);
+    box.top = std::clamp(box.top, 0, 1000);
+    box.right = std::clamp(box.right, 0, 1000);
+    box.left = std::clamp(box.left, 0, 1000);
 }
 
-void GameHandler::checkBuildingTriggers(){
-    DataManager::getInstance().gasStation.checkTrigger(DataManager::getInstance().player);
-    DataManager::getInstance().shop.checkTrigger(DataManager::getInstance().player);
-    DataManager::getInstance().trader.checkTrigger(DataManager::getInstance().player);
+void GameHandler::checkBuildingTriggers(AABB& box, World& world){
+    for (auto & building : world.buildings) {
+        building.checkTrigger(box);
+    }
 }
