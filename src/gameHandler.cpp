@@ -199,53 +199,54 @@ void GameHandler::checkCollisionAndMove(AABB& box, World& world){
 }
 
 // Check if AABB is touching blocks on any side
-void GameHandler::checkTouching(AABB& box, World& world){
+void GameHandler::checkPlayerTouchingSides(Player& player, World& world){
     DataManager& dataManager = DataManager::getInstance();
-    std::vector<AABB> blocks = getPossibleCollisionsFromGrid(box, world); // AABB from all blocks that can collide
+    std::vector<AABB> blocks = getPossibleCollisionsFromGrid(player, world); // AABB from all blocks that can collide
 
     bool left = false, right = false, bottom = false, top = false;
 
     // Iterate the possible blocks
     for(auto & block : blocks){
         // Bottom
-        if(AABBIntersection(box, AABB(Vector2Add(block.position, {0, -dataManager.touchingDistance}), block.size))){
+        if(AABBIntersection(player, AABB(Vector2Add(block.position, {0, -dataManager.touchingDistance}), block.size))){
             bottom = true;
         }
         // Top
-        if(AABBIntersection(box, AABB(Vector2Add(block.position, {0, dataManager.touchingDistance}), block.size))){
+        if(AABBIntersection(player, AABB(Vector2Add(block.position, {0, dataManager.touchingDistance}), block.size))){
             top = true;
         }
         // Right
-        if(AABBIntersection(box, AABB(Vector2Add(block.position, {-dataManager.touchingDistance, 0}), block.size))){
+        if(AABBIntersection(player, AABB(Vector2Add(block.position, {-dataManager.touchingDistance, 0}), block.size))){
             right = true;
         }
         // Top
-        if(AABBIntersection(box, AABB(Vector2Add(block.position, {dataManager.touchingDistance, 0}), block.size))){
+        if(AABBIntersection(player, AABB(Vector2Add(block.position, {dataManager.touchingDistance, 0}), block.size))){
             left = true;
         }
     }
 
     // Update touching sides.
     // Bottom
-    if(bottom){ box.bottom ++; }
-    else{ box.bottom = 0; }
+    if(bottom){ player.bottom ++; }
+    else{ player.bottom = 0; }
 
     // Top
-    if(top){ box.top ++; }
-    else{ box.top = 0; }
+    if(top){ player.top ++; }
+    else{ player.top = 0; }
 
     // Right
-    if(right){ box.right ++; }
-    else{ box.right = 0; }
+    if(right){ player.right ++; }
+    else{ player.right = 0; }
 
     // Left
-    if(left){ box.left ++; }
-    else{ box.left = 0; }
+    if(left){ player.left ++; }
+    else{ player.left = 0; }
 
-    box.bottom = std::clamp(box.bottom, 0, 1000);
-    box.top = std::clamp(box.top, 0, 1000);
-    box.right = std::clamp(box.right, 0, 1000);
-    box.left = std::clamp(box.left, 0, 1000);
+    // Clamp values to prevent them from climbing to infinity
+    player.bottom = std::clamp(player.bottom, 0, 1000);
+    player.top = std::clamp(player.top, 0, 1000);
+    player.right = std::clamp(player.right, 0, 1000);
+    player.left = std::clamp(player.left, 0, 1000);
 }
 
 void GameHandler::checkBuildingTriggers(AABB& box, World& world){

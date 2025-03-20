@@ -15,11 +15,7 @@ public:
     Vector2 size;
     Vector2 velocity;
 
-    // Zero means not touching. Any other number shows for how many frames it is touching
-    int top, right, bottom, left;
-
-
-    AABB(/* args */) {}
+    AABB() {}
     AABB(const Vector2 rPosition, const Vector2 rSize) : position(rPosition), size(rSize){}
     AABB(const Vector2 rPosition, const Vector2 rSize, const Vector2 rVelocity) : position(rPosition), size(rSize), velocity(rVelocity){}
     ~AABB(){}

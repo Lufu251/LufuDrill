@@ -53,10 +53,10 @@ void GameRenderer::renderMapGrid(World& world){
     EndMode2D();
 }
 
-void GameRenderer::renderMapBuildings(){
+void GameRenderer::renderMapBuildings(World& world){
     BeginMode2D(camera);
 
-    for (auto& building : DataManager::getInstance().world.buildings){
+    for (auto& building : world.buildings){
             switch (building.mType)
             {
             case GAS_STATION:
@@ -75,10 +75,10 @@ void GameRenderer::renderMapBuildings(){
     EndMode2D();
 }
 
-void GameRenderer::renderPlayer(){
+void GameRenderer::renderPlayer(Player& player){
     BeginMode2D(camera);
 
-    DataManager::getInstance().player.render();
+    DrawRectangleV(player.position, player.size, RED);
 
     EndMode2D();
 }

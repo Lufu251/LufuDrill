@@ -19,7 +19,7 @@ private:
     FuelMenu fuelMenu;
 
 public:
-    GameScene(/* args */){}
+    GameScene(){}
     ~GameScene(){}
 
     void initialize() override{
@@ -55,8 +55,6 @@ public:
             }
         }
         
-        
-
         // Camera initialise
         gameRenderer.camera.zoom = 2.0f;
         gameRenderer.camera.rotation = 0.0f;
@@ -97,15 +95,8 @@ public:
         gameHandler.clampToGrid(DataManager::getInstance().player, DataManager::getInstance().world);
 
         // Check if player is touching a block on any side and count for how long it is touching
-        gameHandler.checkTouching(DataManager::getInstance().player, DataManager::getInstance().world);
-
+        gameHandler.checkPlayerTouchingSides(DataManager::getInstance().player, DataManager::getInstance().world);
         gameHandler.checkBuildingTriggers(DataManager::getInstance().player, DataManager::getInstance().world);
-
-        // Print touching sides
-        if(DataManager::getInstance().player.left) std::cout << "Player LEFT " << DataManager::getInstance().player.left << std::endl;
-        if(DataManager::getInstance().player.right) std::cout << "Player RIGHT " << DataManager::getInstance().player.right << std::endl;
-        if(DataManager::getInstance().player.top) std::cout << "Player TOP " << DataManager::getInstance().player.top << std::endl;
-        if(DataManager::getInstance().player.bottom) std::cout << "Player BOTTOM " << DataManager::getInstance().player.bottom << std::endl;
 
         // Update Gui
         playerGui.update();
@@ -117,8 +108,8 @@ public:
         ClearBackground(PURPLE);
 
         gameRenderer.renderMapGrid(DataManager::getInstance().world);
-        gameRenderer.renderMapBuildings();
-        gameRenderer.renderPlayer();
+        gameRenderer.renderMapBuildings(DataManager::getInstance().world);
+        gameRenderer.renderPlayer(DataManager::getInstance().player);
 
         fuelMenu.render();
         playerGui.render();

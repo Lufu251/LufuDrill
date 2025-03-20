@@ -21,6 +21,6 @@ public:
     void setCameraOffset(const Vector2& offset);
     void moveCameraToPosition(const Vector2& position);
     void renderMapGrid(World& world);
-    void renderMapBuildings();
-    void renderPlayer();
+    void renderMapBuildings(World& world);
+    void renderPlayer(Player& player);
 };

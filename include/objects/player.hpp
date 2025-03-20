@@ -14,6 +14,9 @@ public:
     CargoBay cargoBay;
     Engine engine;
 
+    // Values to track touching sides
+    int top, right, bottom, left;
+
     Player() : AABB(){}
     Player(const Vector2 rPosition, const Vector2 rSize, const Vector2 rVelocity) : AABB(rPosition, rSize, rVelocity){}
     ~Player(){}
@@ -24,9 +27,5 @@ public:
 
     void updatePosition(){
         position += velocity;
-    }
-
-    void render(){
-        DrawRectangleV(position, size, RED);
     }
 };

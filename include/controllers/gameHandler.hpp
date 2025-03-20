@@ -25,6 +25,6 @@ public:
     void clampToGrid(AABB& box, World& world);
     std::vector<AABB> getPossibleCollisionsFromGrid(AABB& box, World& world);
     void checkCollisionAndMove(AABB& box, World& world);
-    void checkTouching(AABB& box, World& world);
+    void checkPlayerTouchingSides(Player& player, World& world);
     void checkBuildingTriggers(AABB& box, World& world);
 };
