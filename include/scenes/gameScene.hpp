@@ -5,7 +5,9 @@
 #include <gameHandler.hpp>
 #include <gameRenderer.hpp>
 #include <playerGui.hpp>
-#include <fuelMenu.hpp>
+#include <gasStationMenu.hpp>
+#include <traderMenu.hpp>
+#include <shopMenu.hpp>
 #include <dataManager.hpp>
 #include <assetManager.hpp>
 
@@ -16,7 +18,9 @@ private:
 
     // Gui Elements
     PlayerGui playerGui;
-    FuelMenu fuelMenu;
+    GasStationMenu gasStationMenu;
+    TraderMenu traderMenu;
+    ShopMenu shopMenu;
 
 public:
     GameScene(){}
@@ -34,21 +38,26 @@ public:
         playerGui.initialize();
         playerGui.enable();
 
-        fuelMenu = FuelMenu({100,100}, {600,600});
-        fuelMenu.initialize();
-        fuelMenu.enable();
+        gasStationMenu = GasStationMenu({100,100}, {600,600});
+        gasStationMenu.initialize();
+
+        traderMenu = TraderMenu({100,100}, {600,600});
+        traderMenu.initialize();
+
+        shopMenu = ShopMenu({100,100}, {600,600});
+        shopMenu.initialize();
         
         for (auto& building : DataManager::getInstance().world.buildings){
             switch (building.mType)
             {
             case GAS_STATION:
-                building.setMenuToTrigger(fuelMenu);
+                building.setMenuToTrigger(gasStationMenu);
                 break;
             case TRADER:
-                building.setMenuToTrigger(fuelMenu);
+                building.setMenuToTrigger(traderMenu);
                 break;
             case SHOP:
-                building.setMenuToTrigger(fuelMenu);
+                building.setMenuToTrigger(shopMenu);
                 break;
             default:
                 break;
@@ -100,7 +109,10 @@ public:
 
         // Update Gui
         playerGui.update();
-        fuelMenu.update();
+        
+        gasStationMenu.update();
+        traderMenu.update();
+        shopMenu.update();
     }
 
     void render() override {
@@ -111,7 +123,10 @@ public:
         gameRenderer.renderMapBuildings(DataManager::getInstance().world);
         gameRenderer.renderPlayer(DataManager::getInstance().player);
 
-        fuelMenu.render();
+        gasStationMenu.render();
+        traderMenu.render();
+        shopMenu.render();
+
         playerGui.render();
     }
 };

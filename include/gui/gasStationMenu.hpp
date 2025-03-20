@@ -11,7 +11,7 @@
 #include <guiContext.hpp>
 #include <assetManager.hpp>
 
-class FuelMenu : virtual public GuiContext{
+class GasStationMenu : virtual public GuiContext{
 private:
     lufu_gui::Text titelText;
     lufu_gui::Button closeButton;
@@ -24,7 +24,7 @@ public:
         Font font = GetFontDefault();
         titelText = lufu_gui::Text("Gas Station", 40, font);
         closeButton = lufu_gui::Button(Vector2{20,20});
-        buyFuelTextButton = lufu_gui::TextButton(Vector2{100,30}, "Buy Fuel", 20, font);
+        buyFuelTextButton = lufu_gui::TextButton(Vector2{100,30}, "Buy Gas", 20, font);
     }
 
     void update() override {

@@ -6,11 +6,12 @@
 enum BUILDING_TYPE{GAS_STATION, TRADER, SHOP};
 
 class Building : public AABB{
-    private:
-    GuiContext* menuToTrigger;
+private:
+    
     
 
 public:
+    GuiContext* mMenuToTrigger;
     int mType;
 
     Building(/* args */){}
@@ -18,12 +19,6 @@ public:
     ~Building(){}
 
     void setMenuToTrigger(GuiContext& rMenuToTrigger){
-        menuToTrigger = &rMenuToTrigger;
-    }
-
-    void checkTrigger(AABB& aabb){
-        if(AABBIntersection(aabb, *this)){
-            menuToTrigger->enable();
-        }
+        mMenuToTrigger = &rMenuToTrigger;
     }
 };

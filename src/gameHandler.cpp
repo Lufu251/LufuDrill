@@ -251,6 +251,11 @@ void GameHandler::checkPlayerTouchingSides(Player& player, World& world){
 
 void GameHandler::checkBuildingTriggers(AABB& box, World& world){
     for (auto & building : world.buildings) {
-        building.checkTrigger(box);
+        if(AABBIntersection(box, building)){
+            building.mMenuToTrigger->enable();
+        }
+        else{
+            building.mMenuToTrigger->disable();
+        }
     }
 }
