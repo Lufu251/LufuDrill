@@ -23,8 +23,9 @@ FetchContent_Declare(
     GIT_REPOSITORY  https://github.com/raysan5/raylib.git
     #GIT_TAG         5.0
 )
-# option(BUILD_EXAMPLES "Build example of how to use this library." OFF)
-# option(BUILD_SHARED_LIBS "Build shared libs." OFF)
+# Disable building of examples and shared libraries
+option(BUILD_EXAMPLES "Build example of how to use this library." OFF)
+option(BUILD_SHARED_LIBS "Build shared libs." OFF)
 # set(GRAPHICS "GRAPHICS_API_OPENGL_43" FORCE)
 FetchContent_MakeAvailable(raylib)
 
