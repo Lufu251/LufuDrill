@@ -13,11 +13,16 @@ GameHandler::GameHandler(/* args */){}
 
 GameHandler::~GameHandler(){}
 
-void GameHandler::handleInput(Vector2& rDirection){
+// Return vector in which player will be moved
+Vector2 GameHandler::playerMovementInput(){
+    Vector2 direction{0,0};
     // Player input
-    if(IsKeyDown(KEY_A)) rDirection.x += -0.5f;
-    if(IsKeyDown(KEY_D)) rDirection.x += 0.5f;
-    if(IsKeyDown(KEY_W)) rDirection.y += -1;
+    if(IsKeyDown(KEY_A)) direction.x += -0.5f;
+    if(IsKeyDown(KEY_D)) direction.x += 0.5f;
+    if(IsKeyDown(KEY_W)) direction.y += -1;
+
+    // Multiply by speed
+    return direction = Vector2Scale(direction, DataManager::getInstance().thrustForce);
 }
 
 void GameHandler::generateTerrain(World& world){
@@ -257,5 +262,12 @@ void GameHandler::checkBuildingTriggers(AABB& box, World& world){
         else{
             building.mMenuToTrigger->disable();
         }
+    }
+}
+
+void GameHandler::checkGameOverStates(Player& player){
+    // Check if no gas is left
+    if(player.fuelTank.mGas <= 0){
+        DataManager::getInstance().gameOver = true;
     }
 }

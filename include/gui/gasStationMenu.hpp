@@ -9,7 +9,7 @@
 
 #include <lufuGui.hpp>
 #include <guiContext.hpp>
-#include <assetManager.hpp>
+#include <dataManager.hpp>
 
 class GasStationMenu : virtual public GuiContext{
 private:
@@ -41,6 +41,10 @@ public:
 
             if(closeButton.mIsPressed){
                 disable();
+            }
+
+            if(buyFuelTextButton.mIsPressed){
+                DataManager::getInstance().player.fuelTank.mGas = DataManager::getInstance().player.fuelTank.mGasMax;
             }
         }
     }

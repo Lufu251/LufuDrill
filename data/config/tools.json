@@ -15,12 +15,12 @@
         {
             "name": "basic",
             "cost": 50,
-            "fuel": 100
+            "fuel": 50
         },
         {
             "name": "advanced",
             "cost": 500,
-            "fuel": 1000
+            "fuel": 100
         }
     ],
     "hull": [

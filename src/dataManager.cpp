@@ -91,12 +91,21 @@ void DataManager::loadSettingConfig(const std::string& name){
 
     // Parse each setting section
     // GENERAL
+    thrustForce = settings["general"]["thrustForce"];
+    passivFuelUsage = settings["general"]["passivFuelUsage"];
+    activeFuelUsage = settings["general"]["activeFuelUsage"];
 
     // WINDOW
     screenWidth = settings["window"]["screenWidth"];
     screenHeight = settings["window"]["screenHeight"];
 
     // PHYSICS
+    gravity.y = settings["physics"]["gravity"];
+    airResistance = settings["physics"]["airResistance"];
+    collisionRetention = settings["physics"]["collisionRetention"];
+    velocityThreshhold = settings["physics"]["velocityThreshhold"];
+    onGroundResistance = settings["physics"]["onGroundResistance"];
+    touchingDistance = settings["physics"]["touchingDistance"];
 
 }
 

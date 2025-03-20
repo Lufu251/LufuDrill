@@ -30,20 +30,23 @@ private:
     std::string savesDirectory = "saves";
     
     // Containers for data
-    // Equ containers
+    
+
+public:
+    // Equipments
     std::vector<Drill> drills; // Stores all drills that can be bought
-    std::vector<FuelTank> fuelTanks; // Stores all fuelTanks that can be bought
+    std::vector<GasTank> fuelTanks; // Stores all fuelTanks that can be bought
     std::vector<Hull> hulls; // Stores all huels that can be bought
     std::vector<CargoBay> cargoBays; // Stores all storages that can be bought
     std::vector<Engine> engines; // Stores all engines that can be bought
     std::vector<Equipment> equipments; // Stores all tools that can be bought
 
-public:
     // Scene
     std::unique_ptr<Scene> activeScene;
 
-    // Window is still running
+    // Tracking variables
     bool windowOpen = true;
+    bool gameOver = false;
 
     // GameState
     Player player;
@@ -53,20 +56,22 @@ public:
     Building trader;
     Building shop;
 
+    // General
+    float thrustForce;
+    float passivFuelUsage;
+    float activeFuelUsage;
+
     // Window settings
     int screenWidth;
     int screenHeight;
 
-    // Variables
-    float movementSpeed = 0.6f;
-
-    //Physics Variables
-    const Vector2 gravity{0.0f,0.4f}; // Gravity of the world
-    float airResistance = 0.985f; // 0 to 1; 0 is no resistance
-    float collisionRetention = 0.1f; // Remaing velocity after collision
-    float velocityThreshhold = 0.05f; // If velocity is below this value it will be set to zero
-    float onGroundResistance = 0.8f; // Multiplication factor when moving on ground
-    float touchingDistance = 1.0f; // Distance to check if a side should be considered as touching or not
+    // Physics Variables
+    Vector2 gravity{0.0f,0.0f}; // Gravity of the world
+    float airResistance; // 0 to 1; 0 is no resistance
+    float collisionRetention; // Remaing velocity after collision
+    float velocityThreshhold; // If velocity is below this value it will be set to zero
+    float onGroundResistance; // Multiplication factor when moving on ground
+    float touchingDistance; // Distance to check if a side should be considered as touching or not
 
     // Access the singleton instance
     static DataManager& getInstance();

@@ -8,8 +8,6 @@ enum BUILDING_TYPE{GAS_STATION, TRADER, SHOP};
 class Building : public AABB{
 private:
     
-    
-
 public:
     GuiContext* mMenuToTrigger;
     int mType;

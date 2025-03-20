@@ -1,12 +1,12 @@
 {
     "general": {
-        "draft": "draft"
+        "thrustForce": 0.6,
+        "passivFuelUsage": 0.01,
+        "activeFuelUsage": 0.04
     },
     "window": {
         "screenWidth": 1920,
-        "screenHeight": 1080,
-        "fullscreen": false,
-        "resizable": true
+        "screenHeight": 1080
     },
     "physics": {
         "gravity": 0.4,

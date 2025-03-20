@@ -5,73 +5,63 @@
 // Base class
 class Tool {
 public:
-    std::string name;
-    int cost;
+    std::string mName;
+    int mCost;
 
     Tool(){}
-    Tool(std::string name, int cost) : name(name), cost(cost) {}
+    Tool(std::string name, int cost) : mName(name), mCost(cost) {}
 };
 
 class Drill : public Tool{
 public:
-    int power;
+    int mPower;
 
     Drill(){}
-    Drill(std::string name, int cost, int power) : Tool(name, cost), power(power) {}
+    Drill(std::string name, int cost, int power) : Tool(name, cost), mPower(power) {}
     ~Drill(){}
 };
 
 
-class FuelTank: public Tool{
+class GasTank: public Tool{
 public:
-    std::string name;
-    int cost;
-    float fuel;
-    float fuelMax;
+    float mGas;
+    float mGasMax;
 
-    FuelTank(){}
-    FuelTank(std::string name, int cost, int fuel) : Tool(name, cost), fuel(fuel) {}
-    ~FuelTank(){}
+    GasTank(){}
+    GasTank(std::string name, int cost, int gasMax) : Tool(name, cost), mGasMax(gasMax) {}
+    ~GasTank(){}
 };
 
 class Hull: public Tool{
 public:
-    std::string name;
-    int cost;
-    float health;
-    float healthMax;
+    float mHealth;
+    float mHealthMax;
 
     Hull(){}
-    Hull(std::string name, int cost, int health) : Tool(name, cost), health(health) {}
+    Hull(std::string name, int cost, int healthMax) : Tool(name, cost), mHealthMax(healthMax) {}
     ~Hull(){}
 };
 
 class CargoBay: public Tool{
 public:
-    std::string name;
-    int cost;
-    int capacity;
+    int mCapacity;
 
     CargoBay(){}
-    CargoBay(std::string name, int cost, int capacity) : Tool(name, cost), capacity(capacity) {}
+    CargoBay(std::string name, int cost, int capacity) : Tool(name, cost), mCapacity(capacity) {}
     ~CargoBay(){}
 };
 
 class Engine: public Tool{
 public:
-    std::string name;
-    int cost;
-    float power;
+    float mPower;
 
     Engine(){}
-    Engine(std::string name, int cost, int power) : Tool(name, cost), power(power) {}
+    Engine(std::string name, int cost, int power) : Tool(name, cost), mPower(power) {}
     ~Engine(){}
 };
 
 class Equipment: public Tool{
 public:
-    std::string name;
-    int cost;
 
     Equipment(){}
     Equipment(std::string name, int cost) : Tool(name, cost) {}

@@ -13,6 +13,9 @@
 
 class GameScene : public Scene{
 private:
+    // Access Singleton
+    DataManager& dataManager = DataManager::getInstance();
+
     GameHandler gameHandler;
     GameRenderer gameRenderer;
 
@@ -27,12 +30,22 @@ public:
     ~GameScene(){}
 
     void initialize() override{
+        
+
         // Preload textureAtlas
         AssetManager::getInstance().loadTextureAtlas("tileset");
         AssetManager::getInstance().loadTextureAtlas("particleset");
 
         // Load tools configuration
-        DataManager::getInstance().loadToolConfig("tools.json");
+        dataManager.loadToolConfig("tools.json");
+
+        // Init Player
+        dataManager.player = Player({200,200}, {24,24}, {0,0});
+        dataManager.player.drill = dataManager.drills[0];
+        dataManager.player.fuelTank = dataManager.fuelTanks[0];
+        dataManager.player.hull = dataManager.hulls[0];
+        dataManager.player.cargoBay = dataManager.cargoBays[0];
+        dataManager.player.engine = dataManager.engines[0];
 
         playerGui = PlayerGui({0,0}, {static_cast<float>(GetScreenWidth()), static_cast<float>(GetScreenHeight())});
         playerGui.initialize();
@@ -47,7 +60,7 @@ public:
         shopMenu = ShopMenu({100,100}, {600,600});
         shopMenu.initialize();
         
-        for (auto& building : DataManager::getInstance().world.buildings){
+        for (auto& building : dataManager.world.buildings){
             switch (building.mType)
             {
             case GAS_STATION:
@@ -67,45 +80,50 @@ public:
         // Camera initialise
         gameRenderer.camera.zoom = 2.0f;
         gameRenderer.camera.rotation = 0.0f;
-        gameRenderer.camera.target = DataManager::getInstance().player.position;
-        gameRenderer.setCameraOffset({GetScreenWidth() / 2.0f - DataManager::getInstance().player.size.x, GetScreenHeight() / 2.0f - DataManager::getInstance().player.size.y});
-
-        DataManager::getInstance().player = Player({200,200}, {24,24}, {0,0});
+        gameRenderer.camera.target = dataManager.player.position;
+        gameRenderer.setCameraOffset({GetScreenWidth() / 2.0f - dataManager.player.size.x, GetScreenHeight() / 2.0f - dataManager.player.size.y});
     }
 
     void update() override {
         //float deltaTime = GetFrameTime();
         // Do updates on screen resize
         if(IsWindowResized()){
-            gameRenderer.setCameraOffset({GetScreenWidth() / 2.0f - DataManager::getInstance().player.size.x, GetScreenHeight() / 2.0f - DataManager::getInstance().player.size.y});
+            gameRenderer.setCameraOffset({GetScreenWidth() / 2.0f - dataManager.player.size.x, GetScreenHeight() / 2.0f - dataManager.player.size.y});
         }
 
         // Update and pan camera in the direction of the player
-        gameRenderer.moveCameraToPosition(DataManager::getInstance().player.position);
+        gameRenderer.moveCameraToPosition(dataManager.player.position);
 
         // Movement input
-        Vector2 movementInput{0,0};
-        gameHandler.handleInput(movementInput);
-        movementInput = Vector2Scale(movementInput, DataManager::getInstance().movementSpeed); // Multiply by speed
+        Vector2 movementInput = gameHandler.playerMovementInput();
 
         // Calculate air resistance
-        Vector2 airResistance = DataManager::getInstance().player.velocity - DataManager::getInstance().player.velocity * DataManager::getInstance().airResistance;
-        DataManager::getInstance().player.addForce(movementInput); // Add movementInput to player velocity
-        DataManager::getInstance().player.addForce(DataManager::getInstance().gravity); // Add gravity to player velocity
-        DataManager::getInstance().player.addForce(Vector2Negate(airResistance)); // Add airResistance to player velocity
+        Vector2 airResistance = Vector2Negate(dataManager.player.velocity - dataManager.player.velocity * dataManager.airResistance);
+
+        // Add Forces
+        dataManager.player.addForce(movementInput); // Add movementInput to player velocity
+        dataManager.player.addForce(dataManager.gravity); // Add gravity to player velocity
+        dataManager.player.addForce(airResistance); // Add airResistance to player velocity
 
         // Stop completely if below the threshold
-        if (Vector2Length(DataManager::getInstance().player.velocity) < DataManager::getInstance().velocityThreshhold) DataManager::getInstance().player.velocity = { 0.0f, 0.0f };
+        if (Vector2Length(dataManager.player.velocity) < dataManager.velocityThreshhold) dataManager.player.velocity = { 0.0f, 0.0f };
 
         // Physics collision response and move player
-        gameHandler.checkCollisionAndMove(DataManager::getInstance().player, DataManager::getInstance().world);
+        gameHandler.checkCollisionAndMove(dataManager.player, dataManager.world);
 
         //Clamp player to grid
-        gameHandler.clampToGrid(DataManager::getInstance().player, DataManager::getInstance().world);
+        gameHandler.clampToGrid(dataManager.player, dataManager.world);
 
         // Check if player is touching a block on any side and count for how long it is touching
-        gameHandler.checkPlayerTouchingSides(DataManager::getInstance().player, DataManager::getInstance().world);
-        gameHandler.checkBuildingTriggers(DataManager::getInstance().player, DataManager::getInstance().world);
+        gameHandler.checkPlayerTouchingSides(dataManager.player, dataManager.world);
+        gameHandler.checkBuildingTriggers(dataManager.player, dataManager.world);
+        gameHandler.checkGameOverStates(dataManager.player);
+
+        // Update Gas
+        dataManager.player.fuelTank.mGas -= dataManager.passivFuelUsage;
+        if(Vector2LengthSqr(movementInput) > 0){
+            dataManager.player.fuelTank.mGas -= dataManager.activeFuelUsage;
+        }
 
         // Update Gui
         playerGui.update();
@@ -119,9 +137,9 @@ public:
         // Clear Screen for the new render cycle
         ClearBackground(PURPLE);
 
-        gameRenderer.renderMapGrid(DataManager::getInstance().world);
-        gameRenderer.renderMapBuildings(DataManager::getInstance().world);
-        gameRenderer.renderPlayer(DataManager::getInstance().player);
+        gameRenderer.renderMapGrid(dataManager.world);
+        gameRenderer.renderMapBuildings(dataManager.world);
+        gameRenderer.renderPlayer(dataManager.player);
 
         gasStationMenu.render();
         traderMenu.render();
