@@ -14,8 +14,7 @@
 class ShopMenu : virtual public GuiContext{
 private:
     lufu_gui::Text titelText;
-    lufu_gui::Button closeButton;
-    lufu_gui::TextButton buyFuelTextButton;
+    lufu_gui::TextButton repairHullTextButton;
     
 public:
     using GuiContext::GuiContext;
@@ -23,8 +22,7 @@ public:
     void initialize() override{
         Font font = GetFontDefault();
         titelText = lufu_gui::Text("Shop", 40, font);
-        closeButton = lufu_gui::Button(Vector2{20,20});
-        buyFuelTextButton = lufu_gui::TextButton(Vector2{100,30}, "Buy Tool", 20, font);
+        repairHullTextButton = lufu_gui::TextButton(Vector2{120,40}, "Repair Hull", 20, font);
     }
 
     void update() override {
@@ -32,15 +30,13 @@ public:
         if(mIsActive){
             // Update GuiElements
             titelText.setPosition(mPosition + Vector2{5,5});
-            closeButton.setPosition(mPosition + Vector2{575,5});
-            buyFuelTextButton.setPosition(mPosition + Vector2{20,100});
+            repairHullTextButton.setPosition(mPosition + Vector2{20,100});
 
             titelText.update();
-            closeButton.update();
-            buyFuelTextButton.update();
+            repairHullTextButton.update();
 
-            if(closeButton.mIsPressed){
-                disable();
+            if(repairHullTextButton.mIsPressed){
+                DataManager::getInstance().player.hull.mHealth = DataManager::getInstance().player.hull.mHealthMax;
             }
         }
     }
@@ -52,8 +48,7 @@ public:
 
             // Draw GuiElements
             titelText.render();
-            closeButton.render();
-            buyFuelTextButton.render();
+            repairHullTextButton.render();
         }
     }
 };

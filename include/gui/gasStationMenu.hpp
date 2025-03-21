@@ -14,8 +14,7 @@
 class GasStationMenu : virtual public GuiContext{
 private:
     lufu_gui::Text titelText;
-    lufu_gui::Button closeButton;
-    lufu_gui::TextButton buyFuelTextButton;
+    lufu_gui::TextButton buyGasTextButton;
     
 public:
     using GuiContext::GuiContext;
@@ -23,8 +22,7 @@ public:
     void initialize() override{
         Font font = GetFontDefault();
         titelText = lufu_gui::Text("Gas Station", 40, font);
-        closeButton = lufu_gui::Button(Vector2{20,20});
-        buyFuelTextButton = lufu_gui::TextButton(Vector2{100,30}, "Buy Gas", 20, font);
+        buyGasTextButton = lufu_gui::TextButton(Vector2{120,40}, "Buy Gas", 20, font);
     }
 
     void update() override {
@@ -32,19 +30,13 @@ public:
         if(mIsActive){
             // Update GuiElements
             titelText.setPosition(mPosition + Vector2{5,5});
-            closeButton.setPosition(mPosition + Vector2{575,5});
-            buyFuelTextButton.setPosition(mPosition + Vector2{20,100});
+            buyGasTextButton.setPosition(mPosition + Vector2{20,100});
 
             titelText.update();
-            closeButton.update();
-            buyFuelTextButton.update();
+            buyGasTextButton.update();
 
-            if(closeButton.mIsPressed){
-                disable();
-            }
-
-            if(buyFuelTextButton.mIsPressed){
-                DataManager::getInstance().player.fuelTank.mGas = DataManager::getInstance().player.fuelTank.mGasMax;
+            if(buyGasTextButton.mIsPressed){
+                DataManager::getInstance().player.gasTank.mGas = DataManager::getInstance().player.gasTank.mGasMax;
             }
         }
     }
@@ -56,8 +48,7 @@ public:
 
             // Draw GuiElements
             titelText.render();
-            closeButton.render();
-            buyFuelTextButton.render();
+            buyGasTextButton.render();
         }
     }
 };

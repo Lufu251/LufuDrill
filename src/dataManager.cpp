@@ -125,7 +125,7 @@ void DataManager::loadToolConfig(const std::string& name){
         drills.emplace_back(item["name"], item["cost"], item["power"]);
     }
     for (const auto& item : jsonData["fueltank"]) {
-        fuelTanks.emplace_back(item["name"], item["cost"], item["fuel"]);
+        gasTanks.emplace_back(item["name"], item["cost"], item["fuel"]);
     }
     for (const auto& item : jsonData["hull"]) {
         hulls.emplace_back(item["name"], item["cost"], item["health"]);

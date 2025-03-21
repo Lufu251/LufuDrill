@@ -51,7 +51,7 @@ public:
             hullBarText.update();
             hullBar.update();
 
-            fuelBar.setProgress(DataManager::getInstance().player.fuelTank.mGas / DataManager::getInstance().player.fuelTank.mGasMax);
+            fuelBar.setProgress(DataManager::getInstance().player.gasTank.mGas / DataManager::getInstance().player.gasTank.mGasMax);
             hullBar.setProgress(DataManager::getInstance().player.hull.mHealth / DataManager::getInstance().player.hull.mHealthMax);
         }
     }

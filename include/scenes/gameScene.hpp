@@ -24,14 +24,12 @@ private:
     GasStationMenu gasStationMenu;
     TraderMenu traderMenu;
     ShopMenu shopMenu;
-
+ 
 public:
     GameScene(){}
     ~GameScene(){}
 
     void initialize() override{
-        
-
         // Preload textureAtlas
         AssetManager::getInstance().loadTextureAtlas("tileset");
         AssetManager::getInstance().loadTextureAtlas("particleset");
@@ -42,10 +40,14 @@ public:
         // Init Player
         dataManager.player = Player({200,200}, {24,24}, {0,0});
         dataManager.player.drill = dataManager.drills[0];
-        dataManager.player.fuelTank = dataManager.fuelTanks[0];
+        dataManager.player.gasTank = dataManager.gasTanks[1];
         dataManager.player.hull = dataManager.hulls[0];
         dataManager.player.cargoBay = dataManager.cargoBays[0];
         dataManager.player.engine = dataManager.engines[0];
+
+        // Set Hull and Gas to max
+        dataManager.player.gasTank.mGas = dataManager.player.gasTank.mGasMax;
+        dataManager.player.hull.mHealth = dataManager.player.hull.mHealthMax;
 
         playerGui = PlayerGui({0,0}, {static_cast<float>(GetScreenWidth()), static_cast<float>(GetScreenHeight())});
         playerGui.initialize();
@@ -94,12 +96,9 @@ public:
         // Update and pan camera in the direction of the player
         gameRenderer.moveCameraToPosition(dataManager.player.position);
 
-        // Movement input
+        // Values for player force
         Vector2 movementInput = gameHandler.playerMovementInput();
-
-        // Calculate air resistance
         Vector2 airResistance = Vector2Negate(dataManager.player.velocity - dataManager.player.velocity * dataManager.airResistance);
-
         // Add Forces
         dataManager.player.addForce(movementInput); // Add movementInput to player velocity
         dataManager.player.addForce(dataManager.gravity); // Add gravity to player velocity
@@ -117,13 +116,15 @@ public:
         // Check if player is touching a block on any side and count for how long it is touching
         gameHandler.checkPlayerTouchingSides(dataManager.player, dataManager.world);
         gameHandler.checkBuildingTriggers(dataManager.player, dataManager.world);
-        gameHandler.checkGameOverStates(dataManager.player);
+        
 
         // Update Gas
-        dataManager.player.fuelTank.mGas -= dataManager.passivFuelUsage;
+        dataManager.player.gasTank.mGas -= dataManager.passivFuelUsage;
         if(Vector2LengthSqr(movementInput) > 0){
-            dataManager.player.fuelTank.mGas -= dataManager.activeFuelUsage;
+            dataManager.player.gasTank.mGas -= dataManager.activeFuelUsage;
         }
+
+        gameHandler.checkGameOverStates(dataManager.player);
 
         // Update Gui
         playerGui.update();

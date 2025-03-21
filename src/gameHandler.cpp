@@ -166,6 +166,9 @@ void GameHandler::checkCollisionAndMove(AABB& box, World& world){
             }
             if(hit.n.y < 0){
                 // BOTTOM
+                // Apply damage to Hull when hitting the bottom
+                collisionDamageToPlayer();
+
                 // Dampening everytime a hit occures
                 boxClone.velocity.y *= dataManager.collisionRetention;
                 box.velocity.y *= dataManager.collisionRetention;
@@ -267,7 +270,15 @@ void GameHandler::checkBuildingTriggers(AABB& box, World& world){
 
 void GameHandler::checkGameOverStates(Player& player){
     // Check if no gas is left
-    if(player.fuelTank.mGas <= 0){
+    if(player.gasTank.mGas <= 0){
         DataManager::getInstance().gameOver = true;
+    }
+}
+
+void GameHandler::collisionDamageToPlayer(){
+    float Threshold = 8;
+    // Check if vertical velocity is greater than
+    if(DataManager::getInstance().player.velocity.y >= Threshold){
+        DataManager::getInstance().player.hull.mHealth -= 10;
     }
 }

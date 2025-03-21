@@ -35,7 +35,7 @@ private:
 public:
     // Equipments
     std::vector<Drill> drills; // Stores all drills that can be bought
-    std::vector<GasTank> fuelTanks; // Stores all fuelTanks that can be bought
+    std::vector<GasTank> gasTanks; // Stores all fuelTanks that can be bought
     std::vector<Hull> hulls; // Stores all huels that can be bought
     std::vector<CargoBay> cargoBays; // Stores all storages that can be bought
     std::vector<Engine> engines; // Stores all engines that can be bought

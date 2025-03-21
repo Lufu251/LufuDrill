@@ -9,7 +9,7 @@
 class Player : public AABB{
 public:
     Drill drill;
-    GasTank fuelTank;
+    GasTank gasTank;
     Hull hull;
     CargoBay cargoBay;
     Engine engine;

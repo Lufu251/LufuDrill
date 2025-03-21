@@ -1,7 +1,7 @@
 {
     "general": {
         "thrustForce": 0.6,
-        "passivFuelUsage": 0.01,
+        "passivFuelUsage": 0.005,
         "activeFuelUsage": 0.04
     },
     "window": {

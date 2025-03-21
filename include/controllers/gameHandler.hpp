@@ -28,4 +28,5 @@ public:
     void checkPlayerTouchingSides(Player& player, World& world);
     void checkBuildingTriggers(AABB& box, World& world);
     void checkGameOverStates(Player& player);
+    void collisionDamageToPlayer();
 };

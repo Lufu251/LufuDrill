@@ -14,8 +14,7 @@
 class TraderMenu : virtual public GuiContext{
 private:
     lufu_gui::Text titelText;
-    lufu_gui::Button closeButton;
-    lufu_gui::TextButton buyFuelTextButton;
+    lufu_gui::TextButton sellAllTextButton;
     
 public:
     using GuiContext::GuiContext;
@@ -23,8 +22,7 @@ public:
     void initialize() override{
         Font font = GetFontDefault();
         titelText = lufu_gui::Text("Trader", 40, font);
-        closeButton = lufu_gui::Button(Vector2{20,20});
-        buyFuelTextButton = lufu_gui::TextButton(Vector2{100,30}, "Sell All", 20, font);
+        sellAllTextButton = lufu_gui::TextButton(Vector2{120,40}, "Sell All", 20, font);
     }
 
     void update() override {
@@ -32,15 +30,13 @@ public:
         if(mIsActive){
             // Update GuiElements
             titelText.setPosition(mPosition + Vector2{5,5});
-            closeButton.setPosition(mPosition + Vector2{575,5});
-            buyFuelTextButton.setPosition(mPosition + Vector2{20,100});
+            sellAllTextButton.setPosition(mPosition + Vector2{20,100});
 
             titelText.update();
-            closeButton.update();
-            buyFuelTextButton.update();
+            sellAllTextButton.update();
 
-            if(closeButton.mIsPressed){
-                disable();
+            if(sellAllTextButton.mIsPressed){
+                // Sell All
             }
         }
     }
@@ -52,8 +48,7 @@ public:
 
             // Draw GuiElements
             titelText.render();
-            closeButton.render();
-            buyFuelTextButton.render();
+            sellAllTextButton.render();
         }
     }
 };
