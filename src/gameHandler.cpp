@@ -273,12 +273,17 @@ void GameHandler::checkGameOverStates(Player& player){
     if(player.gasTank.mGas <= 0){
         DataManager::getInstance().gameOver = true;
     }
+    // Check if hull is destroyed
+    if(player.hull.mHealth <= 0){
+        DataManager::getInstance().gameOver = true;
+    }
 }
 
 void GameHandler::collisionDamageToPlayer(){
-    float Threshold = 8;
+    float threshold = 8;
     // Check if vertical velocity is greater than
-    if(DataManager::getInstance().player.velocity.y >= Threshold){
-        DataManager::getInstance().player.hull.mHealth -= 10;
+    if(DataManager::getInstance().player.velocity.y >= threshold){
+        float damage = std::clamp( 6 * (DataManager::getInstance().player.velocity.y -threshold), threshold, 100.0f);
+        DataManager::getInstance().player.hull.mHealth -= damage;
     }
 }
