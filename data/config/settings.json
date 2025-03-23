@@ -18,7 +18,7 @@
         "airResistance": 0.985,
         "collisionRetention": 0.1,
         "velocityThreshhold": 0.05,
-        "onGroundResistance": 0.8,
+        "onGroundResistance": 0.9,
         "touchingDistance": 1
     }
   }

@@ -40,12 +40,18 @@ public:
         AssetManager::getInstance().loadTexture("sky", "sky.png");
         AssetManager::getInstance().loadTexture("mountain", "mountain.png");
         AssetManager::getInstance().loadTexture("cloud", "cloud.png");
+        AssetManager::getInstance().loadTexture("drill_unit", "drill_unit.png");
+
+        AssetManager::getInstance().loadMusic("nebula_run", "nebula_run.ogg");
+
+        // Play music
+        PlayMusicStream(AssetManager::getInstance().getMusic("nebula_run"));
 
         // Load tools configuration
         dataManager.loadToolConfig("tools.json");
 
         // Init Player
-        dataManager.player = Player({200,200}, {24,24}, {0,0});
+        dataManager.player = Player({200,300}, {24,24}, {0,0});
         dataManager.player.drill = dataManager.drills[0];
         dataManager.player.gasTank = dataManager.gasTanks[0];
         dataManager.player.hull = dataManager.hulls[0];
@@ -76,20 +82,10 @@ public:
         for (auto& building : dataManager.world.buildings){
             switch (building.mType)
             {
-            case GAS_STATION:
-                building.setMenuToTrigger(gasStationMenu);
-                break;
-            case TRADER:
-                building.setMenuToTrigger(traderMenu);
-                break;
-            case TOOL_SHOP:
-                building.setMenuToTrigger(toolShopMenu);
-                break;
-            case EQUIPMENT_SHOP:
-                building.setMenuToTrigger(equipmentShopMenu);
-                break;
-            default:
-                break;
+            case GAS_STATION: building.setMenuToTrigger(gasStationMenu); break;
+            case TRADER: building.setMenuToTrigger(traderMenu); break;
+            case TOOL_SHOP: building.setMenuToTrigger(toolShopMenu); break;
+            case EQUIPMENT_SHOP: building.setMenuToTrigger(equipmentShopMenu); break;
             }
         }
         
@@ -102,6 +98,8 @@ public:
 
     void update() override {
         //float deltaTime = GetFrameTime();
+        UpdateMusicStream(AssetManager::getInstance().getMusic("nebula_run"));
+
         // Do updates on screen resize
         if(IsWindowResized()){
             gameRenderer.setCameraOffset({GetScreenWidth() / 2.0f, GetScreenHeight() / 2.0f});

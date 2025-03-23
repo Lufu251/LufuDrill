@@ -78,9 +78,8 @@ void GameRenderer::renderMapBuildings(World& world){
 
 void GameRenderer::renderPlayer(Player& player){
     BeginMode2D(camera);
-
-    DrawRectangleV(player.position, player.size, RED);
-
+    Texture2D  drill_unitTexture = AssetManager::getInstance().getTexture("drill_unit");
+    DrawTextureEx(drill_unitTexture, {player.position.x -6, player.position.y}, 0, 1, WHITE);
     EndMode2D();
 }
 
@@ -91,23 +90,26 @@ void GameRenderer::renderBackground(Player& player){
     Texture2D  mountainTexture = AssetManager::getInstance().getTexture("mountain");
     
 
-    float paralaxLayer1 = 0;
-    float paralaxLayer2 = player.position.x / 15;
-    float paralaxLayer3 = player.position.x / 40;
+    float paralax3 = camera.target.x - (camera.target.x + camera.offset.x) * 0.3;
+    float paralax2 = camera.target.x - (camera.target.x + camera.offset.x) * 0.5;
+    float paralax1 = camera.target.x - (camera.target.x + camera.offset.x) * 0.7;
 
     float yOffset = 0;
+    float xOffset = -1000;
     float scale = 1.5;
 
     int repeat = 12;
+
     for(float i = 0; i < repeat; i++){
-        DrawTextureEx(skyTexture, {skyTexture.width * i * scale - paralaxLayer1, yOffset}, 0, scale, {255,255,255,255});
+        DrawTextureEx(skyTexture, {mountainTexture.width * i * scale + paralax3 + xOffset, yOffset}, 0, scale, {255,255,255,255});
     }
     for(float i = 0; i < repeat; i++){
-        DrawTextureEx(cloudTexture, {cloudTexture.width * i * scale  - paralaxLayer2, yOffset}, 0, scale, {255,255,255,255});
+        DrawTextureEx(cloudTexture, {mountainTexture.width * i * scale + paralax2 + xOffset, yOffset}, 0, scale, {255,255,255,255});
     }
     for(float i = 0; i < repeat; i++){
-        DrawTextureEx(mountainTexture, {mountainTexture.width * i * scale  - paralaxLayer3, yOffset}, 0, scale, {255,255,255,255});
+        DrawTextureEx(mountainTexture, {mountainTexture.width * i * scale + paralax1 + xOffset, yOffset}, 0, scale, {255,255,255,255});
     }
+
     
     EndMode2D();
 }

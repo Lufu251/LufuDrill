@@ -16,8 +16,8 @@ GameHandler::~GameHandler(){}
 Vector2 GameHandler::playerMovementInput(){
     Vector2 direction{0,0};
     // Player input
-    if(IsKeyDown(KEY_A)) direction.x += -0.5f;
-    if(IsKeyDown(KEY_D)) direction.x += 0.5f;
+    if(IsKeyDown(KEY_A)) direction.x += -0.2f;
+    if(IsKeyDown(KEY_D)) direction.x += 0.2f;
     if(IsKeyDown(KEY_W)) direction.y += -1;
 
     // Multiply by speed
