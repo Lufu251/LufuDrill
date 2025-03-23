@@ -15,6 +15,11 @@ void GameRenderer::moveCameraToPosition(const Vector2& position){
     camera.target = Vector2Lerp(camera.target, position, 0.6f);
 }
 
+void GameRenderer::clampCameraToGrid(AABB& box, World& world){
+    camera.target.x = std::clamp(camera.target.x, camera.offset.x /camera.zoom, static_cast<float>(world.mGrid.gridSizeX * world.mBlockSize - camera.offset.x /camera.zoom));
+    camera.target.y = std::clamp(camera.target.y, camera.offset.y /camera.zoom, static_cast<float>(world.mGrid.gridSizeY * world.mBlockSize - camera.offset.y /camera.zoom));
+}
+
 void GameRenderer::renderMapGrid(World& world){
     TextureAtlas& tileset = AssetManager::getInstance().getTextureAtlas("tileset");
 
@@ -41,7 +46,7 @@ void GameRenderer::renderMapGrid(World& world){
 
             Block* block = &world.mGrid(iBlock, jBlock); // Set the current block
             switch (block->mType){
-                case EMPTY: DrawRectangle(block->position.x, block->position.y, world.mBlockSize, world.mBlockSize, RAYWHITE); break;
+                case EMPTY: break;
                 case DIRT: DrawTextureRec(tileset.texture, tileset.sections["DIRT"], block->position, WHITE); break;
                 case STONE: DrawTextureRec(tileset.texture, tileset.sections["STONE"], block->position, WHITE);; break;
                 case COPPERORE: DrawTextureRec(tileset.texture, tileset.sections["COPPERORE"], block->position, WHITE);; break;
@@ -65,8 +70,11 @@ void GameRenderer::renderMapBuildings(World& world){
             case TRADER:
                 DrawRectangleV(building.position, building.size, YELLOW);
                 break;
-            case SHOP:
+            case TOOL_SHOP:
                 DrawRectangleV(building.position, building.size, BLUE);
+                break;
+            case EQUIPMENT_SHOP:
+                DrawRectangleV(building.position, building.size, GREEN);
                 break;
             default:
                 break;
@@ -80,5 +88,33 @@ void GameRenderer::renderPlayer(Player& player){
 
     DrawRectangleV(player.position, player.size, RED);
 
+    EndMode2D();
+}
+
+void GameRenderer::renderBackground(Player& player){
+    BeginMode2D(camera);
+    Texture2D  skyTexture = AssetManager::getInstance().getTexture("sky");
+    Texture2D  cloudTexture = AssetManager::getInstance().getTexture("cloud");
+    Texture2D  mountainTexture = AssetManager::getInstance().getTexture("mountain");
+    
+
+    float paralaxLayer1 = 0;
+    float paralaxLayer2 = player.position.x / 15;
+    float paralaxLayer3 = player.position.x / 40;
+
+    float yOffset = 0;
+    float scale = 1.5;
+
+    int repeat = 12;
+    for(float i = 0; i < repeat; i++){
+        DrawTextureEx(skyTexture, {skyTexture.width * i * scale - paralaxLayer1, yOffset}, 0, scale, {255,255,255,255});
+    }
+    for(float i = 0; i < repeat; i++){
+        DrawTextureEx(cloudTexture, {cloudTexture.width * i * scale  - paralaxLayer2, yOffset}, 0, scale, {255,255,255,255});
+    }
+    for(float i = 0; i < repeat; i++){
+        DrawTextureEx(mountainTexture, {mountainTexture.width * i * scale  - paralaxLayer3, yOffset}, 0, scale, {255,255,255,255});
+    }
+    
     EndMode2D();
 }

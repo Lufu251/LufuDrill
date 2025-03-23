@@ -5,7 +5,6 @@
 #include <random>
 
 #include <dataManager.hpp>
-#include <aabb.hpp>
 #include <world.hpp>
 #include <buildings.hpp>
 
@@ -36,7 +35,8 @@ void GameHandler::generateTerrain(World& world){
     // Place buildings
     world.buildings.push_back(Building(GAS_STATION ,{400, 380}, {100, 100}));
     world.buildings.push_back(Building(TRADER ,{800, 380}, {100, 100}));
-    world.buildings.push_back(Building(SHOP ,{1200, 380}, {100, 100}));
+    world.buildings.push_back(Building(TOOL_SHOP ,{1200, 380}, {100, 100}));
+    world.buildings.push_back(Building(EQUIPMENT_SHOP ,{1600, 380}, {100, 100}));
 
     for (size_t x = 0; x < world.mGrid.gridSizeX; x++){
         for (size_t y = 0; y < world.mGrid.gridSizeY; y++){
@@ -285,5 +285,12 @@ void GameHandler::collisionDamageToPlayer(){
     if(DataManager::getInstance().player.velocity.y >= threshold){
         float damage = std::clamp( 6 * (DataManager::getInstance().player.velocity.y -threshold), threshold, 100.0f);
         DataManager::getInstance().player.hull.mHealth -= damage;
+    }
+}
+
+void GameHandler::drainGasFromPlayer(Player& player, Vector2& movementInput){
+    player.gasTank.mGas -= DataManager::getInstance().passivFuelUsage;
+    if(Vector2LengthSqr(movementInput) > 0){
+        player.gasTank.mGas -= DataManager::getInstance().activeFuelUsage;
     }
 }

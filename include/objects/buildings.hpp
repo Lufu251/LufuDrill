@@ -3,7 +3,7 @@
 #include <aabb.hpp>
 #include <guiContext.hpp>
 
-enum BUILDING_TYPE{GAS_STATION, TRADER, SHOP};
+enum BUILDING_TYPE{GAS_STATION, TRADER, TOOL_SHOP, EQUIPMENT_SHOP};
 
 class Building : public AABB{
 private:

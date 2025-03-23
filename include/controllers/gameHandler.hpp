@@ -29,4 +29,5 @@ public:
     void checkBuildingTriggers(AABB& box, World& world);
     void checkGameOverStates(Player& player);
     void collisionDamageToPlayer();
+    void drainGasFromPlayer(Player& player, Vector2& movementInput);
 };

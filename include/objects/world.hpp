@@ -6,8 +6,7 @@
 
 #include <buildings.hpp>
 
-class World
-{
+class World {
 private:
     
 public:

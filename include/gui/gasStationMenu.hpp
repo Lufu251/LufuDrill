@@ -10,6 +10,7 @@
 #include <lufuGui.hpp>
 #include <guiContext.hpp>
 #include <dataManager.hpp>
+#include <assetManager.hpp>
 
 class GasStationMenu : virtual public GuiContext{
 private:
@@ -29,7 +30,7 @@ public:
         // Check if menu is active
         if(mIsActive){
             // Update GuiElements
-            titelText.setPosition(mPosition + Vector2{5,5});
+            titelText.setPosition(mPosition + Vector2{15,10});
             buyGasTextButton.setPosition(mPosition + Vector2{20,100});
 
             titelText.update();
@@ -44,7 +45,8 @@ public:
     void render() override {
         // Check if menu is activ
         if(mIsActive){
-            DrawRectangleV(mPosition, mSize, GRAY);
+            Texture2D texture = AssetManager::getInstance().getTexture("menuTemplate");
+            DrawTextureEx(texture, mPosition, 0, 4, {255,255,255,250});
 
             // Draw GuiElements
             titelText.render();

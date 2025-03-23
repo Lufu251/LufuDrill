@@ -20,7 +20,9 @@ public:
 
     void setCameraOffset(const Vector2& offset);
     void moveCameraToPosition(const Vector2& position);
+    void clampCameraToGrid(AABB& box, World& world);
     void renderMapGrid(World& world);
     void renderMapBuildings(World& world);
     void renderPlayer(Player& player);
+    void renderBackground(Player& player);
 };

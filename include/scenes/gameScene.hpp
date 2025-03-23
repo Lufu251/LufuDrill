@@ -7,7 +7,8 @@
 #include <playerGui.hpp>
 #include <gasStationMenu.hpp>
 #include <traderMenu.hpp>
-#include <shopMenu.hpp>
+#include <toolShopMenu.hpp>
+#include <equipmentShopMenu.hpp>
 #include <dataManager.hpp>
 #include <assetManager.hpp>
 
@@ -23,7 +24,8 @@ private:
     PlayerGui playerGui;
     GasStationMenu gasStationMenu;
     TraderMenu traderMenu;
-    ShopMenu shopMenu;
+    ToolShopMenu toolShopMenu;
+    EquipmentShopMenu equipmentShopMenu;
  
 public:
     GameScene(){}
@@ -34,13 +36,18 @@ public:
         AssetManager::getInstance().loadTextureAtlas("tileset");
         AssetManager::getInstance().loadTextureAtlas("particleset");
 
+        AssetManager::getInstance().loadTexture("menuTemplate", "menuTemplate.png");
+        AssetManager::getInstance().loadTexture("sky", "sky.png");
+        AssetManager::getInstance().loadTexture("mountain", "mountain.png");
+        AssetManager::getInstance().loadTexture("cloud", "cloud.png");
+
         // Load tools configuration
         dataManager.loadToolConfig("tools.json");
 
         // Init Player
         dataManager.player = Player({200,200}, {24,24}, {0,0});
         dataManager.player.drill = dataManager.drills[0];
-        dataManager.player.gasTank = dataManager.gasTanks[1];
+        dataManager.player.gasTank = dataManager.gasTanks[0];
         dataManager.player.hull = dataManager.hulls[0];
         dataManager.player.cargoBay = dataManager.cargoBays[0];
         dataManager.player.engine = dataManager.engines[0];
@@ -53,14 +60,18 @@ public:
         playerGui.initialize();
         playerGui.enable();
 
-        gasStationMenu = GasStationMenu({100,100}, {600,600});
+        gasStationMenu = GasStationMenu({100,100}, {800,700});
         gasStationMenu.initialize();
 
-        traderMenu = TraderMenu({100,100}, {600,600});
+        traderMenu = TraderMenu({100,100}, {800,700});
         traderMenu.initialize();
 
-        shopMenu = ShopMenu({100,100}, {600,600});
-        shopMenu.initialize();
+        toolShopMenu = ToolShopMenu({100,100}, {800,700});
+        toolShopMenu.initialize();
+
+        equipmentShopMenu = EquipmentShopMenu({100,100}, {800,700});
+        equipmentShopMenu.initialize();
+        
         
         for (auto& building : dataManager.world.buildings){
             switch (building.mType)
@@ -71,8 +82,11 @@ public:
             case TRADER:
                 building.setMenuToTrigger(traderMenu);
                 break;
-            case SHOP:
-                building.setMenuToTrigger(shopMenu);
+            case TOOL_SHOP:
+                building.setMenuToTrigger(toolShopMenu);
+                break;
+            case EQUIPMENT_SHOP:
+                building.setMenuToTrigger(equipmentShopMenu);
                 break;
             default:
                 break;
@@ -83,18 +97,19 @@ public:
         gameRenderer.camera.zoom = 2.0f;
         gameRenderer.camera.rotation = 0.0f;
         gameRenderer.camera.target = dataManager.player.position;
-        gameRenderer.setCameraOffset({GetScreenWidth() / 2.0f - dataManager.player.size.x, GetScreenHeight() / 2.0f - dataManager.player.size.y});
+        gameRenderer.setCameraOffset({GetScreenWidth() / 2.0f, GetScreenHeight() / 2.0f});
     }
 
     void update() override {
         //float deltaTime = GetFrameTime();
         // Do updates on screen resize
         if(IsWindowResized()){
-            gameRenderer.setCameraOffset({GetScreenWidth() / 2.0f - dataManager.player.size.x, GetScreenHeight() / 2.0f - dataManager.player.size.y});
+            gameRenderer.setCameraOffset({GetScreenWidth() / 2.0f, GetScreenHeight() / 2.0f});
         }
 
         // Update and pan camera in the direction of the player
-        gameRenderer.moveCameraToPosition(dataManager.player.position);
+        gameRenderer.moveCameraToPosition(dataManager.player.position + dataManager.player.size /2);
+        gameRenderer.clampCameraToGrid(dataManager.player, dataManager.world);
 
         // Values for player force
         Vector2 movementInput = gameHandler.playerMovementInput();
@@ -117,12 +132,8 @@ public:
         gameHandler.checkPlayerTouchingSides(dataManager.player, dataManager.world);
         gameHandler.checkBuildingTriggers(dataManager.player, dataManager.world);
         
-
         // Update Gas
-        dataManager.player.gasTank.mGas -= dataManager.passivFuelUsage;
-        if(Vector2LengthSqr(movementInput) > 0){
-            dataManager.player.gasTank.mGas -= dataManager.activeFuelUsage;
-        }
+        gameHandler.drainGasFromPlayer(dataManager.player, movementInput);
 
         gameHandler.checkGameOverStates(dataManager.player);
 
@@ -131,12 +142,14 @@ public:
         
         gasStationMenu.update();
         traderMenu.update();
-        shopMenu.update();
+        toolShopMenu.update();
+        equipmentShopMenu.update();
     }
 
     void render() override {
         // Clear Screen for the new render cycle
-        ClearBackground(PURPLE);
+        ClearBackground({94, 131, 166, 255});
+        gameRenderer.renderBackground(dataManager.player);
 
         gameRenderer.renderMapGrid(dataManager.world);
         gameRenderer.renderMapBuildings(dataManager.world);
@@ -144,7 +157,8 @@ public:
 
         gasStationMenu.render();
         traderMenu.render();
-        shopMenu.render();
+        toolShopMenu.render();
+        equipmentShopMenu.render();
 
         playerGui.render();
     }

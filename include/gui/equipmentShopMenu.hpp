@@ -10,19 +10,20 @@
 #include <lufuGui.hpp>
 #include <guiContext.hpp>
 #include <assetManager.hpp>
+#include <dataManager.hpp>
 
-class TraderMenu : virtual public GuiContext{
+class EquipmentShopMenu : virtual public GuiContext{
 private:
     lufu_gui::Text titelText;
-    lufu_gui::TextButton sellAllTextButton;
+    lufu_gui::TextButton repairHullTextButton;
     
 public:
     using GuiContext::GuiContext;
 
     void initialize() override{
         Font font = GetFontDefault();
-        titelText = lufu_gui::Text("Trader", 40, font);
-        sellAllTextButton = lufu_gui::TextButton(Vector2{120,40}, "Sell All", 20, font);
+        titelText = lufu_gui::Text("Equipment Shop", 40, font);
+        repairHullTextButton = lufu_gui::TextButton(Vector2{120,40}, "Repair Hull", 20, font);
     }
 
     void update() override {
@@ -30,13 +31,13 @@ public:
         if(mIsActive){
             // Update GuiElements
             titelText.setPosition(mPosition + Vector2{15,10});
-            sellAllTextButton.setPosition(mPosition + Vector2{20,100});
+            repairHullTextButton.setPosition(mPosition + Vector2{20,100});
 
             titelText.update();
-            sellAllTextButton.update();
+            repairHullTextButton.update();
 
-            if(sellAllTextButton.mIsPressed){
-                // Sell All
+            if(repairHullTextButton.mIsPressed){
+                DataManager::getInstance().player.hull.mHealth = DataManager::getInstance().player.hull.mHealthMax;
             }
         }
     }
@@ -49,7 +50,7 @@ public:
 
             // Draw GuiElements
             titelText.render();
-            sellAllTextButton.render();
+            repairHullTextButton.render();
         }
     }
 };
