@@ -33,6 +33,7 @@ private:
     std::unordered_map<std::string, TextureAtlas> textureAtlases;
     std::unordered_map<std::string, Texture2D> textures;
     std::unordered_map<std::string, Sound> sounds;
+    std::unordered_map<std::string, Music> musics;
     std::unordered_map<std::string, Font> fonts;
     
 public:
@@ -43,12 +44,14 @@ public:
     TextureAtlas& getTextureAtlas(const std::string& name);
     Texture2D& getTexture(const std::string& name);
     Sound& getSound(const std::string& name);
+    Music& getMusic(const std::string& name);
     Font& getFont(const std::string& name);
 
     // Loading assets
     void loadTextureAtlas(const std::string& name);
     void loadTexture(const std::string& name, const std::string& filename);
     void loadSound(const std::string& name, const std::string& filename);
+    void loadMusic(const std::string& name, const std::string& filename);
     void loadFont(const std::string& name, const std::string& filename, int fontSize);
 
     // Search for a directory and set the path to this directory

@@ -61,6 +61,11 @@ public:
     float passivFuelUsage;
     float activeFuelUsage;
 
+    // Sound
+    float masterVolume;
+    float musicVolume;
+    float soundVolume;
+
     // Window settings
     int screenWidth;
     int screenHeight;

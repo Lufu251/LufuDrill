@@ -4,6 +4,11 @@
         "passivFuelUsage": 0.005,
         "activeFuelUsage": 0.04
     },
+    "sound": {
+        "masterVolume": 0.1,
+        "musicVolume": 0.8,
+        "soundVolume": 1
+    },
     "window": {
         "screenWidth": 1920,
         "screenHeight": 1080

@@ -34,5 +34,6 @@ ToDo Description
 - ToDo (Add Images of the project here)
 
 ## Credit
-- DavidKBD - Cosmic Pack
+- Music
+DavidKBD - Cosmic Pack
 https://davidkbd.itch.io/cosmic-journey-space-themed-music-pack

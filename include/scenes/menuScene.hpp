@@ -24,6 +24,17 @@ public:
     ~MenuScene(){}
 
     void initialize() override{
+        // Initialize audio device
+        InitAudioDevice();
+        SetMasterVolume(DataManager::getInstance().masterVolume);
+
+        // Load Assets
+        AssetManager::getInstance().loadMusic("galactic_pulse", "galactic_pulse.ogg");
+
+        // Play music
+        PlayMusicStream(AssetManager::getInstance().getMusic("galactic_pulse"));
+        SetMusicVolume(AssetManager::getInstance().getMusic("galactic_pulse"), DataManager::getInstance().musicVolume);
+
         // Set anchor to the middle of the screen
         anchor = {GetScreenWidth() / 2.0f, GetScreenHeight() / 2.0f - 200};
 
@@ -35,8 +46,10 @@ public:
     }
 
     void update() override {
+        // Update music buffer with new stream data
+        UpdateMusicStream(AssetManager::getInstance().getMusic("galactic_pulse"));
+
         GameHandler gameHandler;
-        
         // Update anchor to be in the middle of the window
         if(IsWindowResized()){
             anchor = {GetScreenWidth() / 2.0f, GetScreenHeight() / 2.0f - 200};

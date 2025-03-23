@@ -32,7 +32,7 @@ public:
     ~GameScene(){}
 
     void initialize() override{
-        // Preload textureAtlas
+        // Load Assets
         AssetManager::getInstance().loadTextureAtlas("tileset");
         AssetManager::getInstance().loadTextureAtlas("particleset");
 

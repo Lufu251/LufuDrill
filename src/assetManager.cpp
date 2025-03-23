@@ -26,45 +26,30 @@ Texture2D& AssetManager::getTexture(const std::string& name) {
 // Get a textureAtlas
 TextureAtlas& AssetManager::getTextureAtlas(const std::string& name){
     auto it = textureAtlases.find(name);
-    if (it != textureAtlases.end()) {
-        return it->second;
-    }
-    else{
-        throw std::runtime_error("TextureAtlases not found and was likely not preloaded: " + name);
-        return it->second;
-    }
+    return it->second;
 }
 
 // Get a sound
 Sound& AssetManager::getSound(const std::string& name) {
     auto it = sounds.find(name);
-    if (it != sounds.end()) {
-        return it->second;
-    }
-    else{
-        throw std::runtime_error("Sound not found and was likely not preloaded: " + name);
-        return it->second;
-    }
+    return it->second;
+}
+
+// Get a music
+Music& AssetManager::getMusic(const std::string& name) {
+    auto it = musics.find(name);
+    return it->second;
 }
 
 // Get a font
 Font& AssetManager::getFont(const std::string& name) {
     auto it = fonts.find(name);
-    if (it != fonts.end()) {
-        return it->second;
-    }
-    else{
-        throw std::runtime_error("Font not found and was likely not preloaded: " + name);
-        return it->second;
-    }
+    return it->second;
 }
 
 // Load a texture
 void AssetManager::loadTexture(const std::string& name, const std::string& filename) {
     Texture2D texture = LoadTexture((assetPath + "/" + texturesDirectory + "/" + filename).c_str());
-    if (texture.id == 0) {
-        throw std::runtime_error("Failed to load texture: " + filename);
-    }
     textures[name] = texture;
 }
 
@@ -110,18 +95,17 @@ void AssetManager::loadTextureAtlas(const std::string& name){
 // Load a sound
 void AssetManager::loadSound(const std::string& name, const std::string& filename) {
     Sound sound = LoadSound((assetPath + "/" + soundsDirectory + "/" + filename).c_str());
-    if (!sound.stream.buffer) {
-        throw std::runtime_error("Failed to load sound: " + filename);
-    }
     sounds[name] = sound;
+}
+
+void AssetManager::loadMusic(const std::string& name, const std::string& filename) {
+    Music music = LoadMusicStream((assetPath + "/" + soundsDirectory + "/" + filename).c_str());
+    musics[name] = music;
 }
 
 // Load a font
 void AssetManager::loadFont(const std::string& name, const std::string& filename, int fontSize) {
     Font font = LoadFontEx((assetPath + "/" + fontsDirectory + "/" + filename).c_str(), fontSize, nullptr, 0);
-    if (font.baseSize == 0) {
-        throw std::runtime_error("Failed to load font: " + filename);
-    }
     fonts[name] = font;
 }
 
@@ -165,11 +149,15 @@ void AssetManager::cleanup() {
     for (auto& [key, sound] : sounds) {
         UnloadSound(sound);
     }
+    for (auto& [key, music] : musics) {
+        UnloadMusicStream(music);
+    }
     for (auto& [key, font] : fonts) {
         UnloadFont(font);
     }
     textures.clear();
     sounds.clear();
+    musics.clear();
     fonts.clear();
 }
 

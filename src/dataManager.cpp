@@ -95,6 +95,11 @@ void DataManager::loadSettingConfig(const std::string& name){
     passivFuelUsage = settings["general"]["passivFuelUsage"];
     activeFuelUsage = settings["general"]["activeFuelUsage"];
 
+    // SOUND
+    masterVolume = settings["sound"]["masterVolume"];
+    musicVolume = settings["sound"]["musicVolume"];
+    soundVolume = settings["sound"]["soundVolume"];
+
     // WINDOW
     screenWidth = settings["window"]["screenWidth"];
     screenHeight = settings["window"]["screenHeight"];
