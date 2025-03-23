@@ -9,6 +9,7 @@ ToDo Description
     <li><a href="#installation">Installation</a></li>
     <li><a href="#wiki">Wiki</a></li>
     <li><a href="#media">Media</a></li>
+    <li><a href="#credit">Media</a></li>
   </ol>
 </details>
 
@@ -31,3 +32,7 @@ ToDo Description
 
 ## Media
 - ToDo (Add Images of the project here)
+
+## Credit
+- DavidKBD - Cosmic Pack
+https://davidkbd.itch.io/cosmic-journey-space-themed-music-pack
