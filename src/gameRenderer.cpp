@@ -48,10 +48,10 @@ void GameRenderer::renderMapGrid(World& world){
             switch (block->mType){
                 case EMPTY: break;
                 case DIRT: DrawTextureRec(tileset.texture, tileset.sections["DIRT"], block->position, WHITE); break;
-                case STONE: DrawTextureRec(tileset.texture, tileset.sections["STONE"], block->position, WHITE);; break;
-                case COPPERORE: DrawTextureRec(tileset.texture, tileset.sections["COPPERORE"], block->position, WHITE);; break;
-                case GOLDORE: DrawTextureRec(tileset.texture, tileset.sections["GOLDORE"], block->position, WHITE);; break;
-                case PLATINUMORE: DrawTextureRec(tileset.texture, tileset.sections["PLATINUMORE"], block->position, WHITE);; break;
+                case STONE: DrawTextureRec(tileset.texture, tileset.sections["STONE"], block->position, WHITE); break;
+                case COPPERORE: DrawTextureRec(tileset.texture, tileset.sections["COPPERORE"], block->position, WHITE); break;
+                case GOLDORE: DrawTextureRec(tileset.texture, tileset.sections["GOLDORE"], block->position, WHITE); break;
+                case PLATINUMORE: DrawTextureRec(tileset.texture, tileset.sections["PLATINUMORE"], block->position, WHITE); break;
             }
         }
     }
@@ -59,25 +59,18 @@ void GameRenderer::renderMapGrid(World& world){
 }
 
 void GameRenderer::renderMapBuildings(World& world){
+    TextureAtlas& buildingset = AssetManager::getInstance().getTextureAtlas("buildingset");
+
     BeginMode2D(camera);
 
     for (auto& building : world.buildings){
+            Rectangle buildingRec = {building.position.x, building.position.y, building.size.x, building.size.y};
             switch (building.mType)
             {
-            case GAS_STATION:
-                DrawRectangleV(building.position, building.size, BLUE);
-                break;
-            case TRADER:
-                DrawRectangleV(building.position, building.size, YELLOW);
-                break;
-            case TOOL_SHOP:
-                DrawRectangleV(building.position, building.size, BLUE);
-                break;
-            case EQUIPMENT_SHOP:
-                DrawRectangleV(building.position, building.size, GREEN);
-                break;
-            default:
-                break;
+            case GAS_STATION: DrawTexturePro(buildingset.texture, buildingset.sections["GAS_STATION"], buildingRec, {0,0}, 0, WHITE); break;
+            case TRADER: DrawTexturePro(buildingset.texture, buildingset.sections["TRADER"], buildingRec, {0,0}, 0, WHITE); break;
+            case TOOL_SHOP: DrawTexturePro(buildingset.texture, buildingset.sections["TOOL_SHOP"], buildingRec, {0,0}, 0, WHITE); break;
+            case EQUIPMENT_SHOP: DrawTexturePro(buildingset.texture, buildingset.sections["EQUIPMENT_SHOP"], buildingRec, {0,0}, 0, WHITE); break;
             }
         }
     EndMode2D();

@@ -33,10 +33,10 @@ void GameHandler::generateTerrain(World& world){
     }
 
     // Place buildings
-    world.buildings.push_back(Building(GAS_STATION ,{400, 380}, {100, 100}));
-    world.buildings.push_back(Building(TRADER ,{800, 380}, {100, 100}));
-    world.buildings.push_back(Building(TOOL_SHOP ,{1200, 380}, {100, 100}));
-    world.buildings.push_back(Building(EQUIPMENT_SHOP ,{1600, 380}, {100, 100}));
+    world.buildings.push_back(Building(GAS_STATION ,{400, 416}, {64, 64}));
+    world.buildings.push_back(Building(TRADER ,{800, 416}, {64, 64}));
+    world.buildings.push_back(Building(TOOL_SHOP ,{1200, 416}, {64, 64}));
+    world.buildings.push_back(Building(EQUIPMENT_SHOP ,{1600, 416}, {64, 64}));
 
     for (size_t x = 0; x < world.mGrid.gridSizeX; x++){
         for (size_t y = 0; y < world.mGrid.gridSizeY; y++){

@@ -34,7 +34,7 @@ public:
     void initialize() override{
         // Load Assets
         AssetManager::getInstance().loadTextureAtlas("tileset");
-        AssetManager::getInstance().loadTextureAtlas("particleset");
+        AssetManager::getInstance().loadTextureAtlas("buildingset");
 
         AssetManager::getInstance().loadTexture("menuTemplate", "menuTemplate.png");
         AssetManager::getInstance().loadTexture("sky", "sky.png");
@@ -94,7 +94,7 @@ public:
         }
         
         // Camera initialise
-        gameRenderer.camera.zoom = 2.0f;
+        gameRenderer.camera.zoom = 1.0f;
         gameRenderer.camera.rotation = 0.0f;
         gameRenderer.camera.target = dataManager.player.position;
         gameRenderer.setCameraOffset({GetScreenWidth() / 2.0f, GetScreenHeight() / 2.0f});
