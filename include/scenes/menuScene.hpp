@@ -24,11 +24,13 @@ public:
     ~MenuScene(){}
 
     void initialize() override{
+        std::cout << "Initialize MenuScene" << std::endl;
         // Initialize audio device
         InitAudioDevice();
         SetMasterVolume(DataManager::getInstance().masterVolume);
 
         // Load Assets
+        
         AssetManager::getInstance().loadMusic("galactic_pulse", "galactic_pulse.ogg");
 
         // Play music
@@ -38,11 +40,15 @@ public:
         // Set anchor to the middle of the screen
         anchor = {GetScreenWidth() / 2.0f, GetScreenHeight() / 2.0f - 200};
 
-        Font font = GetFontDefault();
-        titelText = lufu_gui::Text("LufuDrill", 50, font);
-        startTextButton = lufu_gui::TextButton({200,40},"Start New Game", 20, font);
-        resumeTextButton = lufu_gui::TextButton({200,40},"Resume", 20, font);
-        exitTextButton = lufu_gui::TextButton({200,40},"Exit", 20, font);
+        Font font20 = AssetManager::getInstance().getFont("thaleah_fat_20");
+        Font font48 = AssetManager::getInstance().getFont("thaleah_fat_48");
+        SetTextureFilter(font20.texture, TEXTURE_FILTER_POINT);
+        SetTextureFilter(font48.texture, TEXTURE_FILTER_POINT);
+
+        titelText = lufu_gui::Text("LufuDrill", 48, font48);
+        startTextButton = lufu_gui::TextButton({200,40},"Start New Game", 20, font20);
+        resumeTextButton = lufu_gui::TextButton({200,40},"Resume", 20, font20);
+        exitTextButton = lufu_gui::TextButton({200,40},"Exit", 20, font20);
     }
 
     void update() override {
@@ -89,7 +95,7 @@ public:
 
     void render() override {
         // Clear Screen for the new render cycle
-        ClearBackground(RAYWHITE);
+        ClearBackground({38,43,68,255});
 
         // Draw GuiElements
         titelText.render();

@@ -13,15 +13,33 @@ GameHandler::GameHandler(/* args */){}
 GameHandler::~GameHandler(){}
 
 // Return vector in which player will be moved
-Vector2 GameHandler::playerMovementInput(){
+Vector2 GameHandler::playerMovementInput(DrillUnit& player){
     Vector2 direction{0,0};
     // Player input
     if(IsKeyDown(KEY_A)) direction.x += -0.2f;
     if(IsKeyDown(KEY_D)) direction.x += 0.2f;
     if(IsKeyDown(KEY_W)) direction.y += -1;
 
+    if(IsKeyDown(KEY_S) && player.bottom >= 20){
+        player.drilling = true;
+    }
+
     // Multiply by speed
     return direction = Vector2Scale(direction, DataManager::getInstance().thrustForce);
+}
+
+void GameHandler::updatePlayerRenderState(DrillUnit& player){
+    if(player.drilling){
+        player.facing = DOWN;
+    }
+    else{
+        if(player.velocity.x < 0){
+            player.facing = LEFT;
+        }
+        else{
+            player.facing = RIGHT;
+        }
+    }
 }
 
 void GameHandler::generateTerrain(World& world){
@@ -207,7 +225,7 @@ void GameHandler::checkCollisionAndMove(AABB& box, World& world){
 }
 
 // Check if AABB is touching blocks on any side
-void GameHandler::checkPlayerTouchingSides(Player& player, World& world){
+void GameHandler::checkPlayerTouchingSides(DrillUnit& player, World& world){
     DataManager& dataManager = DataManager::getInstance();
     std::vector<AABB> blocks = getPossibleCollisionsFromGrid(player, world); // AABB from all blocks that can collide
 
@@ -258,7 +276,7 @@ void GameHandler::checkPlayerTouchingSides(Player& player, World& world){
 }
 
 void GameHandler::checkBuildingTriggers(AABB& box, World& world){
-    for (auto & building : world.buildings) {
+    for (auto & building : world.buildings){
         if(AABBIntersection(box, building)){
             building.mMenuToTrigger->enable();
         }
@@ -268,7 +286,7 @@ void GameHandler::checkBuildingTriggers(AABB& box, World& world){
     }
 }
 
-void GameHandler::checkGameOverStates(Player& player){
+void GameHandler::checkGameOverStates(DrillUnit& player){
     // Check if no gas is left
     if(player.gasTank.mGas <= 0){
         DataManager::getInstance().gameOver = true;
@@ -288,9 +306,19 @@ void GameHandler::collisionDamageToPlayer(){
     }
 }
 
-void GameHandler::drainGasFromPlayer(Player& player, Vector2& movementInput){
+void GameHandler::drainGasFromPlayer(DrillUnit& player, Vector2& movementInput){
+    // Drain passiv fuel
     player.gasTank.mGas -= DataManager::getInstance().passivFuelUsage;
-    if(Vector2LengthSqr(movementInput) > 0){
-        player.gasTank.mGas -= DataManager::getInstance().activeFuelUsage;
+
+    // Drain gas while drilling
+    if(player.drilling){
+        player.gasTank.mGas -= DataManager::getInstance().drillingFuelUsage;
+        return;
     }
+    // Drain gas while moving
+    if(Vector2LengthSqr(movementInput) > 0){
+        player.gasTank.mGas -= DataManager::getInstance().movingFuelUsage;
+    }
+
+    
 }

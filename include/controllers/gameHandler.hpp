@@ -20,14 +20,15 @@ public:
     ~GameHandler();
 
     // Helper methods
-    Vector2 playerMovementInput();
+    Vector2 playerMovementInput(DrillUnit& player);
+    void updatePlayerRenderState(DrillUnit& player);
     void generateTerrain(World& world);
     void clampToGrid(AABB& box, World& world);
     std::vector<AABB> getPossibleCollisionsFromGrid(AABB& box, World& world);
     void checkCollisionAndMove(AABB& box, World& world);
-    void checkPlayerTouchingSides(Player& player, World& world);
+    void checkPlayerTouchingSides(DrillUnit& player, World& world);
     void checkBuildingTriggers(AABB& box, World& world);
-    void checkGameOverStates(Player& player);
+    void checkGameOverStates(DrillUnit& player);
     void collisionDamageToPlayer();
-    void drainGasFromPlayer(Player& player, Vector2& movementInput);
+    void drainGasFromPlayer(DrillUnit& player, Vector2& movementInput);
 };

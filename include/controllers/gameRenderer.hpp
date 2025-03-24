@@ -23,6 +23,6 @@ public:
     void clampCameraToGrid(AABB& box, World& world);
     void renderMapGrid(World& world);
     void renderMapBuildings(World& world);
-    void renderPlayer(Player& player);
-    void renderBackground(Player& player);
+    void renderPlayer(DrillUnit& player);
+    void renderBackground(DrillUnit& player);
 };

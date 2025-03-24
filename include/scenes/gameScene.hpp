@@ -32,15 +32,16 @@ public:
     ~GameScene(){}
 
     void initialize() override{
+        std::cout << "Initialize GameScene" << std::endl;
         // Load Assets
         AssetManager::getInstance().loadTextureAtlas("tileset");
         AssetManager::getInstance().loadTextureAtlas("buildingset");
+        AssetManager::getInstance().loadTextureAtlas("drillunitset");
 
         AssetManager::getInstance().loadTexture("menuTemplate", "menuTemplate.png");
         AssetManager::getInstance().loadTexture("sky", "sky.png");
         AssetManager::getInstance().loadTexture("mountain", "mountain.png");
         AssetManager::getInstance().loadTexture("cloud", "cloud.png");
-        AssetManager::getInstance().loadTexture("drill_unit", "drill_unit.png");
 
         AssetManager::getInstance().loadMusic("nebula_run", "nebula_run.ogg");
 
@@ -51,7 +52,7 @@ public:
         dataManager.loadToolConfig("tools.json");
 
         // Init Player
-        dataManager.player = Player({200,300}, {24,24}, {0,0});
+        dataManager.player = DrillUnit({200,300}, {24,24}, {0,0});
         dataManager.player.drill = dataManager.drills[0];
         dataManager.player.gasTank = dataManager.gasTanks[0];
         dataManager.player.hull = dataManager.hulls[0];
@@ -90,7 +91,7 @@ public:
         }
         
         // Camera initialise
-        gameRenderer.camera.zoom = 1.0f;
+        gameRenderer.camera.zoom = 2.0f;
         gameRenderer.camera.rotation = 0.0f;
         gameRenderer.camera.target = dataManager.player.position;
         gameRenderer.setCameraOffset({GetScreenWidth() / 2.0f, GetScreenHeight() / 2.0f});
@@ -110,7 +111,7 @@ public:
         gameRenderer.clampCameraToGrid(dataManager.player, dataManager.world);
 
         // Values for player force
-        Vector2 movementInput = gameHandler.playerMovementInput();
+        Vector2 movementInput = gameHandler.playerMovementInput(dataManager.player);
         Vector2 airResistance = Vector2Negate(dataManager.player.velocity - dataManager.player.velocity * dataManager.airResistance);
         // Add Forces
         dataManager.player.addForce(movementInput); // Add movementInput to player velocity
@@ -129,7 +130,9 @@ public:
         // Check if player is touching a block on any side and count for how long it is touching
         gameHandler.checkPlayerTouchingSides(dataManager.player, dataManager.world);
         gameHandler.checkBuildingTriggers(dataManager.player, dataManager.world);
-        
+
+        gameHandler.updatePlayerRenderState(dataManager.player);
+
         // Update Gas
         gameHandler.drainGasFromPlayer(dataManager.player, movementInput);
 

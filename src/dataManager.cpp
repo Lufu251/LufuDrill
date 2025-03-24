@@ -64,7 +64,7 @@ void DataManager::saveGameState(const std::string& name){
     // Write JSON to a file
     nlohmann::json json = world;
     json = {
-        {"map", world} // Convert the Grid object to JSON
+        {"world", world} // Convert the Grid object to JSON
     }; 
 
 
@@ -93,7 +93,8 @@ void DataManager::loadSettingConfig(const std::string& name){
     // GENERAL
     thrustForce = settings["general"]["thrustForce"];
     passivFuelUsage = settings["general"]["passivFuelUsage"];
-    activeFuelUsage = settings["general"]["activeFuelUsage"];
+    movingFuelUsage = settings["general"]["movingFuelUsage"];
+    drillingFuelUsage = settings["general"]["drillingFuelUsage"];
 
     // SOUND
     masterVolume = settings["sound"]["masterVolume"];

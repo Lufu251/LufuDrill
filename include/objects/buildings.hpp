@@ -20,3 +20,30 @@ public:
         mMenuToTrigger = &rMenuToTrigger;
     }
 };
+
+// Serialize Vector2d to JSON
+inline void to_json(nlohmann::json& j, const Vector2& v) {
+    j = {{"x", v.x}, {"y", v.y}};
+}
+
+// Deserialize JSON to Vector2d
+inline void from_json(const nlohmann::json& j, Vector2& v) {
+    j.at("x").get_to(v.x);
+    j.at("y").get_to(v.y);
+}
+
+// Convert Building to JSON
+inline void to_json(nlohmann::json& j, const Building& b) {
+    j = {
+        {"type", b.mType},
+        {"position", b.position},
+        {"size", b.size}
+    };
+}
+
+// Convert JSON to Building
+inline void from_json(const nlohmann::json& j, Building& b) {
+    j.at("type").get_to(b.mType);
+    j.at("position").get_to(b.position);
+    j.at("size").get_to(b.size);
+}

@@ -14,13 +14,8 @@ AssetManager& AssetManager::getInstance() {
 // Get a texture
 Texture2D& AssetManager::getTexture(const std::string& name) {
     auto it = textures.find(name);
-    if (it != textures.end()) {
-        return it->second;
-    }
-    else{
-        throw std::runtime_error("Texture not found and was likely not preloaded: " + name);
-        return it->second;
-    }
+    return it->second;
+
 }
 
 // Get a textureAtlas
@@ -47,14 +42,11 @@ Font& AssetManager::getFont(const std::string& name) {
     return it->second;
 }
 
-// Load a texture
-void AssetManager::loadTexture(const std::string& name, const std::string& filename) {
-    Texture2D texture = LoadTexture((assetPath + "/" + texturesDirectory + "/" + filename).c_str());
-    textures[name] = texture;
-}
+
 
 // Load a textureAtlas
 void AssetManager::loadTextureAtlas(const std::string& name){
+    std::cout << "Loading textureAtlas: " << name << std::endl;
     // Load texture to textureAtlas
     TextureAtlas textureAtlas;
     textureAtlas.texture = LoadTexture((assetPath + "/" + texturesDirectory + "/" + name + "/" + name + ".png").c_str());
@@ -89,24 +81,30 @@ void AssetManager::loadTextureAtlas(const std::string& name){
     file.close();
 
     // Store the textureAtlas
-    textureAtlases[name] = std::move(textureAtlas);
+    textureAtlases[name] = textureAtlas;
+}
+
+// Load a texture
+void AssetManager::loadTexture(const std::string& name, const std::string& filename) {
+    std::cout << "Loading texture: " << filename << std::endl;
+    textures[name] = LoadTexture((assetPath + "/" + texturesDirectory + "/" + filename).c_str());;
 }
 
 // Load a sound
 void AssetManager::loadSound(const std::string& name, const std::string& filename) {
-    Sound sound = LoadSound((assetPath + "/" + soundsDirectory + "/" + filename).c_str());
-    sounds[name] = sound;
+    std::cout << "Loading sound: " << filename << std::endl;
+    sounds[name] = LoadSound((assetPath + "/" + soundsDirectory + "/" + filename).c_str());;
 }
 
 void AssetManager::loadMusic(const std::string& name, const std::string& filename) {
-    Music music = LoadMusicStream((assetPath + "/" + soundsDirectory + "/" + filename).c_str());
-    musics[name] = music;
+    std::cout << "Loading music: " << filename << std::endl;
+    musics[name] = LoadMusicStream((assetPath + "/" + soundsDirectory + "/" + filename).c_str());;
 }
 
 // Load a font
 void AssetManager::loadFont(const std::string& name, const std::string& filename, int fontSize) {
-    Font font = LoadFontEx((assetPath + "/" + fontsDirectory + "/" + filename).c_str(), fontSize, nullptr, 0);
-    fonts[name] = font;
+    std::cout << "Loading font: " << filename << std::endl;
+    fonts[name] = LoadFontEx((assetPath + "/" + fontsDirectory + "/" + filename).c_str(), fontSize, 0, 250);
 }
 
 // Search for a directory starting from the working directory. The AssetManager will look for resources in this directory

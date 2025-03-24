@@ -2,7 +2,8 @@
     "general": {
         "thrustForce": 0.6,
         "passivFuelUsage": 0.005,
-        "activeFuelUsage": 0.04
+        "movingFuelUsage": 0.01,
+        "drillingFuelUsage": 0.04
     },
     "sound": {
         "masterVolume": 0.1,

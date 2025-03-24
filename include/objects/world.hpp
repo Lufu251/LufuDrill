@@ -21,34 +21,18 @@ public:
 
 };
 
-// Convert Block to JSON
-inline void to_json(nlohmann::json& j, const Block& b) {
-    j = {
-        {"type", b.mType}
-    };
-}
-
-// Convert JSON to Block
-inline void from_json(const nlohmann::json& j, Block& b) {
-    size_t type;
-    j.at("type").get_to(type);
-    b = Block(type);
-}
-
-// Convert Grid to JSON
+// Convert World to JSON
 inline void to_json(nlohmann::json& j, const World& w) {
     j = {
-        {"gridSizeX", w.mGrid.gridSizeX},
-        {"gridSizeY", w.mGrid.gridSizeY},
         {"blockSize", w.mBlockSize},
-        {"gridData", w.mGrid.gridData}
+        {"buildings", w.buildings},
+        {"grid", w.mGrid}
     };
 }
 
-// Convert JSON to Grid
+// Convert World to Grid
 inline void from_json(const nlohmann::json& j, World& w) {
-    j.at("gridSizeX").get_to(w.mGrid.gridSizeX);
-    j.at("gridSizeY").get_to(w.mGrid.gridSizeY);
     j.at("blockSize").get_to(w.mBlockSize);
-    j.at("gridData").get_to(w.mGrid.gridData);
+    j.at("buildings").get_to(w.buildings);
+    j.at("grid").get_to(w.mGrid);
 }

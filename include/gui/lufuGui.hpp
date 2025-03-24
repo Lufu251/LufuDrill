@@ -3,24 +3,26 @@
 #include <raylib.h>
 #include <raymath.h>
 
+#include <iostream>
+
 namespace lufu_gui{
 
     // Define Style
     // -------------------------------------------------------
     // BASE
-    constexpr Color BASE_COLOR = { 0, 121, 241, 255 };
-    constexpr Color BASE_BORDER_COLOR = { 0, 0, 0, 255 };
-    constexpr Color BASE_TEXT_COLOR = { 0, 0, 0, 255 };
+    constexpr Color BASE_COLOR = { 58, 68, 102, 255 };
+    constexpr Color BASE_BORDER_COLOR = { 24, 20, 37, 255 };
+    constexpr Color BASE_TEXT_COLOR = { 255, 255, 255, 255 };
 
     // HOVER
     constexpr Color HOVERED_COLOR = { 0, 101, 221, 255 };
     constexpr Color HOVERED_BORDER_COLOR = { 0, 0, 0, 255 };
-    constexpr Color HOVERED_TEXT_COLOR = { 0, 0, 0, 255 };
+    constexpr Color HOVERED_TEXT_COLOR = { 255, 255, 255, 255 };
 
     // ACTIVATED
     constexpr Color ACTIVATED_COLOR = { 0, 81, 101, 255 };
     constexpr Color ACTIVATED_BORDER_COLOR = { 0, 0, 0, 255 };
-    constexpr Color ACTIVATED_TEXT_COLOR = { 0, 0, 0, 255 };
+    constexpr Color ACTIVATED_TEXT_COLOR = { 255, 255, 255, 255 };
 
     // GENERAL
     constexpr Color SECONDARY_COLOR = { 255, 0, 0, 255 };
@@ -158,6 +160,7 @@ namespace lufu_gui{
         TextButton(const Vector2& rSize, const std::string& rtext, const float& rtextSize, Font& rFont) : GuiElement(rSize), mText(rtext), mTextSize(rtextSize), mFont(rFont){}
 
         void update() override{
+            
             updateHovered();
             updatePressed();
             updateDown();

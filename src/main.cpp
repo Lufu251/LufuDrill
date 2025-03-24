@@ -18,7 +18,6 @@ int main(void){
     // ----------------------------------------------------------------------------------
     // AssetManager and DataManager
     AssetManager::getInstance().searchAssetsDirectoryPath("assets", 3);
-    AssetManager::getInstance().loadFont("roboto-regular", "Roboto-Regular.ttf", 16);
 
     DataManager::getInstance().searchDataDirectoryPath("data", 3);
     DataManager::getInstance().loadSettingConfig("settings.json");
@@ -32,6 +31,10 @@ int main(void){
     // SetWindowIcon(Image image);
     //ToggleFullscreen(); // Toggle window state: fullscreen/windowed, resizes monitor to match window resolution
     //ToggleBorderlessWindowed(); // Toggle window state: borderless windowed, resizes window to match monitor resolution
+
+    // Load Assets
+    AssetManager::getInstance().loadFont("thaleah_fat_20", "ThaleahFat.ttf", 20);
+    AssetManager::getInstance().loadFont("thaleah_fat_48", "ThaleahFat.ttf", 48);
 
     // Declare scene
     DataManager::getInstance().activeScene = std::make_unique<MenuScene>();
@@ -56,6 +59,7 @@ int main(void){
             DataManager::getInstance().activeScene->render();
         EndDrawing();
     }
+    //DataManager::getInstance().saveGameState("save.sv");
 
     // Cleanup resources and close raylib
     AssetManager::getInstance().cleanup();

@@ -6,7 +6,9 @@
 #include <tools.hpp>
 #include <aabb.hpp>
 
-class Player : public AABB{
+enum FACING{LEFT, RIGHT, DOWN};
+
+class DrillUnit : public AABB{
 public:
     Drill drill;
     GasTank gasTank;
@@ -14,12 +16,16 @@ public:
     CargoBay cargoBay;
     Engine engine;
 
+    // Booleans to track players state
+    bool drilling = false;
+    int facing = RIGHT;
+
     // Values to track touching sides
     int top, right, bottom, left;
 
-    Player() : AABB(){}
-    Player(const Vector2 rPosition, const Vector2 rSize, const Vector2 rVelocity) : AABB(rPosition, rSize, rVelocity){}
-    ~Player(){}
+    DrillUnit() : AABB(){}
+    DrillUnit(const Vector2 rPosition, const Vector2 rSize, const Vector2 rVelocity) : AABB(rPosition, rSize, rVelocity){}
+    ~DrillUnit(){}
     
     void addForce(const Vector2& rVelocity){
         velocity += rVelocity;

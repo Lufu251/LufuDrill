@@ -49,7 +49,7 @@ public:
     bool gameOver = false;
 
     // GameState
-    Player player;
+    DrillUnit player;
     World world;
     
     Building gasStation;
@@ -59,7 +59,8 @@ public:
     // General
     float thrustForce;
     float passivFuelUsage;
-    float activeFuelUsage;
+    float movingFuelUsage;
+    float drillingFuelUsage;
 
     // Sound
     float masterVolume;

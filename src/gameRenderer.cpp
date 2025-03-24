@@ -62,7 +62,6 @@ void GameRenderer::renderMapBuildings(World& world){
     TextureAtlas& buildingset = AssetManager::getInstance().getTextureAtlas("buildingset");
 
     BeginMode2D(camera);
-
     for (auto& building : world.buildings){
             Rectangle buildingRec = {building.position.x, building.position.y, building.size.x, building.size.y};
             switch (building.mType)
@@ -76,14 +75,20 @@ void GameRenderer::renderMapBuildings(World& world){
     EndMode2D();
 }
 
-void GameRenderer::renderPlayer(Player& player){
+void GameRenderer::renderPlayer(DrillUnit& player){
+    TextureAtlas& buildingset = AssetManager::getInstance().getTextureAtlas("drillunitset");
+
     BeginMode2D(camera);
-    Texture2D  drill_unitTexture = AssetManager::getInstance().getTexture("drill_unit");
-    DrawTextureEx(drill_unitTexture, {player.position.x -6, player.position.y}, 0, 1, WHITE);
+    switch (player.facing)
+    {
+    case LEFT: DrawTextureRec(buildingset.texture, buildingset.sections["LEFT"], {player.position.x -6, player.position.y}, WHITE); break;
+    case RIGHT: DrawTextureRec(buildingset.texture, buildingset.sections["RIGHT"],player.position, WHITE); break;
+    case DOWN: DrawTextureRec(buildingset.texture, buildingset.sections["DOWN"],player.position, WHITE); break;
+    }
     EndMode2D();
 }
 
-void GameRenderer::renderBackground(Player& player){
+void GameRenderer::renderBackground(DrillUnit& player){
     BeginMode2D(camera);
     Texture2D  skyTexture = AssetManager::getInstance().getTexture("sky");
     Texture2D  cloudTexture = AssetManager::getInstance().getTexture("cloud");
