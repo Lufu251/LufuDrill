@@ -16,52 +16,60 @@ GameHandler::~GameHandler(){}
 Vector2 GameHandler::playerMovementInput(DrillUnit& player){
     Vector2 direction{0,0};
     // Player input
-    if(IsKeyDown(KEY_A)) direction.x += -0.2f;
-    if(IsKeyDown(KEY_D)) direction.x += 0.2f;
-    if(IsKeyDown(KEY_W)) direction.y += -1;
+    if(IsKeyDown(KEY_A)) direction.x += -1.f;
+    if(IsKeyDown(KEY_D)) direction.x += 1.f;
+    if(IsKeyDown(KEY_W)) direction.y += -1.f;
+    if(IsKeyDown(KEY_S)) direction.y += 1.f;
 
-    if(IsKeyDown(KEY_S) && player.bottom >= 20){
-        player.drilling = true;
-    }
-
-    // Multiply by speed
-    return direction = Vector2Scale(direction, DataManager::getInstance().thrustForce);
+    return direction;
 }
 
-void GameHandler::updatePlayerState(DrillUnit& player){
-    // State LEFT
-    if(player.state == LEFT){
-        // Values for this state
-
+void GameHandler::updatePlayerState(DrillUnit& player, Vector2& movementInput){
+    switch (player.state){
+    case LEFT:
         // StateChange triggers
-        if(player.velocity.x > 0) player.state = RIGHT;
-        if(player.drilling) player.state = DOWN;
+        if(movementInput.x > 0) player.state = RIGHT; // Change facing direction
+        if(player.left > 20 && player.bottom && movementInput.x < 0) player.state = DRILL_LEFT; // Start drill
+        if(player.bottom > 20 && movementInput.y > 0 && movementInput.x == 0) player.state = DRILL_DOWN; // Start drill
+        break;
 
-        return;
-    }
-    // State RIGHT
-    if(player.state == RIGHT){
-        // Values for this state
-
+    case RIGHT:
         // StateChange triggers
-        if(player.velocity.x < 0) player.state = LEFT;
-        if(player.drilling) player.state = DOWN;
+        if(movementInput.x < 0) player.state = LEFT; // Change facing direction
+        if(player.right > 20 && player.bottom && movementInput.x > 0) player.state = DRILL_RIGHT; // Start drill
+        if(player.bottom > 20 && movementInput.y > 0 && movementInput.x == 0) player.state = DRILL_DOWN; // Start drill
+        break;
 
-        return;
-    }
-    // State DOWN
-    if(player.state == DOWN){
-        // Values for this state
-        player.drilling = true;
-
+    case DRILL_DOWN:
         // StateChange triggers
-        if(!player.drilling) player.state = RIGHT;
+        if(movementInput.x > 0) player.state = RIGHT; // Movement interupt
+        if(movementInput.x < 0) player.state = LEFT; // Movement interupt
+        if(movementInput.y < 0) player.state = RIGHT; // Movement interupt
+        if(player.drillTime == 0) player.state = RIGHT; // Drill over
+        
+        break;
 
-        return;
+    case DRILL_LEFT:
+        // StateChange triggers
+        if(movementInput.x > 0) player.state = RIGHT; // Movement interupt
+        if(movementInput.y < 0) player.state = LEFT; // Movement interupt
+        if(player.drillTime == 0) player.state = LEFT; // Drill over
+        
+        break;
+
+    case DRILL_RIGHT:
+        // StateChange triggers
+        if(movementInput.x < 0) player.state = LEFT; // Movement interupt
+        if(movementInput.y < 0) player.state = RIGHT; // Movement interupt
+        if(player.drillTime == 0) player.state = RIGHT; // Drill over
+
+        break;
+    
+    default:
+        // Default state for the player
+        player.state = RIGHT;
+        break;
     }
-
-    // Default state for the player
-    player.state = RIGHT;
 }
 
 void GameHandler::generateTerrain(World& world){
@@ -336,7 +344,7 @@ void GameHandler::drainGasFromPlayer(DrillUnit& player, Vector2& movementInput){
     player.gasTank.mGas -= DataManager::getInstance().passivFuelUsage;
 
     // Drain gas while drilling
-    if(player.drilling){
+    if(player.state == DRILL_DOWN || player.state == DRILL_LEFT || player.state == DRILL_RIGHT){
         player.gasTank.mGas -= DataManager::getInstance().drillingFuelUsage;
         return;
     }
@@ -374,4 +382,48 @@ void GameHandler::discoverWorldBlocks(DrillUnit& drillUnit, World& world){
         }
     }
     
+}
+
+void GameHandler::playerDrill(DrillUnit& drillUnit, World& world){
+    // Get the player position on the grid
+    size_t iPlayer = drillUnit.getGridPosition(world.mBlockSize).x;
+    size_t jPlayer = drillUnit.getGridPosition(world.mBlockSize).y;
+
+    // Set drillTime to the time the block needs to be destroyed
+    if(drillUnit.drillTime == 0){
+        if(drillUnit.state == DRILL_DOWN){
+            drillUnit.drillingBlock = &world.mGrid(iPlayer, jPlayer +1);
+            // Set drillUnit time to drill to the hardness of the block
+            drillUnit.drillTime = drillUnit.drillingBlock->hardness;
+        }
+        else if(drillUnit.state == DRILL_LEFT){
+            drillUnit.drillingBlock = &world.mGrid(iPlayer -1, jPlayer);
+            // Set drillUnit time to drill to the hardness of the block
+            drillUnit.drillTime = drillUnit.drillingBlock->hardness;
+        }
+        else if(drillUnit.state == DRILL_RIGHT){
+            drillUnit.drillingBlock = &world.mGrid(iPlayer +1, jPlayer);
+            // Set drillUnit time to drill to the hardness of the block
+            drillUnit.drillTime = drillUnit.drillingBlock->hardness;
+        }
+    }
+    else{
+        if(drillUnit.drillingBlock == nullptr){
+            // block is nullpointer
+            //std::cout << "NULLPTR" << std::endl;
+        }
+        else{
+            // drillUnit is drilling a block reduce drillTime by drillpower
+            drillUnit.drillTime -= drillUnit.drill.mPower;
+
+            if(drillUnit.drillTime <= 0){
+                // Block is mined reset
+                drillUnit.drillTime = 0;
+
+                // Do something to the block
+                drillUnit.drillingBlock->mType = EMPTY;
+                drillUnit.drillingBlock->blocking = false;
+            }
+        }
+    }
 }

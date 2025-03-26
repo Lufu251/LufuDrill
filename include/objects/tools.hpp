@@ -14,7 +14,7 @@ public:
 
 class Drill : public Tool{
 public:
-    int mPower;
+    float mPower;
 
     Drill(){}
     Drill(std::string name, int cost, int power) : Tool(name, cost), mPower(power) {}

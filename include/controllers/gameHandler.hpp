@@ -21,7 +21,7 @@ public:
 
     // Helper methods
     Vector2 playerMovementInput(DrillUnit& player);
-    void updatePlayerState(DrillUnit& player);
+    void updatePlayerState(DrillUnit& player, Vector2& movementInput);
     void generateTerrain(World& world);
     void clampToGrid(AABB& box, World& world);
     std::vector<AABB> getPossibleCollisionsFromGrid(AABB& box, World& world);
@@ -32,4 +32,5 @@ public:
     void collisionDamageToPlayer();
     void drainGasFromPlayer(DrillUnit& player, Vector2& movementInput);
     void discoverWorldBlocks(DrillUnit& player, World& world);
+    void playerDrill(DrillUnit& player, World& world);
 };

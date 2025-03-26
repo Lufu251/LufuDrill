@@ -5,8 +5,9 @@
 
 #include <tools.hpp>
 #include <aabb.hpp>
+#include <block.hpp>
 
-enum FACING{LEFT, RIGHT, DOWN};
+enum FACING{LEFT, RIGHT, DRILL_DOWN, DRILL_LEFT, DRILL_RIGHT};
 
 class DrillUnit : public AABB{
 public:
@@ -16,9 +17,10 @@ public:
     CargoBay cargoBay;
     Engine engine;
 
-    // Booleans to track players state
-    bool drilling = false;
-    int state = RIGHT;
+    // Players state
+    int state;
+    float drillTime = 0;
+    Block* drillingBlock;
 
     // Values to track touching sides
     int top, right, bottom, left;

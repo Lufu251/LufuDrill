@@ -59,7 +59,7 @@ int main(void){
             DataManager::getInstance().activeScene->render();
         EndDrawing();
     }
-
+    //DataManager::getInstance().saveGameState("save.sv");
     // Cleanup resources and close raylib
     AssetManager::getInstance().cleanup();
 

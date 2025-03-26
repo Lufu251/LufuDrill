@@ -112,9 +112,13 @@ public:
 
         // Values for player force
         Vector2 movementInput = gameHandler.playerMovementInput(dataManager.player);
+        Vector2 direction = Vector2Scale(movementInput, DataManager::getInstance().thrustForce); // Multiply by speed
+        direction.x = direction.x * 0.2f; // weaken side thruster
+        if(direction.y > 0) direction.y = 0; // Stop down acceleration
+        
         Vector2 airResistance = Vector2Negate(dataManager.player.velocity - dataManager.player.velocity * dataManager.airResistance);
         // Add Forces
-        dataManager.player.addForce(movementInput); // Add movementInput to player velocity
+        dataManager.player.addForce(direction); // Add movementInput to player velocity
         dataManager.player.addForce(dataManager.gravity); // Add gravity to player velocity
         dataManager.player.addForce(airResistance); // Add airResistance to player velocity
 
@@ -132,7 +136,8 @@ public:
         gameHandler.checkBuildingTriggers(dataManager.player, dataManager.world);
         gameHandler.discoverWorldBlocks(dataManager.player, dataManager.world);
 
-        gameHandler.updatePlayerState(dataManager.player);
+        gameHandler.updatePlayerState(dataManager.player, movementInput);
+        gameHandler.playerDrill(dataManager.player, dataManager.world);
 
         // Update Gas
         gameHandler.drainGasFromPlayer(dataManager.player, movementInput);

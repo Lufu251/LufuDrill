@@ -84,7 +84,9 @@ void GameRenderer::renderPlayer(DrillUnit& player){
     {
     case LEFT: DrawTextureRec(buildingset.texture, buildingset.sections["LEFT"], {player.position.x -6, player.position.y}, WHITE); break;
     case RIGHT: DrawTextureRec(buildingset.texture, buildingset.sections["RIGHT"],player.position, WHITE); break;
-    case DOWN: DrawTextureRec(buildingset.texture, buildingset.sections["DOWN"],player.position, WHITE); break;
+    case DRILL_DOWN: DrawTextureRec(buildingset.texture, buildingset.sections["DOWN"],player.position, GRAY); break;
+    case DRILL_LEFT: DrawTextureRec(buildingset.texture, buildingset.sections["LEFT"], {player.position.x -6, player.position.y}, GRAY); break;
+    case DRILL_RIGHT:DrawTextureRec(buildingset.texture, buildingset.sections["RIGHT"],player.position, GRAY); break;
     }
     EndMode2D();
 }

@@ -11,6 +11,7 @@ public:
     size_t mType = EMPTY;
     bool blocking = true;
     bool discovered = false;
+    int hardness = 30;
 
     Block(){}
     Block(size_t type) : mType(type){}
@@ -23,7 +24,8 @@ inline void to_json(nlohmann::json& j, const Block& b) {
     j = {
         {"type", b.mType},
         {"blocking", b.blocking},
-        {"discovered", b.discovered}
+        {"discovered", b.discovered},
+        {"hardness", b.hardness}
     };
 }
 
@@ -32,4 +34,5 @@ inline void from_json(const nlohmann::json& j, Block& b) {
     j.at("type").get_to(b.mType);
     j.at("blocking").get_to(b.blocking);
     j.at("discovered").get_to(b.discovered);
+    j.at("hardness").get_to(b.hardness);
 }
