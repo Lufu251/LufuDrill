@@ -29,15 +29,15 @@ void GameHandler::updatePlayerState(DrillUnit& player, Vector2& movementInput){
     case LEFT:
         // StateChange triggers
         if(movementInput.x > 0) player.state = RIGHT; // Change facing direction
-        if(player.left > 20 && player.bottom && movementInput.x < 0) player.state = DRILL_LEFT; // Start drill
-        if(player.bottom > 20 && movementInput.y > 0 && movementInput.x == 0) player.state = DRILL_DOWN; // Start drill
+        if(player.left > DataManager::getInstance().startDrillThreshold && player.bottom && movementInput.x < 0) player.state = DRILL_LEFT; // Start drill
+        if(player.bottom > DataManager::getInstance().startDrillThreshold && movementInput.y > 0 && movementInput.x == 0) player.state = DRILL_DOWN; // Start drill
         break;
 
     case RIGHT:
         // StateChange triggers
         if(movementInput.x < 0) player.state = LEFT; // Change facing direction
-        if(player.right > 20 && player.bottom && movementInput.x > 0) player.state = DRILL_RIGHT; // Start drill
-        if(player.bottom > 20 && movementInput.y > 0 && movementInput.x == 0) player.state = DRILL_DOWN; // Start drill
+        if(player.right > DataManager::getInstance().startDrillThreshold && player.bottom && movementInput.x > 0) player.state = DRILL_RIGHT; // Start drill
+        if(player.bottom > DataManager::getInstance().startDrillThreshold && movementInput.y > 0 && movementInput.x == 0) player.state = DRILL_DOWN; // Start drill
         break;
 
     case DRILL_DOWN:
@@ -357,7 +357,7 @@ void GameHandler::drainGasFromPlayer(DrillUnit& player, Vector2& movementInput){
 }
 
 void GameHandler::discoverWorldBlocks(DrillUnit& drillUnit, World& world){
-    int radius = 5;
+    int radius = DataManager::getInstance().discoverRange;
 
     // Get the player position on the grid
     size_t iPlayer = drillUnit.getGridPosition(world.mBlockSize).x;
@@ -389,8 +389,8 @@ void GameHandler::playerDrill(DrillUnit& drillUnit, World& world){
     size_t iPlayer = drillUnit.getGridPosition(world.mBlockSize).x;
     size_t jPlayer = drillUnit.getGridPosition(world.mBlockSize).y;
 
-    // Set drillTime to the time the block needs to be destroyed
-    if(drillUnit.drillTime == 0){
+    float epsilon = 0.000005;
+    if(fabs(drillUnit.drillTime - 0) <= epsilon){
         if(drillUnit.state == DRILL_DOWN){
             drillUnit.drillingBlock = &world.mGrid(iPlayer, jPlayer +1);
             // Set drillUnit time to drill to the hardness of the block
@@ -410,7 +410,6 @@ void GameHandler::playerDrill(DrillUnit& drillUnit, World& world){
     else{
         if(drillUnit.drillingBlock == nullptr){
             // block is nullpointer
-            //std::cout << "NULLPTR" << std::endl;
         }
         else{
             // drillUnit is drilling a block reduce drillTime by drillpower
@@ -421,6 +420,7 @@ void GameHandler::playerDrill(DrillUnit& drillUnit, World& world){
                 drillUnit.drillTime = 0;
 
                 // Do something to the block
+                // Particles
                 drillUnit.drillingBlock->mType = EMPTY;
                 drillUnit.drillingBlock->blocking = false;
             }

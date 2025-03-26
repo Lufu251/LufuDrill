@@ -1,8 +1,14 @@
 {
     "general": {
+        
+    },
+    "game": {
         "thrustForce": 0.6,
+        "sideThrustForce": 0.2,
+        "discoverRange": 5,
+        "startDrillThreshold": 10,
         "passivFuelUsage": 0.005,
-        "movingFuelUsage": 0.01,
+        "movingFuelUsage": 0.02,
         "drillingFuelUsage": 0.04
     },
     "sound": {
@@ -19,7 +25,7 @@
         "airResistance": 0.985,
         "collisionRetention": 0.1,
         "velocityThreshhold": 0.05,
-        "onGroundResistance": 0.9,
+        "onGroundResistance": 0.95,
         "touchingDistance": 1
     }
   }

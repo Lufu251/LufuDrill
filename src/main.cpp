@@ -11,8 +11,6 @@
 #include <gameHandler.hpp>
 #include <gameRenderer.hpp> 
 
-#include <fstream>
-
 int main(void){
     // Declaration
     // ----------------------------------------------------------------------------------

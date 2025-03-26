@@ -57,7 +57,12 @@ public:
     Building shop;
 
     // General
+
+    // GAME
     float thrustForce;
+    float sideThrustForce;
+    int discoverRange;
+    int startDrillThreshold;
     float passivFuelUsage;
     float movingFuelUsage;
     float drillingFuelUsage;

@@ -113,7 +113,7 @@ public:
         // Values for player force
         Vector2 movementInput = gameHandler.playerMovementInput(dataManager.player);
         Vector2 direction = Vector2Scale(movementInput, DataManager::getInstance().thrustForce); // Multiply by speed
-        direction.x = direction.x * 0.2f; // weaken side thruster
+        direction.x = direction.x * DataManager::getInstance().sideThrustForce; // weaken side thruster
         if(direction.y > 0) direction.y = 0; // Stop down acceleration
         
         Vector2 airResistance = Vector2Negate(dataManager.player.velocity - dataManager.player.velocity * dataManager.airResistance);

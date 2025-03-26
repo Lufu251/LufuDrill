@@ -91,10 +91,15 @@ void DataManager::loadSettingConfig(const std::string& name){
 
     // Parse each setting section
     // GENERAL
-    thrustForce = settings["general"]["thrustForce"];
-    passivFuelUsage = settings["general"]["passivFuelUsage"];
-    movingFuelUsage = settings["general"]["movingFuelUsage"];
-    drillingFuelUsage = settings["general"]["drillingFuelUsage"];
+
+    // GAME
+    thrustForce = settings["game"]["thrustForce"];
+    sideThrustForce = settings["game"]["sideThrustForce"];
+    discoverRange = settings["game"]["discoverRange"];
+    startDrillThreshold = settings["game"]["startDrillThreshold"];
+    passivFuelUsage = settings["game"]["passivFuelUsage"];
+    movingFuelUsage = settings["game"]["movingFuelUsage"];
+    drillingFuelUsage = settings["game"]["drillingFuelUsage"];
 
     // SOUND
     masterVolume = settings["sound"]["masterVolume"];
@@ -112,7 +117,6 @@ void DataManager::loadSettingConfig(const std::string& name){
     velocityThreshhold = settings["physics"]["velocityThreshhold"];
     onGroundResistance = settings["physics"]["onGroundResistance"];
     touchingDistance = settings["physics"]["touchingDistance"];
-
 }
 
 void DataManager::loadToolConfig(const std::string& name){

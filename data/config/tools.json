@@ -3,24 +3,24 @@
         {
             "name": "basic",
             "cost": 50,
-            "power": 1
+            "power": 0.5
         },
         {
             "name": "advanced",
             "cost": 500,
-            "power": 2
+            "power": 1
         }
     ],
     "fueltank": [
         {
             "name": "basic",
             "cost": 50,
-            "fuel": 50
+            "fuel": 30
         },
         {
             "name": "advanced",
             "cost": 500,
-            "fuel": 100
+            "fuel": 60
         }
     ],
     "hull": [
