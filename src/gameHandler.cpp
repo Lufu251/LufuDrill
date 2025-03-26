@@ -426,4 +426,13 @@ void GameHandler::playerDrill(DrillUnit& drillUnit, World& world){
             }
         }
     }
+
+    // Reset drillingBlock when drillUnit is not in drilling mode
+    if(drillUnit.state == DRILL_LEFT || drillUnit.state == DRILL_RIGHT || drillUnit.state == DRILL_DOWN){
+        
+    }
+    else{
+        drillUnit.drillingBlock = nullptr;
+        drillUnit.drillTime = 0;
+    }
 }
