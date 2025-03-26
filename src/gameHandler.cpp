@@ -28,18 +28,40 @@ Vector2 GameHandler::playerMovementInput(DrillUnit& player){
     return direction = Vector2Scale(direction, DataManager::getInstance().thrustForce);
 }
 
-void GameHandler::updatePlayerRenderState(DrillUnit& player){
-    if(player.drilling){
-        player.facing = DOWN;
+void GameHandler::updatePlayerState(DrillUnit& player){
+    // State LEFT
+    if(player.state == LEFT){
+        // Values for this state
+
+        // StateChange triggers
+        if(player.velocity.x > 0) player.state = RIGHT;
+        if(player.drilling) player.state = DOWN;
+
+        return;
     }
-    else{
-        if(player.velocity.x < 0){
-            player.facing = LEFT;
-        }
-        else{
-            player.facing = RIGHT;
-        }
+    // State RIGHT
+    if(player.state == RIGHT){
+        // Values for this state
+
+        // StateChange triggers
+        if(player.velocity.x < 0) player.state = LEFT;
+        if(player.drilling) player.state = DOWN;
+
+        return;
     }
+    // State DOWN
+    if(player.state == DOWN){
+        // Values for this state
+        player.drilling = true;
+
+        // StateChange triggers
+        if(!player.drilling) player.state = RIGHT;
+
+        return;
+    }
+
+    // Default state for the player
+    player.state = RIGHT;
 }
 
 void GameHandler::generateTerrain(World& world){
@@ -65,12 +87,14 @@ void GameHandler::generateTerrain(World& world){
             // Create a tunnel to the bottom
             if(x == 20){
                 world.mGrid(x,y).mType = EMPTY;
+                world.mGrid(x,y).blocking = false;
                 continue;
             }
 
             // Generate some air pockets
             if(y > 15 && dist6(rng) >= 10){
                 world.mGrid(x,y).mType = EMPTY;
+                world.mGrid(x,y).blocking = false;
                 continue;
             }
 
@@ -78,6 +102,7 @@ void GameHandler::generateTerrain(World& world){
             // Air layer
             if(y < 15){
                 world.mGrid(x,y).mType = EMPTY;
+                world.mGrid(x,y).blocking = false;
                 continue;
             }
             // Dirt layer
@@ -137,7 +162,7 @@ std::vector<AABB> GameHandler::getPossibleCollisionsFromGrid(AABB& box, World& w
                 // Out of bound
                 continue;
             }
-            else if(world.mGrid(iBlock, jBlock).mType > 0){ // In bound block needs to be checked
+            else if(world.mGrid(iBlock, jBlock).blocking == true){ // In bound block needs to be checked
                 // Add block to the list
                 blocks.push_back(world.mGrid(iBlock, jBlock));
             }
@@ -320,5 +345,33 @@ void GameHandler::drainGasFromPlayer(DrillUnit& player, Vector2& movementInput){
         player.gasTank.mGas -= DataManager::getInstance().movingFuelUsage;
     }
 
+    
+}
+
+void GameHandler::discoverWorldBlocks(DrillUnit& drillUnit, World& world){
+    int radius = 5;
+
+    // Get the player position on the grid
+    size_t iPlayer = drillUnit.getGridPosition(world.mBlockSize).x;
+    size_t jPlayer = drillUnit.getGridPosition(world.mBlockSize).y;
+
+    // Loop blocks near player
+    for (int i = -radius; i <= radius; i++){
+        for (int j = -radius; j <= radius; j++){
+            // Calculate the gridposition of the block that needs to be checked
+            size_t iBlock = iPlayer + i;
+            size_t jBlock = jPlayer + j;
+
+            // Check if position is out of bound from grid and skip this loop
+            if (iBlock < 0 || iBlock >= world.mGrid.gridSizeX || jBlock < 0 || jBlock >= world.mGrid.gridSizeY){
+                // Out of bound
+                continue;
+            }
+            else{
+                // Set block to discovered
+                world.mGrid(iBlock, jBlock).discovered = true;
+            }
+        }
+    }
     
 }

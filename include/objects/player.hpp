@@ -18,7 +18,7 @@ public:
 
     // Booleans to track players state
     bool drilling = false;
-    int facing = RIGHT;
+    int state = RIGHT;
 
     // Values to track touching sides
     int top, right, bottom, left;

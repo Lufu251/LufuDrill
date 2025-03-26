@@ -21,37 +21,38 @@ void GameRenderer::clampCameraToGrid(AABB& box, World& world){
 }
 
 void GameRenderer::renderMapGrid(World& world){
-    TextureAtlas& tileset = AssetManager::getInstance().getTextureAtlas("tileset");
-
     // Render game view with the camera ------------------------------------
     BeginMode2D(camera);
 
     // Render the visible blocks from the grid
-    int xRenderAmount = (GetScreenWidth() / world.mBlockSize) / (2 * camera.zoom) +2; // Calculate how many tiles are viewed by the camera
-    int yRenderAmount = (GetScreenHeight() / world.mBlockSize) / (2 * camera.zoom) +2; // Calculate how many tiles are viewed by the camera
+    int xRenderAmount = (GetScreenWidth() / world.mBlockSize) / camera.zoom +2; // Calculate how many tiles are viewed by the camera
+    int yRenderAmount = (GetScreenHeight() / world.mBlockSize) / camera.zoom +2; // Calculate how many tiles are viewed by the camera
 
-    // Calculate the cameraTarget position on the grid
-    int iCamera = camera.target.x / world.mBlockSize;
-    int jCamera = camera.target.y / world.mBlockSize;
+    // Calculate the cameraTarget position on the grid and substract half the amount of rendered pixels
+    int iStartBlock = camera.target.x / world.mBlockSize - xRenderAmount /2;
+    int jStartBlock = camera.target.y / world.mBlockSize - yRenderAmount /2;
 
     // Loop over the amount of blocks that are visible
-    for (int i = -xRenderAmount; i <= xRenderAmount; i++){
-        for (int j = -yRenderAmount; j <= yRenderAmount; j++){
-            size_t iBlock = iCamera + i;
-            size_t jBlock = jCamera + j;
+    for (int i = 0; i <= xRenderAmount; i++){
+        for (int j = 0; j <= yRenderAmount; j++){
+            size_t iBlock = iStartBlock + i;
+            size_t jBlock = jStartBlock + j;
             // Clamp to grid size
-            if(iBlock < 0 || iBlock >= world.mGrid.gridSizeX || jBlock < 0 || jBlock >= world.mGrid.gridSizeY){
+            if(iBlock >= world.mGrid.gridSizeX || jBlock >= world.mGrid.gridSizeY){
                 continue;
             }
 
+            TextureAtlas& tileset = AssetManager::getInstance().getTextureAtlas("tileset");
             Block* block = &world.mGrid(iBlock, jBlock); // Set the current block
+            Color color = BLACK;
+            if(!block->blocking || block->discovered) color = WHITE;
             switch (block->mType){
                 case EMPTY: break;
-                case DIRT: DrawTextureRec(tileset.texture, tileset.sections["DIRT"], block->position, WHITE); break;
-                case STONE: DrawTextureRec(tileset.texture, tileset.sections["STONE"], block->position, WHITE); break;
-                case COPPERORE: DrawTextureRec(tileset.texture, tileset.sections["COPPERORE"], block->position, WHITE); break;
-                case GOLDORE: DrawTextureRec(tileset.texture, tileset.sections["GOLDORE"], block->position, WHITE); break;
-                case PLATINUMORE: DrawTextureRec(tileset.texture, tileset.sections["PLATINUMORE"], block->position, WHITE); break;
+                case DIRT: DrawTextureRec(tileset.texture, tileset.sections["DIRT"], block->position, color); break;
+                case STONE: DrawTextureRec(tileset.texture, tileset.sections["STONE"], block->position, color); break;
+                case COPPERORE: DrawTextureRec(tileset.texture, tileset.sections["COPPERORE"], block->position, color); break;
+                case GOLDORE: DrawTextureRec(tileset.texture, tileset.sections["GOLDORE"], block->position, color); break;
+                case PLATINUMORE: DrawTextureRec(tileset.texture, tileset.sections["PLATINUMORE"], block->position, color); break;
             }
         }
     }
@@ -79,7 +80,7 @@ void GameRenderer::renderPlayer(DrillUnit& player){
     TextureAtlas& buildingset = AssetManager::getInstance().getTextureAtlas("drillunitset");
 
     BeginMode2D(camera);
-    switch (player.facing)
+    switch (player.state)
     {
     case LEFT: DrawTextureRec(buildingset.texture, buildingset.sections["LEFT"], {player.position.x -6, player.position.y}, WHITE); break;
     case RIGHT: DrawTextureRec(buildingset.texture, buildingset.sections["RIGHT"],player.position, WHITE); break;

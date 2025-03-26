@@ -130,8 +130,9 @@ public:
         // Check if player is touching a block on any side and count for how long it is touching
         gameHandler.checkPlayerTouchingSides(dataManager.player, dataManager.world);
         gameHandler.checkBuildingTriggers(dataManager.player, dataManager.world);
+        gameHandler.discoverWorldBlocks(dataManager.player, dataManager.world);
 
-        gameHandler.updatePlayerRenderState(dataManager.player);
+        gameHandler.updatePlayerState(dataManager.player);
 
         // Update Gas
         gameHandler.drainGasFromPlayer(dataManager.player, movementInput);

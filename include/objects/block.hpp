@@ -9,7 +9,8 @@ enum BLOCK_TYPE{EMPTY, DIRT, STONE, COPPERORE, GOLDORE, PLATINUMORE};
 class Block : public AABB{
 public:
     size_t mType = EMPTY;
-    bool blocking = false;
+    bool blocking = true;
+    bool discovered = false;
 
     Block(){}
     Block(size_t type) : mType(type){}
@@ -21,7 +22,8 @@ public:
 inline void to_json(nlohmann::json& j, const Block& b) {
     j = {
         {"type", b.mType},
-        {"blocking", b.blocking}
+        {"blocking", b.blocking},
+        {"discovered", b.discovered}
     };
 }
 
@@ -29,4 +31,5 @@ inline void to_json(nlohmann::json& j, const Block& b) {
 inline void from_json(const nlohmann::json& j, Block& b) {
     j.at("type").get_to(b.mType);
     j.at("blocking").get_to(b.blocking);
+    j.at("discovered").get_to(b.discovered);
 }
