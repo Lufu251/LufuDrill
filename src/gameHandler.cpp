@@ -5,6 +5,7 @@
 #include <random>
 
 #include <dataManager.hpp>
+#include <inputHandler.hpp>
 #include <world.hpp>
 #include <buildings.hpp>
 
@@ -13,18 +14,20 @@ GameHandler::GameHandler(/* args */){}
 GameHandler::~GameHandler(){}
 
 // Return vector in which player will be moved
-Vector2 GameHandler::playerMovementInput(DrillUnit& player){
-    Vector2 direction{0,0};
-    // Player input
-    if(IsKeyDown(KEY_A)) direction.x += -1.f;
-    if(IsKeyDown(KEY_D)) direction.x += 1.f;
-    if(IsKeyDown(KEY_W)) direction.y += -1.f;
-    if(IsKeyDown(KEY_S)) direction.y += 1.f;
-
-    return direction;
+void GameHandler::addForceToDrillUnit(DrillUnit& drillUnit, World& world){
+    // Values for player force
+    Vector2 direction = Vector2Scale(InputHandler::getInstance().movementInput, DataManager::getInstance().thrustForce); // Multiply by speed
+    direction.x = direction.x * DataManager::getInstance().sideThrustForce; // weaken side thruster
+    if(direction.y > 0) direction.y = 0; // Stop down acceleration
+    
+    Vector2 airResistance = Vector2Negate(drillUnit.velocity - drillUnit.velocity * world.mAirDensity);
+    // Add Forces
+    drillUnit.addForce(direction); // Add movementInput to player velocity
+    drillUnit.addForce(world.mGravity); // Add gravity to player velocity
+    drillUnit.addForce(airResistance); // Add airResistance to player velocity
 }
 
-void GameHandler::updatePlayerState(DrillUnit& player, Vector2& movementInput){
+void GameHandler::updateDrillUnitStates(DrillUnit& player, Vector2& movementInput){
     switch (player.state){
     case LEFT:
         // StateChange triggers
@@ -53,6 +56,7 @@ void GameHandler::updatePlayerState(DrillUnit& player, Vector2& movementInput){
         // StateChange triggers
         if(movementInput.x > 0) player.state = RIGHT; // Movement interupt
         if(movementInput.y < 0) player.state = LEFT; // Movement interupt
+        if(movementInput.y > 0 && movementInput.x == 0) player.state = LEFT; // Movement interupt
         if(player.drillTime == 0) player.state = LEFT; // Drill over
         
         break;
@@ -61,6 +65,7 @@ void GameHandler::updatePlayerState(DrillUnit& player, Vector2& movementInput){
         // StateChange triggers
         if(movementInput.x < 0) player.state = LEFT; // Movement interupt
         if(movementInput.y < 0) player.state = RIGHT; // Movement interupt
+        if(movementInput.y > 0 && movementInput.x == 0) player.state = RIGHT; // Movement interupt
         if(player.drillTime == 0) player.state = RIGHT; // Drill over
 
         break;
@@ -73,6 +78,9 @@ void GameHandler::updatePlayerState(DrillUnit& player, Vector2& movementInput){
 }
 
 void GameHandler::generateTerrain(World& world){
+    world.mGravity = {0, 0.4f};
+    world.mAirDensity = 0.985f;
+
     // Pre init
     for (size_t x = 0; x < world.mGrid.gridSizeX; x++){
         for (size_t y = 0; y < world.mGrid.gridSizeY; y++){
@@ -339,7 +347,7 @@ void GameHandler::collisionDamageToPlayer(){
     }
 }
 
-void GameHandler::drainGasFromPlayer(DrillUnit& player, Vector2& movementInput){
+void GameHandler::drainGasFromDrillUnit(DrillUnit& player, Vector2& movementInput){
     // Drain passiv fuel
     player.gasTank.mGas -= DataManager::getInstance().passivFuelUsage;
 
@@ -384,7 +392,7 @@ void GameHandler::discoverWorldBlocks(DrillUnit& drillUnit, World& world){
     
 }
 
-void GameHandler::playerDrill(DrillUnit& drillUnit, World& world){
+void GameHandler::updateDrillUnitDrilling(DrillUnit& drillUnit, World& world){
     // Get the player position on the grid
     size_t iPlayer = drillUnit.getGridPosition(world.mBlockSize).x;
     size_t jPlayer = drillUnit.getGridPosition(world.mBlockSize).y;
@@ -423,16 +431,17 @@ void GameHandler::playerDrill(DrillUnit& drillUnit, World& world){
                 // Particles
                 drillUnit.drillingBlock->mType = EMPTY;
                 drillUnit.drillingBlock->blocking = false;
+
             }
         }
     }
 
     // Reset drillingBlock when drillUnit is not in drilling mode
-    if(drillUnit.state == DRILL_LEFT || drillUnit.state == DRILL_RIGHT || drillUnit.state == DRILL_DOWN){
-        
-    }
-    else{
+    if(!(drillUnit.state == DRILL_LEFT || drillUnit.state == DRILL_RIGHT || drillUnit.state == DRILL_DOWN)){
         drillUnit.drillingBlock = nullptr;
         drillUnit.drillTime = 0;
+    }
+    else{
+        
     }
 }

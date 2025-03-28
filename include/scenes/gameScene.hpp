@@ -11,6 +11,7 @@
 #include <equipmentShopMenu.hpp>
 #include <dataManager.hpp>
 #include <assetManager.hpp>
+#include <inputHandler.hpp>
 
 class GameScene : public Scene{
 private:
@@ -106,47 +107,33 @@ public:
             gameRenderer.setCameraOffset({GetScreenWidth() / 2.0f, GetScreenHeight() / 2.0f});
         }
 
-        // Update and pan camera in the direction of the player
-        gameRenderer.moveCameraToPosition(dataManager.player.position + dataManager.player.size /2);
-        gameRenderer.clampCameraToGrid(dataManager.player, dataManager.world);
+        // Update Input
+        InputHandler::getInstance().updateMovementInput();
 
-        // Values for player force
-        Vector2 movementInput = gameHandler.playerMovementInput(dataManager.player);
-        Vector2 direction = Vector2Scale(movementInput, DataManager::getInstance().thrustForce); // Multiply by speed
-        direction.x = direction.x * DataManager::getInstance().sideThrustForce; // weaken side thruster
-        if(direction.y > 0) direction.y = 0; // Stop down acceleration
-        
-        Vector2 airResistance = Vector2Negate(dataManager.player.velocity - dataManager.player.velocity * dataManager.airResistance);
-        // Add Forces
-        dataManager.player.addForce(direction); // Add movementInput to player velocity
-        dataManager.player.addForce(dataManager.gravity); // Add gravity to player velocity
-        dataManager.player.addForce(airResistance); // Add airResistance to player velocity
-
+        // Movement DrillUnit
+        gameHandler.addForceToDrillUnit(dataManager.player, dataManager.world);
+        gameHandler.checkCollisionAndMove(dataManager.player, dataManager.world); // Physics collision response and move player
+        gameHandler.clampToGrid(dataManager.player, dataManager.world); //Clamp player to grid
         // Stop completely if below the threshold
         if (Vector2Length(dataManager.player.velocity) < dataManager.velocityThreshhold) dataManager.player.velocity = { 0.0f, 0.0f };
 
-        // Physics collision response and move player
-        gameHandler.checkCollisionAndMove(dataManager.player, dataManager.world);
 
-        //Clamp player to grid
-        gameHandler.clampToGrid(dataManager.player, dataManager.world);
-
-        // Check if player is touching a block on any side and count for how long it is touching
+        // Update DrillUnit General
+        gameHandler.updateDrillUnitStates(dataManager.player, InputHandler::getInstance().movementInput);
+        gameHandler.updateDrillUnitDrilling(dataManager.player, dataManager.world);
+        gameHandler.discoverWorldBlocks(dataManager.player, dataManager.world);
         gameHandler.checkPlayerTouchingSides(dataManager.player, dataManager.world);
         gameHandler.checkBuildingTriggers(dataManager.player, dataManager.world);
-        gameHandler.discoverWorldBlocks(dataManager.player, dataManager.world);
-
-        gameHandler.updatePlayerState(dataManager.player, movementInput);
-        gameHandler.playerDrill(dataManager.player, dataManager.world);
-
-        // Update Gas
-        gameHandler.drainGasFromPlayer(dataManager.player, movementInput);
-
+        gameHandler.drainGasFromDrillUnit(dataManager.player, InputHandler::getInstance().movementInput);
         gameHandler.checkGameOverStates(dataManager.player);
+
+        // Update and pan camera
+        gameRenderer.moveCameraToPosition(dataManager.player.position + dataManager.player.size /2);
+        gameRenderer.clampCameraToGrid(dataManager.player, dataManager.world);
+
 
         // Update Gui
         playerGui.update();
-        
         gasStationMenu.update();
         traderMenu.update();
         toolShopMenu.update();

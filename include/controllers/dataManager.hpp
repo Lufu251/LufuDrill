@@ -77,8 +77,6 @@ public:
     int screenHeight;
 
     // Physics Variables
-    Vector2 gravity{0.0f,0.0f}; // Gravity of the world
-    float airResistance; // 0 to 1; 0 is no resistance
     float collisionRetention; // Remaing velocity after collision
     float velocityThreshhold; // If velocity is below this value it will be set to zero
     float onGroundResistance; // Multiplication factor when moving on ground

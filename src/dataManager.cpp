@@ -111,8 +111,6 @@ void DataManager::loadSettingConfig(const std::string& name){
     screenHeight = settings["window"]["screenHeight"];
 
     // PHYSICS
-    gravity.y = settings["physics"]["gravity"];
-    airResistance = settings["physics"]["airResistance"];
     collisionRetention = settings["physics"]["collisionRetention"];
     velocityThreshhold = settings["physics"]["velocityThreshhold"];
     onGroundResistance = settings["physics"]["onGroundResistance"];

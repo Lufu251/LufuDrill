@@ -30,7 +30,6 @@ public:
         SetMasterVolume(DataManager::getInstance().masterVolume);
 
         // Load Assets
-        
         AssetManager::getInstance().loadMusic("galactic_pulse", "galactic_pulse.ogg");
 
         // Play music

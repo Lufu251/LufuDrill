@@ -21,8 +21,6 @@
         "screenHeight": 1080
     },
     "physics": {
-        "gravity": 0.4,
-        "airResistance": 0.985,
         "collisionRetention": 0.1,
         "velocityThreshhold": 0.05,
         "onGroundResistance": 0.95,
