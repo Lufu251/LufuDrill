@@ -2,6 +2,8 @@
 
 #include <scene.hpp>
 
+#include <chrono>
+
 #include <gameHandler.hpp>
 #include <gameRenderer.hpp>
 #include <playerGui.hpp>
@@ -45,6 +47,7 @@ public:
         AssetManager::getInstance().loadTexture("cloud", "cloud.png");
 
         AssetManager::getInstance().loadMusic("nebula_run", "nebula_run.ogg");
+        
 
         // Play music
         PlayMusicStream(AssetManager::getInstance().getMusic("nebula_run"));
@@ -141,11 +144,21 @@ public:
     }
 
     void render() override {
+        
+
+
+
+
         // Clear Screen for the new render cycle
         ClearBackground({94, 131, 166, 255});
         gameRenderer.renderBackground(dataManager.player);
-
+        std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
         gameRenderer.renderMapGrid(dataManager.world);
+        std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
+        
+        std::cout << "Time difference = " << std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count() << "[µs]" << std::endl;
+        std::cout << "Time difference = " << std::chrono::duration_cast<std::chrono::nanoseconds> (end - begin).count() << "[ns]" << std::endl;
+
         gameRenderer.renderMapBuildings(dataManager.world);
         gameRenderer.renderPlayer(dataManager.player);
 

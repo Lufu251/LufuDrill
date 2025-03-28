@@ -32,6 +32,13 @@ void GameRenderer::renderMapGrid(World& world){
     int iStartBlock = camera.target.x / world.mBlockSize - xRenderAmount /2;
     int jStartBlock = camera.target.y / world.mBlockSize - yRenderAmount /2;
 
+    TextureAtlas& tileset = AssetManager::getInstance().getTextureAtlas("tileset");
+    Rectangle* rec_DIRT = &tileset.sections["DIRT"];
+    Rectangle* rec_STONE = &tileset.sections["STONE"];
+    Rectangle* rec_COPPERORE = &tileset.sections["COPPERORE"];
+    Rectangle* rec_GOLDORE = &tileset.sections["GOLDORE"];
+    Rectangle* rec_PLATINUMORE = &tileset.sections["PLATINUMORE"];
+
     // Loop over the amount of blocks that are visible
     for (int i = 0; i <= xRenderAmount; i++){
         for (int j = 0; j <= yRenderAmount; j++){
@@ -42,17 +49,17 @@ void GameRenderer::renderMapGrid(World& world){
                 continue;
             }
 
-            TextureAtlas& tileset = AssetManager::getInstance().getTextureAtlas("tileset");
+            
             Block* block = &world.mGrid(iBlock, jBlock); // Set the current block
             Color color = BLACK;
             if(!block->blocking || block->discovered) color = WHITE;
             switch (block->mType){
                 case EMPTY: break;
-                case DIRT: DrawTextureRec(tileset.texture, tileset.sections["DIRT"], block->position, color); break;
-                case STONE: DrawTextureRec(tileset.texture, tileset.sections["STONE"], block->position, color); break;
-                case COPPERORE: DrawTextureRec(tileset.texture, tileset.sections["COPPERORE"], block->position, color); break;
-                case GOLDORE: DrawTextureRec(tileset.texture, tileset.sections["GOLDORE"], block->position, color); break;
-                case PLATINUMORE: DrawTextureRec(tileset.texture, tileset.sections["PLATINUMORE"], block->position, color); break;
+                case DIRT: DrawTextureRec(tileset.texture, *rec_DIRT, block->position, color); break;
+                case STONE: DrawTextureRec(tileset.texture, *rec_STONE, block->position, color); break;
+                case COPPERORE: DrawTextureRec(tileset.texture, *rec_COPPERORE, block->position, color); break;
+                case GOLDORE: DrawTextureRec(tileset.texture, *rec_GOLDORE, block->position, color); break;
+                case PLATINUMORE: DrawTextureRec(tileset.texture, *rec_PLATINUMORE, block->position, color); break;
             }
         }
     }
