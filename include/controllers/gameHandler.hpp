@@ -20,7 +20,7 @@ public:
     ~GameHandler();
 
     // Helper methods
-    void addForceToDrillUnit(DrillUnit& drillUnit, World& world);
+    void updateDrillUnitMovement(DrillUnit& drillUnit, World& world);
     void updateDrillUnitStates(DrillUnit& player, Vector2& movementInput);
     void generateTerrain(World& world);
     void clampToGrid(AABB& box, World& world);

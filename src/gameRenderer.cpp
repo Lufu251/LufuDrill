@@ -49,7 +49,6 @@ void GameRenderer::renderMapGrid(World& world){
                 continue;
             }
 
-            
             Block* block = &world.mGrid(iBlock, jBlock); // Set the current block
             Color color = BLACK;
             if(!block->blocking || block->discovered) color = WHITE;

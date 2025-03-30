@@ -14,7 +14,7 @@ GameHandler::GameHandler(/* args */){}
 GameHandler::~GameHandler(){}
 
 // Return vector in which player will be moved
-void GameHandler::addForceToDrillUnit(DrillUnit& drillUnit, World& world){
+void GameHandler::updateDrillUnitMovement(DrillUnit& drillUnit, World& world){
     // Values for player force
     Vector2 direction = Vector2Scale(InputHandler::getInstance().movementInput, DataManager::getInstance().thrustForce); // Multiply by speed
     direction.x = direction.x * DataManager::getInstance().sideThrustForce; // weaken side thruster
@@ -25,6 +25,10 @@ void GameHandler::addForceToDrillUnit(DrillUnit& drillUnit, World& world){
     drillUnit.addForce(direction); // Add movementInput to player velocity
     drillUnit.addForce(world.mGravity); // Add gravity to player velocity
     drillUnit.addForce(airResistance); // Add airResistance to player velocity
+
+    if(drillUnit.state == DRILL_DOWN){
+        drillUnit.velocity.x = 0;
+    }
 }
 
 void GameHandler::updateDrillUnitStates(DrillUnit& player, Vector2& movementInput){
@@ -48,7 +52,7 @@ void GameHandler::updateDrillUnitStates(DrillUnit& player, Vector2& movementInpu
         if(movementInput.x > 0) player.state = RIGHT; // Movement interupt
         if(movementInput.x < 0) player.state = LEFT; // Movement interupt
         if(movementInput.y < 0) player.state = RIGHT; // Movement interupt
-        if(player.drillTime == 0) player.state = RIGHT; // Drill over
+        if(player.drillTime == 0) player.state = RIGHT; // Drill done
         
         break;
 
@@ -57,7 +61,7 @@ void GameHandler::updateDrillUnitStates(DrillUnit& player, Vector2& movementInpu
         if(movementInput.x > 0) player.state = RIGHT; // Movement interupt
         if(movementInput.y < 0) player.state = LEFT; // Movement interupt
         if(movementInput.y > 0 && movementInput.x == 0) player.state = LEFT; // Movement interupt
-        if(player.drillTime == 0) player.state = LEFT; // Drill over
+        if(player.drillTime == 0) player.state = LEFT; // Drill done
         
         break;
 
@@ -66,7 +70,7 @@ void GameHandler::updateDrillUnitStates(DrillUnit& player, Vector2& movementInpu
         if(movementInput.x < 0) player.state = LEFT; // Movement interupt
         if(movementInput.y < 0) player.state = RIGHT; // Movement interupt
         if(movementInput.y > 0 && movementInput.x == 0) player.state = RIGHT; // Movement interupt
-        if(player.drillTime == 0) player.state = RIGHT; // Drill over
+        if(player.drillTime == 0) player.state = RIGHT; // Drill done
 
         break;
     
@@ -420,6 +424,11 @@ void GameHandler::updateDrillUnitDrilling(DrillUnit& drillUnit, World& world){
             // block is nullpointer
         }
         else{
+            // Stop drilling when block can't be drilled
+            if(drillUnit.drillingBlock->breakable == false){
+                return;
+            }
+
             // drillUnit is drilling a block reduce drillTime by drillpower
             drillUnit.drillTime -= drillUnit.drill.mPower;
 
