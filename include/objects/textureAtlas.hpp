@@ -1,12 +1,12 @@
 #pragma once
 
-#include <unordered_map>
+#include <vector>
 #include <string>
 #include <raylib.h>
 
 class TextureAtlas{
 public:
-    std::unordered_map<std::string, Rectangle> sections;
+    std::vector<Rectangle> sections;
     Texture2D texture;
 };
 

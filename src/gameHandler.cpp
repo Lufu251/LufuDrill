@@ -88,7 +88,7 @@ void GameHandler::generateTerrain(World& world){
     // Pre init
     for (size_t x = 0; x < world.mGrid.gridSizeX; x++){
         for (size_t y = 0; y < world.mGrid.gridSizeY; y++){
-            world.mGrid(x,y) = Block(EMPTY, {static_cast<float>(x * world.mBlockSize), static_cast<float>(y * world.mBlockSize)}, {static_cast<float>(world.mBlockSize), static_cast<float>(world.mBlockSize)});
+            world.mGrid(x,y) = Block({static_cast<float>(x * world.mBlockSize), static_cast<float>(y * world.mBlockSize)}, {static_cast<float>(world.mBlockSize), static_cast<float>(world.mBlockSize)});
         }
     }
 
@@ -106,14 +106,14 @@ void GameHandler::generateTerrain(World& world){
 
             // Create a tunnel to the bottom
             if(x == 20){
-                world.mGrid(x,y).mType = EMPTY;
+                world.mGrid(x,y).mType = 0;
                 world.mGrid(x,y).blocking = false;
                 continue;
             }
 
             // Generate some air pockets
             if(y > 15 && dist6(rng) >= 10){
-                world.mGrid(x,y).mType = EMPTY;
+                world.mGrid(x,y).mType = 0;
                 world.mGrid(x,y).blocking = false;
                 continue;
             }
@@ -121,39 +121,39 @@ void GameHandler::generateTerrain(World& world){
             // Normal generation
             // Air layer
             if(y < 15){
-                world.mGrid(x,y).mType = EMPTY;
+                world.mGrid(x,y).mType = 0;
                 world.mGrid(x,y).blocking = false;
                 continue;
             }
             // Dirt layer
             if(y < 100){
                 if(dist6(rng) == 10){
-                    world.mGrid(x,y).mType = COPPERORE;
+                    world.mGrid(x,y).mType = 1;
                     continue;
                 }
-                world.mGrid(x,y).mType = DIRT;
+                world.mGrid(x,y).mType = 1;
                 continue;
             }
             // Upper stone layer
             if(y < 500){
                 if(dist6(rng) == 10){
-                    world.mGrid(x,y).mType = GOLDORE;
+                    world.mGrid(x,y).mType = 2;
                     continue;
                 }
-                world.mGrid(x,y).mType = STONE;
+                world.mGrid(x,y).mType = 2;
                 continue;
             }
             // Lower stone layer
             if(y < 1000){
                 if(dist6(rng) == 10){
-                    world.mGrid(x,y).mType = PLATINUMORE;
+                    world.mGrid(x,y).mType = 3;
                     continue;
                 }
-                world.mGrid(x,y).mType = STONE;
+                world.mGrid(x,y).mType = 2;
                 continue;
             }
             // Anything Deeper Layer
-            world.mGrid(x,y).mType = STONE;
+            world.mGrid(x,y).mType = 2;
         }
     }
 }
@@ -426,6 +426,7 @@ void GameHandler::updateDrillUnitDrilling(DrillUnit& drillUnit, World& world){
         else{
             // Stop drilling when block can't be drilled
             if(drillUnit.drillingBlock->breakable == false){
+                
                 return;
             }
 
@@ -433,12 +434,12 @@ void GameHandler::updateDrillUnitDrilling(DrillUnit& drillUnit, World& world){
             drillUnit.drillTime -= drillUnit.drill.mPower;
 
             if(drillUnit.drillTime <= 0){
-                // Block is mined reset
+                // Block is mined reset 
                 drillUnit.drillTime = 0;
 
                 // Do something to the block
                 // Particles
-                drillUnit.drillingBlock->mType = EMPTY;
+                drillUnit.drillingBlock->mType = 0;
                 drillUnit.drillingBlock->blocking = false;
 
             }

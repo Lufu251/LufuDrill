@@ -74,7 +74,7 @@ void AssetManager::loadTextureAtlas(const std::string& name){
         ss >> sectionName >> rect.x >> rect.y >> rect.width >> rect.height;
 
         // Store the section in the TextureAtlas
-        textureAtlas.sections[sectionName] = std::move(rect);
+        textureAtlas.sections.push_back(rect);
     }
 
     // Close the file

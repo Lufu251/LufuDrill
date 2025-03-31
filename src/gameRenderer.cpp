@@ -33,11 +33,6 @@ void GameRenderer::renderMapGrid(World& world){
     int jStartBlock = camera.target.y / world.mBlockSize - yRenderAmount /2;
 
     TextureAtlas& tileset = AssetManager::getInstance().getTextureAtlas("tileset");
-    Rectangle* rec_DIRT = &tileset.sections["DIRT"];
-    Rectangle* rec_STONE = &tileset.sections["STONE"];
-    Rectangle* rec_COPPERORE = &tileset.sections["COPPERORE"];
-    Rectangle* rec_GOLDORE = &tileset.sections["GOLDORE"];
-    Rectangle* rec_PLATINUMORE = &tileset.sections["PLATINUMORE"];
 
     // Loop over the amount of blocks that are visible
     for (int i = 0; i <= xRenderAmount; i++){
@@ -52,14 +47,7 @@ void GameRenderer::renderMapGrid(World& world){
             Block* block = &world.mGrid(iBlock, jBlock); // Set the current block
             Color color = BLACK;
             if(!block->blocking || block->discovered) color = WHITE;
-            switch (block->mType){
-                case EMPTY: break;
-                case DIRT: DrawTextureRec(tileset.texture, *rec_DIRT, block->position, color); break;
-                case STONE: DrawTextureRec(tileset.texture, *rec_STONE, block->position, color); break;
-                case COPPERORE: DrawTextureRec(tileset.texture, *rec_COPPERORE, block->position, color); break;
-                case GOLDORE: DrawTextureRec(tileset.texture, *rec_GOLDORE, block->position, color); break;
-                case PLATINUMORE: DrawTextureRec(tileset.texture, *rec_PLATINUMORE, block->position, color); break;
-            }
+            DrawTextureRec(tileset.texture, tileset.sections[block->mType], block->position, color);
         }
     }
     EndMode2D();
@@ -70,15 +58,9 @@ void GameRenderer::renderMapBuildings(World& world){
 
     BeginMode2D(camera);
     for (auto& building : world.buildings){
-            Rectangle buildingRec = {building.position.x, building.position.y, building.size.x, building.size.y};
-            switch (building.mType)
-            {
-            case GAS_STATION: DrawTexturePro(buildingset.texture, buildingset.sections["GAS_STATION"], buildingRec, {0,0}, 0, WHITE); break;
-            case TRADER: DrawTexturePro(buildingset.texture, buildingset.sections["TRADER"], buildingRec, {0,0}, 0, WHITE); break;
-            case TOOL_SHOP: DrawTexturePro(buildingset.texture, buildingset.sections["TOOL_SHOP"], buildingRec, {0,0}, 0, WHITE); break;
-            case EQUIPMENT_SHOP: DrawTexturePro(buildingset.texture, buildingset.sections["EQUIPMENT_SHOP"], buildingRec, {0,0}, 0, WHITE); break;
-            }
-        }
+        Rectangle buildingRec = {building.position.x, building.position.y, building.size.x, building.size.y};
+        DrawTexturePro(buildingset.texture, buildingset.sections[building.mType], buildingRec, {0,0}, 0, WHITE);
+    }
     EndMode2D();
 }
 
@@ -86,14 +68,7 @@ void GameRenderer::renderPlayer(DrillUnit& player){
     TextureAtlas& buildingset = AssetManager::getInstance().getTextureAtlas("drillunitset");
 
     BeginMode2D(camera);
-    switch (player.state)
-    {
-    case LEFT: DrawTextureRec(buildingset.texture, buildingset.sections["LEFT"], {player.position.x -6, player.position.y}, WHITE); break;
-    case RIGHT: DrawTextureRec(buildingset.texture, buildingset.sections["RIGHT"],player.position, WHITE); break;
-    case DRILL_DOWN: DrawTextureRec(buildingset.texture, buildingset.sections["DOWN"],player.position, GRAY); break;
-    case DRILL_LEFT: DrawTextureRec(buildingset.texture, buildingset.sections["LEFT"], {player.position.x -6, player.position.y}, GRAY); break;
-    case DRILL_RIGHT:DrawTextureRec(buildingset.texture, buildingset.sections["RIGHT"],player.position, GRAY); break;
-    }
+    DrawTextureRec(buildingset.texture, buildingset.sections[player.state], {player.position.x -6, player.position.y}, WHITE);
     EndMode2D();
 }
 
