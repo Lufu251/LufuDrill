@@ -45,9 +45,13 @@ void GameRenderer::renderMapGrid(World& world){
             }
 
             Block* block = &world.mGrid(iBlock, jBlock); // Set the current block
+            // check if the block is empty
+            if(block->mType > 100000){
+                continue;
+            }
             Color color = BLACK;
             if(!block->blocking || block->discovered) color = WHITE;
-            DrawTextureRec(tileset.texture, tileset.sections[block->mType], block->position, color);
+            DrawTextureRec(tileset.texture, tileset.sections[block->mType].rect, block->position, color);
         }
     }
     EndMode2D();
@@ -59,7 +63,7 @@ void GameRenderer::renderMapBuildings(World& world){
     BeginMode2D(camera);
     for (auto& building : world.buildings){
         Rectangle buildingRec = {building.position.x, building.position.y, building.size.x, building.size.y};
-        DrawTexturePro(buildingset.texture, buildingset.sections[building.mType], buildingRec, {0,0}, 0, WHITE);
+        DrawTexturePro(buildingset.texture, buildingset.sections[building.mType].rect, buildingRec, {0,0}, 0, WHITE);
     }
     EndMode2D();
 }
@@ -68,7 +72,7 @@ void GameRenderer::renderPlayer(DrillUnit& player){
     TextureAtlas& buildingset = AssetManager::getInstance().getTextureAtlas("drillunitset");
 
     BeginMode2D(camera);
-    DrawTextureRec(buildingset.texture, buildingset.sections[player.state], {player.position.x -6, player.position.y}, WHITE);
+    DrawTextureRec(buildingset.texture, buildingset.sections[player.state].rect, {player.position.x -6, player.position.y}, WHITE);
     EndMode2D();
 }
 

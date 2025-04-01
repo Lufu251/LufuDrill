@@ -67,14 +67,13 @@ void AssetManager::loadTextureAtlas(const std::string& name){
     std::string data;
     while (std::getline(file, data, ';')) {
         std::istringstream ss(data);
-        std::string sectionName;
-        Rectangle rect;
+        Section section;
 
         // Write the data to the variables
-        ss >> sectionName >> rect.x >> rect.y >> rect.width >> rect.height;
+        ss >> section.name >> section.rect.x >> section.rect.y >> section.rect.width >> section.rect.height;
 
         // Store the section in the TextureAtlas
-        textureAtlas.sections.push_back(rect);
+        textureAtlas.sections.push_back(section);
     }
 
     // Close the file

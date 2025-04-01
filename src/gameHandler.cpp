@@ -98,62 +98,104 @@ void GameHandler::generateTerrain(World& world){
     world.buildings.push_back(Building(TOOL_SHOP ,{1200, 416}, {64, 64}));
     world.buildings.push_back(Building(EQUIPMENT_SHOP ,{1600, 416}, {64, 64}));
 
+    std::random_device dev;
+    std::mt19937 rng(dev());
+    std::uniform_int_distribution<std::mt19937::result_type> dist6(1,15);
+
     for (size_t x = 0; x < world.mGrid.gridSizeX; x++){
         for (size_t y = 0; y < world.mGrid.gridSizeY; y++){
-            std::random_device dev;
-            std::mt19937 rng(dev());
-            std::uniform_int_distribution<std::mt19937::result_type> dist6(1,10);
 
             // Create a tunnel to the bottom
             if(x == 20){
-                world.mGrid(x,y).mType = 0;
+                world.mGrid(x,y).mType = -1;
                 world.mGrid(x,y).blocking = false;
                 continue;
             }
 
-            // Generate some air pockets
-            if(y > 15 && dist6(rng) >= 10){
-                world.mGrid(x,y).mType = 0;
+            // Air pokets
+            if(dist6(rng) == 2){
+                world.mGrid(x,y).mType = -1;
                 world.mGrid(x,y).blocking = false;
                 continue;
             }
 
-            // Normal generation
-            // Air layer
-            if(y < 15){
-                world.mGrid(x,y).mType = 0;
+            // empty_zone
+            if(y < 50){
+                world.mGrid(x,y).mType = -1;
                 world.mGrid(x,y).blocking = false;
                 continue;
             }
-            // Dirt layer
-            if(y < 100){
+
+            // dirt_zone
+            if(y < 250){
                 if(dist6(rng) == 10){
-                    world.mGrid(x,y).mType = 1;
-                    continue;
+                    world.mGrid(x,y).mType = 1; // cuprium
                 }
-                world.mGrid(x,y).mType = 1;
+                else if(dist6(rng) == 11){
+                    world.mGrid(x,y).mType = 2; // albium
+                }
+                else if(dist6(rng) == 12){
+                    world.mGrid(x,y).mType = 3; // platinum
+                }
+                else if(dist6(rng) == 13){
+                    world.mGrid(x,y).mType = 4; // goldium
+                }
+                else{
+                    world.mGrid(x,y).mType = 0; // dirt
+                }
                 continue;
             }
-            // Upper stone layer
-            if(y < 500){
+
+            // stone_zone
+            if(y < 600){
                 if(dist6(rng) == 10){
-                    world.mGrid(x,y).mType = 2;
-                    continue;
+                    world.mGrid(x,y).mType = 6; // celestium
                 }
-                world.mGrid(x,y).mType = 2;
+                else if(dist6(rng) == 11){
+                    world.mGrid(x,y).mType = 7; // faerite
+                }
+                else if(dist6(rng) == 12){
+                    world.mGrid(x,y).mType = 8; // florite
+                }
+                else if(dist6(rng) == 13){
+                    world.mGrid(x,y).mType = 9; // prismarite
+                }
+                else{
+                    world.mGrid(x,y).mType = 5; // stone
+                }
                 continue;
             }
-            // Lower stone layer
+
+            // magma_zone
+            if(y < 800){
+                if(dist6(rng) == 10){
+                    world.mGrid(x,y).mType = 11; // pyrite
+                }
+                else if(dist6(rng) == 11){
+                    world.mGrid(x,y).mType = 12; // infernium
+                }
+                else if(dist6(rng) == 12){
+                    world.mGrid(x,y).mType = 13; // magmatite
+                }
+                else{
+                    world.mGrid(x,y).mType = 10; // magmastone
+                }
+                continue;
+            }
+
+            // void_zone
             if(y < 1000){
                 if(dist6(rng) == 10){
-                    world.mGrid(x,y).mType = 3;
-                    continue;
+                    world.mGrid(x,y).mType = 15; // pyrite
                 }
-                world.mGrid(x,y).mType = 2;
+                else if(dist6(rng) == 11){
+                    world.mGrid(x,y).mType = 16; // infernium
+                }
+                else{
+                    world.mGrid(x,y).mType = 14;
+                }
                 continue;
             }
-            // Anything Deeper Layer
-            world.mGrid(x,y).mType = 2;
         }
     }
 }
@@ -439,7 +481,7 @@ void GameHandler::updateDrillUnitDrilling(DrillUnit& drillUnit, World& world){
 
                 // Do something to the block
                 // Particles
-                drillUnit.drillingBlock->mType = 0;
+                drillUnit.drillingBlock->mType = -1;
                 drillUnit.drillingBlock->blocking = false;
 
             }

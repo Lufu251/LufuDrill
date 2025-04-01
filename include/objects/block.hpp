@@ -6,7 +6,7 @@
 
 class Block : public AABB{
 public:
-    size_t mType;
+    size_t mType = -1;
     bool blocking = true;
     bool discovered = false;
     bool breakable = true;

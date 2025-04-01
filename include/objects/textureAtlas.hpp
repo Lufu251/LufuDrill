@@ -4,10 +4,14 @@
 #include <string>
 #include <raylib.h>
 
-class TextureAtlas{
-public:
-    std::vector<Rectangle> sections;
-    Texture2D texture;
+class Section{
+    public:
+    std::string name;
+    Rectangle rect;
 };
 
-
+class TextureAtlas{
+public:
+    std::vector<Section> sections;
+    Texture2D texture;
+};
