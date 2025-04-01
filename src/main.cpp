@@ -26,7 +26,7 @@ int main(void){
     SetExitKey(KEY_NULL);
     SetTargetFPS(60);
     SetWindowMinSize(500, 500);
-    // SetWindowIcon(Image image);
+    //SetWindowIcon(Image image);
     //ToggleFullscreen(); // Toggle window state: fullscreen/windowed, resizes monitor to match window resolution
     //ToggleBorderlessWindowed(); // Toggle window state: borderless windowed, resizes window to match monitor resolution
 

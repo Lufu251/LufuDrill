@@ -72,7 +72,14 @@ void GameRenderer::renderPlayer(DrillUnit& player){
     TextureAtlas& buildingset = AssetManager::getInstance().getTextureAtlas("drillunitset");
 
     BeginMode2D(camera);
-    DrawTextureRec(buildingset.texture, buildingset.sections[player.state].rect, {player.position.x -6, player.position.y}, WHITE);
+    switch (player.state)
+    {
+    case LEFT: DrawTextureRec(buildingset.texture, buildingset.sections[player.state].rect, {player.position.x -6, player.position.y}, WHITE); break;
+    case RIGHT: DrawTextureRec(buildingset.texture, buildingset.sections[player.state].rect, {player.position.x, player.position.y}, WHITE); break;
+    case DRILL_LEFT: DrawTextureRec(buildingset.texture, buildingset.sections[player.state].rect, {player.position.x -6, player.position.y}, WHITE); break;
+    case DRILL_RIGHT: DrawTextureRec(buildingset.texture, buildingset.sections[player.state].rect, {player.position.x, player.position.y}, WHITE); break;
+    case DRILL_DOWN: DrawTextureRec(buildingset.texture, buildingset.sections[player.state].rect, {player.position.x, player.position.y}, WHITE); break;
+    }
     EndMode2D();
 }
 

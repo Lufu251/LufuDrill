@@ -1,0 +1,106 @@
+{
+    "ores": [
+        {
+            "name": "dirt",
+            "value": 0,
+            "weight": 0,
+            "hardness": 30
+        },
+        {
+            "name": "cuprium",
+            "value": 10,
+            "weight": 0.5,
+            "hardness": 30
+        },
+        {
+            "name": "albium",
+            "value": 20,
+            "weight": 1,
+            "hardness": 30
+        },
+        {
+            "name": "platinum",
+            "value": 40,
+            "weight": 1,
+            "hardness": 30
+        },
+        {
+            "name": "goldium",
+            "value": 80,
+            "weight": 1.5,
+            "hardness": 30
+        },
+        {
+            "name": "stone",
+            "value": 0,
+            "weight": 0,
+            "hardness": 60
+        },
+        {
+            "name": "celestium",
+            "value": 200,
+            "weight": 3,
+            "hardness": 60
+        },
+        {
+            "name": "faerite",
+            "value": 250,
+            "weight": 3.5,
+            "hardness": 60
+        },
+        {
+            "name": "florite",
+            "value": 320,
+            "weight": 4,
+            "hardness": 60
+        },
+        {
+            "name": "prismarite",
+            "value": 360,
+            "weight": 6,
+            "hardness": 60
+        },
+        {
+            "name": "magmastone",
+            "value": 0,
+            "weight": 0,
+            "hardness": 120
+        },
+        {
+            "name": "pyrite",
+            "value": 500,
+            "weight": 8,
+            "hardness": 120
+        },
+        {
+            "name": "infernium",
+            "value": 620,
+            "weight": 9,
+            "hardness": 120
+        },
+        {
+            "name": "magmatite",
+            "value": 800,
+            "weight": 12,
+            "hardness": 120
+        },
+        {
+            "name": "voidstone",
+            "value": 0,
+            "weight": 0,
+            "hardness": 200
+        },
+        {
+            "name": "voidium",
+            "value": 1200,
+            "weight": 20,
+            "hardness": 200
+        },
+        {
+            "name": "singularium",
+            "value": 2000,
+            "weight": 30,
+            "hardness": 200
+        }
+    ]
+}

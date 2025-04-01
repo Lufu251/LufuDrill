@@ -7,7 +7,7 @@
 #include <aabb.hpp>
 #include <block.hpp>
 
-enum FACING{LEFT, RIGHT, DRILL_DOWN, DRILL_LEFT, DRILL_RIGHT};
+enum FACING{LEFT, RIGHT, DRILL_LEFT, DRILL_RIGHT, DRILL_DOWN};
 
 class DrillUnit : public AABB{
 public:

@@ -1,3 +1,5 @@
 left 0 0 30 24;
 right 30 0 30 24;
-down 4 24 24 30;
+drillleft 0 24 30 24;
+drillright 30 24 30 24;
+drilldown 4 48 24 30;

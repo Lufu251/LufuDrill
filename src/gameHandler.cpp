@@ -113,14 +113,14 @@ void GameHandler::generateTerrain(World& world){
             }
 
             // Air pokets
-            if(dist6(rng) == 2){
+            if(dist6(rng) == 2 && y != 15){
                 world.mGrid(x,y).mType = -1;
                 world.mGrid(x,y).blocking = false;
                 continue;
             }
 
             // empty_zone
-            if(y < 50){
+            if(y < 15){
                 world.mGrid(x,y).mType = -1;
                 world.mGrid(x,y).blocking = false;
                 continue;
