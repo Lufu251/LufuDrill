@@ -5,7 +5,7 @@
 
 #include <tools.hpp>
 #include <aabb.hpp>
-#include <block.hpp>
+#include <tile.hpp>
 
 enum FACING{LEFT, RIGHT, DRILL_LEFT, DRILL_RIGHT, DRILL_DOWN};
 
@@ -20,7 +20,7 @@ public:
     // Players state
     int state = 0;
     float drillTime = 0;
-    Block* drillingBlock;
+    Tile* drillingBlock;
 
     // Values to track touching sides
     int top, right, bottom, left;

@@ -5,13 +5,13 @@
 
 #include <nlohmann/json.hpp>
 
-#include <block.hpp>
+#include <tile.hpp>
 #include <buildings.hpp>
 
 class Grid
 {
 public:
-    std::vector<Block> gridData;
+    std::vector<Tile> gridData;
 public:
     size_t gridSizeX, gridSizeY;
 
@@ -20,7 +20,7 @@ public:
 
     ~Grid(){}
 
-    Block& operator() (size_t x, size_t y){
+    Tile& operator() (size_t x, size_t y){
         assert(x < gridSizeX);
         assert(y < gridSizeY);
         return gridData[gridSizeX * y + x];

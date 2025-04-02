@@ -44,7 +44,7 @@ void GameRenderer::renderMapGrid(World& world){
                 continue;
             }
 
-            Block* block = &world.mGrid(iBlock, jBlock); // Set the current block
+            Tile* block = &world.mGrid(iBlock, jBlock); // Set the current block
             // check if the block is empty
             if(block->mType > 100000){
                 continue;
