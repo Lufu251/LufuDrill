@@ -473,14 +473,10 @@ void GameHandler::updateDrillUnitDrilling(DrillUnit& drillUnit, World& world){
             drillUnit.drillTime -= drillUnit.drill.mPower;
 
             if(drillUnit.drillTime <= 0){
-                // Block is mined reset 
-                drillUnit.drillTime = 0;
-
-                // Do something to the block
+                // Block is mined
+                drillUnit.drillTime = 0; // Reset drillTime
+                drillUnit.drillingBlock->setTileFromBlock(0, DataManager::getInstance().blocks[0]); // Replace block with air
                 // Particles
-                drillUnit.drillingBlock->mType = -1;
-                drillUnit.drillingBlock->mBlocking = false;
-
             }
         }
     }
