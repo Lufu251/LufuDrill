@@ -51,9 +51,6 @@ public:
         // Play music
         PlayMusicStream(AssetManager::getInstance().getMusic("nebula_run"));
 
-        // Load tools configuration
-        dataManager.loadToolConfig("tools.json");
-
         // Init Player
         dataManager.player = DrillUnit({200,300}, {24,24}, {0,0});
         dataManager.player.drill = dataManager.drills[0];

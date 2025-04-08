@@ -25,10 +25,6 @@ public:
 
     void initialize() override{
         std::cout << "Initialize MenuScene" << std::endl;
-        // Initialize audio device
-        InitAudioDevice();
-        SetMasterVolume(DataManager::getInstance().masterVolume);
-
         // Load Assets
         AssetManager::getInstance().loadMusic("galactic_pulse", "galactic_pulse.ogg");
 

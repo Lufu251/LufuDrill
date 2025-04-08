@@ -19,6 +19,12 @@ int main(void){
 
     DataManager::getInstance().searchDataDirectoryPath("data", 3);
     DataManager::getInstance().loadSettingConfig("settings.json");
+    DataManager::getInstance().loadToolsConfig("tools.json");
+    DataManager::getInstance().loadBlocksConfig("blocks.json");
+
+    // Initialize audio device
+    InitAudioDevice();
+    SetMasterVolume(DataManager::getInstance().masterVolume);
 
     // Set window parameters
     SetConfigFlags(FLAG_WINDOW_RESIZABLE);
@@ -30,7 +36,7 @@ int main(void){
     //ToggleFullscreen(); // Toggle window state: fullscreen/windowed, resizes monitor to match window resolution
     //ToggleBorderlessWindowed(); // Toggle window state: borderless windowed, resizes window to match monitor resolution
 
-    // Load Assets
+    // Load fonts because they need to be loaded after window init
     AssetManager::getInstance().loadFont("thaleah_fat_20", "ThaleahFat.ttf", 20);
     AssetManager::getInstance().loadFont("thaleah_fat_48", "ThaleahFat.ttf", 48);
 

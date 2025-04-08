@@ -107,41 +107,38 @@ void GameHandler::generateTerrain(World& world){
 
             // Create a tunnel to the bottom
             if(x == 20){
-                world.mGrid(x,y).mType = -1;
-                world.mGrid(x,y).blocking = false;
+                world.mGrid(x,y).setTileFromBlock(0, DataManager::getInstance().blocks[0]);
                 continue;
             }
 
             // Air pokets
             if(dist6(rng) == 2 && y != 15){
-                world.mGrid(x,y).mType = -1;
-                world.mGrid(x,y).blocking = false;
+                world.mGrid(x,y).setTileFromBlock(0, DataManager::getInstance().blocks[0]);
                 continue;
             }
 
             // empty_zone
             if(y < 15){
-                world.mGrid(x,y).mType = -1;
-                world.mGrid(x,y).blocking = false;
+                world.mGrid(x,y).setTileFromBlock(0, DataManager::getInstance().blocks[0]);
                 continue;
             }
 
             // dirt_zone
             if(y < 250){
                 if(dist6(rng) == 10){
-                    world.mGrid(x,y).mType = 1; // cuprium
+                    world.mGrid(x,y).setTileFromBlock(2, DataManager::getInstance().blocks[2]); // cuprium
                 }
                 else if(dist6(rng) == 11){
-                    world.mGrid(x,y).mType = 2; // albium
+                    world.mGrid(x,y).setTileFromBlock(3, DataManager::getInstance().blocks[3]); // albium
                 }
                 else if(dist6(rng) == 12){
-                    world.mGrid(x,y).mType = 3; // platinum
+                    world.mGrid(x,y).setTileFromBlock(4, DataManager::getInstance().blocks[4]); // platinum
                 }
                 else if(dist6(rng) == 13){
-                    world.mGrid(x,y).mType = 4; // goldium
+                    world.mGrid(x,y).setTileFromBlock(5, DataManager::getInstance().blocks[5]); // goldium
                 }
                 else{
-                    world.mGrid(x,y).mType = 0; // dirt
+                    world.mGrid(x,y).setTileFromBlock(1, DataManager::getInstance().blocks[1]); // dirt
                 }
                 continue;
             }
@@ -149,19 +146,19 @@ void GameHandler::generateTerrain(World& world){
             // stone_zone
             if(y < 600){
                 if(dist6(rng) == 10){
-                    world.mGrid(x,y).mType = 6; // celestium
+                    world.mGrid(x,y).setTileFromBlock(7, DataManager::getInstance().blocks[7]); // celestium
                 }
                 else if(dist6(rng) == 11){
-                    world.mGrid(x,y).mType = 7; // faerite
+                    world.mGrid(x,y).setTileFromBlock(8, DataManager::getInstance().blocks[8]); // faerite
                 }
                 else if(dist6(rng) == 12){
-                    world.mGrid(x,y).mType = 8; // florite
+                    world.mGrid(x,y).setTileFromBlock(9, DataManager::getInstance().blocks[9]); // florite
                 }
                 else if(dist6(rng) == 13){
-                    world.mGrid(x,y).mType = 9; // prismarite
+                    world.mGrid(x,y).setTileFromBlock(10, DataManager::getInstance().blocks[10]); // prismarite
                 }
                 else{
-                    world.mGrid(x,y).mType = 5; // stone
+                    world.mGrid(x,y).setTileFromBlock(6, DataManager::getInstance().blocks[6]); // stone
                 }
                 continue;
             }
@@ -169,16 +166,16 @@ void GameHandler::generateTerrain(World& world){
             // magma_zone
             if(y < 800){
                 if(dist6(rng) == 10){
-                    world.mGrid(x,y).mType = 11; // pyrite
+                   world.mGrid(x,y).setTileFromBlock(12, DataManager::getInstance().blocks[12]); // pyrite
                 }
                 else if(dist6(rng) == 11){
-                    world.mGrid(x,y).mType = 12; // infernium
+                    world.mGrid(x,y).setTileFromBlock(13, DataManager::getInstance().blocks[13]); // infernium
                 }
                 else if(dist6(rng) == 12){
-                    world.mGrid(x,y).mType = 13; // magmatite
+                    world.mGrid(x,y).setTileFromBlock(14, DataManager::getInstance().blocks[14]); // magmatite
                 }
                 else{
-                    world.mGrid(x,y).mType = 10; // magmastone
+                    world.mGrid(x,y).setTileFromBlock(11, DataManager::getInstance().blocks[11]); // magmastone
                 }
                 continue;
             }
@@ -186,13 +183,13 @@ void GameHandler::generateTerrain(World& world){
             // void_zone
             if(y < 1000){
                 if(dist6(rng) == 10){
-                    world.mGrid(x,y).mType = 15; // pyrite
+                    world.mGrid(x,y).setTileFromBlock(16, DataManager::getInstance().blocks[16]); // voidium
                 }
                 else if(dist6(rng) == 11){
-                    world.mGrid(x,y).mType = 16; // infernium
+                    world.mGrid(x,y).setTileFromBlock(17, DataManager::getInstance().blocks[17]); // singularium
                 }
                 else{
-                    world.mGrid(x,y).mType = 14;
+                    world.mGrid(x,y).setTileFromBlock(15, DataManager::getInstance().blocks[15]); // voidstone
                 }
                 continue;
             }
@@ -224,7 +221,7 @@ std::vector<AABB> GameHandler::getPossibleCollisionsFromGrid(AABB& box, World& w
                 // Out of bound
                 continue;
             }
-            else if(world.mGrid(iBlock, jBlock).blocking == true){ // In bound block needs to be checked
+            else if(world.mGrid(iBlock, jBlock).mBlocking == true){ // In bound block needs to be checked
                 // Add block to the list
                 blocks.push_back(world.mGrid(iBlock, jBlock));
             }
@@ -431,7 +428,7 @@ void GameHandler::discoverWorldBlocks(DrillUnit& drillUnit, World& world){
             }
             else{
                 // Set block to discovered
-                world.mGrid(iBlock, jBlock).discovered = true;
+                world.mGrid(iBlock, jBlock).mDiscovered = true;
             }
         }
     }
@@ -448,17 +445,17 @@ void GameHandler::updateDrillUnitDrilling(DrillUnit& drillUnit, World& world){
         if(drillUnit.state == DRILL_DOWN){
             drillUnit.drillingBlock = &world.mGrid(iPlayer, jPlayer +1);
             // Set drillUnit time to drill to the hardness of the block
-            drillUnit.drillTime = drillUnit.drillingBlock->hardness;
+            drillUnit.drillTime = drillUnit.drillingBlock->mHardness;
         }
         else if(drillUnit.state == DRILL_LEFT){
             drillUnit.drillingBlock = &world.mGrid(iPlayer -1, jPlayer);
             // Set drillUnit time to drill to the hardness of the block
-            drillUnit.drillTime = drillUnit.drillingBlock->hardness;
+            drillUnit.drillTime = drillUnit.drillingBlock->mHardness;
         }
         else if(drillUnit.state == DRILL_RIGHT){
             drillUnit.drillingBlock = &world.mGrid(iPlayer +1, jPlayer);
             // Set drillUnit time to drill to the hardness of the block
-            drillUnit.drillTime = drillUnit.drillingBlock->hardness;
+            drillUnit.drillTime = drillUnit.drillingBlock->mHardness;
         }
     }
     else{
@@ -467,7 +464,7 @@ void GameHandler::updateDrillUnitDrilling(DrillUnit& drillUnit, World& world){
         }
         else{
             // Stop drilling when block can't be drilled
-            if(drillUnit.drillingBlock->breakable == false){
+            if(drillUnit.drillingBlock->mBreakable == false){
                 
                 return;
             }
@@ -482,7 +479,7 @@ void GameHandler::updateDrillUnitDrilling(DrillUnit& drillUnit, World& world){
                 // Do something to the block
                 // Particles
                 drillUnit.drillingBlock->mType = -1;
-                drillUnit.drillingBlock->blocking = false;
+                drillUnit.drillingBlock->mBlocking = false;
 
             }
         }

@@ -117,7 +117,7 @@ void DataManager::loadSettingConfig(const std::string& name){
     touchingDistance = settings["physics"]["touchingDistance"];
 }
 
-void DataManager::loadToolConfig(const std::string& name){
+void DataManager::loadToolsConfig(const std::string& name){
     std::ifstream file(dataPath + "/" + configDirectory + "/" + name);
 
     // Check if opening file failed
@@ -146,5 +146,22 @@ void DataManager::loadToolConfig(const std::string& name){
     }
     for (const auto& item : jsonData["equipment"]) {
         equipments.emplace_back(item["name"], item["cost"]);
+    }
+}
+
+
+void DataManager::loadBlocksConfig(const std::string& name){
+    std::ifstream file(dataPath + "/" + configDirectory + "/" + name);
+
+    // Check if opening file failed
+    if (!file) {
+        std::cerr << "Error opening file!\n";
+    }
+
+    nlohmann::json jsonData;
+    file >> jsonData;
+
+    for (const auto& block : jsonData["blocks"]) {
+        blocks.emplace_back(block);
     }
 }

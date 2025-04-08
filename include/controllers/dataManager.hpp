@@ -8,6 +8,7 @@
 
 #include <tools.hpp>
 #include <world.hpp>
+#include <block.hpp>
 #include <player.hpp>
 #include <scene.hpp>
 #include <buildings.hpp>
@@ -29,9 +30,6 @@ private:
     std::string configDirectory = "config";
     std::string savesDirectory = "saves";
     
-    // Containers for data
-    
-
 public:
     // Equipments
     std::vector<Drill> drills; // Stores all drills that can be bought
@@ -40,6 +38,8 @@ public:
     std::vector<CargoBay> cargoBays; // Stores all storages that can be bought
     std::vector<Engine> engines; // Stores all engines that can be bought
     std::vector<Equipment> equipments; // Stores all tools that can be bought
+
+    std::vector<Block> blocks; // Store all blocks from config
 
     // Scene
     std::unique_ptr<Scene> activeScene;
@@ -97,5 +97,8 @@ public:
     void loadSettingConfig(const std::string& name);
 
     // Loading data
-    void loadToolConfig(const std::string& name);
+    void loadToolsConfig(const std::string& name);
+
+    // Loading blocks
+    void loadBlocksConfig(const std::string& name);
 };

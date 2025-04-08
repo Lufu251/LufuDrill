@@ -50,8 +50,9 @@ void GameRenderer::renderMapGrid(World& world){
                 continue;
             }
             Color color = BLACK;
-            if(!block->blocking || block->discovered) color = WHITE;
-            DrawTextureRec(tileset.texture, tileset.sections[block->mType].rect, block->position, color);
+            if(!block->mBlocking || block->mDiscovered) color = WHITE;
+
+            DrawTextureRec(tileset.texture, tileset.sections[block->mType -1].rect, block->position, color);
         }
     }
     EndMode2D();
