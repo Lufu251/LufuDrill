@@ -10,7 +10,7 @@
 #include <grid.hpp>
 #include <gasStationMenu.hpp>
 #include <playerGui.hpp>
-
+struct World;
 class GameHandler
 {
 private:
