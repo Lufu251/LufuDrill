@@ -11,16 +11,6 @@
 
 class AssetManager{
 private:
-    // Private constructor
-    AssetManager() = default;
-
-    // Disable copy and assignment
-    AssetManager(const AssetManager&) = delete;
-    AssetManager& operator=(const AssetManager&) = delete;
-
-    // Private helper methods for loading
-
-
     // Private string for data folder path
     std::string assetPath;
 
@@ -37,8 +27,8 @@ private:
     std::unordered_map<std::string, Font> fonts;
     
 public:
-    // Access the singleton instance
-    static AssetManager& getInstance();
+    // Private constructor
+    AssetManager() = default;
 
     // Get assets by filename
     TextureAtlas& getTextureAtlas(const std::string& name);

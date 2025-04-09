@@ -12,17 +12,11 @@
 #include <player.hpp>
 #include <scene.hpp>
 #include <buildings.hpp>
+#include <ore.hpp>
 
 class DataManager
 {
 private:
-    // Private constructor
-    DataManager() = default;
-
-    // Disable copy and assignment
-    DataManager(const DataManager&) = delete;
-    DataManager& operator=(const DataManager&) = delete;
-
     // Private string for data folder path
     std::string dataPath;
 
@@ -31,6 +25,9 @@ private:
     std::string savesDirectory = "saves";
     
 public:
+    // Private constructor
+    DataManager() = default;
+
     // Equipments
     std::vector<Drill> drills; // Stores all drills that can be bought
     std::vector<GasTank> gasTanks; // Stores all fuelTanks that can be bought
@@ -38,8 +35,9 @@ public:
     std::vector<CargoBay> cargoBays; // Stores all storages that can be bought
     std::vector<Engine> engines; // Stores all engines that can be bought
     std::vector<Equipment> equipments; // Stores all tools that can be bought
-
     std::vector<Block> blocks; // Store all blocks from config
+    std::vector<Ore> ores; // Store all ores from config
+
 
     // Scene
     std::unique_ptr<Scene> activeScene;
@@ -82,23 +80,17 @@ public:
     float onGroundResistance; // Multiplication factor when moving on ground
     float touchingDistance; // Distance to check if a side should be considered as touching or not
 
-    // Access the singleton instance
-    static DataManager& getInstance();
-
     // Search for a directory and set the path to this directory
     void searchDataDirectoryPath(std::string dir, size_t searchDepth);
-
+    
     // Load gamestate
     void loadGameState(const std::string& name);
     // Save gamestate
     void saveGameState(const std::string& name);
 
     // Loading setting configuration
-    void loadSettingConfig(const std::string& name);
-
-    // Loading data
+    void loadSettingConfig(const std::string& name); // Loading data
     void loadToolsConfig(const std::string& name);
-
-    // Loading blocks
-    void loadBlocksConfig(const std::string& name);
+    void loadBlocksConfig(const std::string& name); // Loading blocks
+    void loadOresConfig(const std::string& name); // Load ores
 };

@@ -11,15 +11,12 @@
 #include <traderMenu.hpp>
 #include <toolShopMenu.hpp>
 #include <equipmentShopMenu.hpp>
-#include <dataManager.hpp>
-#include <assetManager.hpp>
+#include <globals.hpp>
 #include <inputHandler.hpp>
+#include <globals.hpp>
 
 class GameScene : public Scene{
 private:
-    // Access Singleton
-    DataManager& dataManager = DataManager::getInstance();
-
     GameHandler gameHandler;
     GameRenderer gameRenderer;
 
@@ -37,31 +34,34 @@ public:
     void initialize() override{
         std::cout << "Initialize GameScene" << std::endl;
         // Load Assets
-        AssetManager::getInstance().loadTextureAtlas("tileset");
-        AssetManager::getInstance().loadTextureAtlas("buildingset");
-        AssetManager::getInstance().loadTextureAtlas("drillunitset");
+        gAM.loadTextureAtlas("tileset");
+        gAM.loadTextureAtlas("buildingset");
+        gAM.loadTextureAtlas("drillunitset");
 
-        AssetManager::getInstance().loadTexture("menuTemplate", "menuTemplate.png");
-        AssetManager::getInstance().loadTexture("sky", "sky.png");
-        AssetManager::getInstance().loadTexture("mountain", "mountain.png");
-        AssetManager::getInstance().loadTexture("cloud", "cloud.png");
+        gAM.loadTexture("menuTemplate", "menuTemplate.png");
+        gAM.loadTexture("sky", "sky.png");
+        gAM.loadTexture("mountain", "mountain.png");
+        gAM.loadTexture("cloud", "cloud.png");
         
-        AssetManager::getInstance().loadMusic("nebula_run", "nebula_run.ogg");
+        gAM.loadMusic("nebula_run", "nebula_run.ogg");
 
         // Play music
-        PlayMusicStream(AssetManager::getInstance().getMusic("nebula_run"));
+        PlayMusicStream(gAM.getMusic("nebula_run"));
 
         // Init Player
-        dataManager.player = DrillUnit({200,300}, {24,24}, {0,0});
-        dataManager.player.drill = dataManager.drills[0];
-        dataManager.player.gasTank = dataManager.gasTanks[0];
-        dataManager.player.hull = dataManager.hulls[0];
-        dataManager.player.cargoBay = dataManager.cargoBays[0];
-        dataManager.player.engine = dataManager.engines[0];
+        gDM.player = DrillUnit({200,300}, {24,24}, {0,0});
+        gDM.player.drill = gDM.drills[0];
+        gDM.player.gasTank = gDM.gasTanks[0];
+        gDM.player.hull = gDM.hulls[0];
+        gDM.player.cargoBay = gDM.cargoBays[0];
+        gDM.player.engine = gDM.engines[0];
+
+        // Set cargo size to the amount of blocks that where loaded from config
+        gDM.player.cargoBay.setCargoSize(gDM.cargoBays.size());
 
         // Set Hull and Gas to max
-        dataManager.player.gasTank.mGas = dataManager.player.gasTank.mGasMax;
-        dataManager.player.hull.mHealth = dataManager.player.hull.mHealthMax;
+        gDM.player.gasTank.mGas = gDM.player.gasTank.mGasMax;
+        gDM.player.hull.mHealth = gDM.player.hull.mHealthMax;
 
         playerGui = PlayerGui({0,0}, {static_cast<float>(GetScreenWidth()), static_cast<float>(GetScreenHeight())});
         playerGui.initialize();
@@ -80,7 +80,7 @@ public:
         equipmentShopMenu.initialize();
         
         
-        for (auto& building : dataManager.world.buildings){
+        for (auto& building : gDM.world.buildings){
             switch (building.mType)
             {
             case GAS_STATION: building.setMenuToTrigger(gasStationMenu); break;
@@ -93,13 +93,13 @@ public:
         // Camera initialise
         gameRenderer.camera.zoom = 2.0f;
         gameRenderer.camera.rotation = 0.0f;
-        gameRenderer.camera.target = dataManager.player.position;
+        gameRenderer.camera.target = gDM.player.position;
         gameRenderer.setCameraOffset({GetScreenWidth() / 2.0f, GetScreenHeight() / 2.0f});
     }
 
     void update() override {
         //float deltaTime = GetFrameTime();
-        UpdateMusicStream(AssetManager::getInstance().getMusic("nebula_run"));
+        UpdateMusicStream(gAM.getMusic("nebula_run"));
 
         // Do updates on screen resize
         if(IsWindowResized()){
@@ -110,25 +110,25 @@ public:
         InputHandler::getInstance().updateMovementInput();
 
         // Movement DrillUnit
-        gameHandler.updateDrillUnitMovement(dataManager.player, dataManager.world);
-        gameHandler.checkCollisionAndMove(dataManager.player, dataManager.world); // Physics collision response and move player
-        gameHandler.clampToGrid(dataManager.player, dataManager.world); //Clamp player to grid
+        gameHandler.updateDrillUnitMovement(gDM.player, gDM.world);
+        gameHandler.checkCollisionAndMove(gDM.player, gDM.world); // Physics collision response and move player
+        gameHandler.clampToGrid(gDM.player, gDM.world); //Clamp player to grid
         // Stop completely if below the threshold
-        if (Vector2Length(dataManager.player.velocity) < dataManager.velocityThreshhold) dataManager.player.velocity = { 0.0f, 0.0f };
+        if (Vector2Length(gDM.player.velocity) < gDM.velocityThreshhold) gDM.player.velocity = { 0.0f, 0.0f };
 
 
         // Update DrillUnit General
-        gameHandler.updateDrillUnitStates(dataManager.player, InputHandler::getInstance().movementInput);
-        gameHandler.updateDrillUnitDrilling(dataManager.player, dataManager.world);
-        gameHandler.discoverWorldBlocks(dataManager.player, dataManager.world);
-        gameHandler.checkPlayerTouchingSides(dataManager.player, dataManager.world);
-        gameHandler.checkBuildingTriggers(dataManager.player, dataManager.world);
-        gameHandler.drainGasFromDrillUnit(dataManager.player, InputHandler::getInstance().movementInput);
-        gameHandler.checkGameOverStates(dataManager.player);
+        gameHandler.updateDrillUnitStates(gDM.player, InputHandler::getInstance().movementInput);
+        gameHandler.updateDrillUnitDrilling(gDM.player, gDM.world);
+        gameHandler.discoverWorldBlocks(gDM.player, gDM.world);
+        gameHandler.checkPlayerTouchingSides(gDM.player, gDM.world);
+        gameHandler.checkBuildingTriggers(gDM.player, gDM.world);
+        gameHandler.drainGasFromDrillUnit(gDM.player, InputHandler::getInstance().movementInput);
+        gameHandler.checkGameOverStates(gDM.player);
 
         // Update and pan camera
-        gameRenderer.moveCameraToPosition(dataManager.player.position + dataManager.player.size /2);
-        gameRenderer.clampCameraToGrid(dataManager.player, dataManager.world);
+        gameRenderer.moveCameraToPosition(gDM.player.position + gDM.player.size /2);
+        gameRenderer.clampCameraToGrid(gDM.player, gDM.world);
 
 
         // Update Gui
@@ -143,10 +143,10 @@ public:
         // Clear Screen for the new render cycle
         ClearBackground({94, 131, 166, 255});
 
-        gameRenderer.renderBackground(dataManager.player);
-        gameRenderer.renderMapGrid(dataManager.world);
-        gameRenderer.renderMapBuildings(dataManager.world);
-        gameRenderer.renderPlayer(dataManager.player);
+        gameRenderer.renderBackground(gDM.player);
+        gameRenderer.renderMapGrid(gDM.world);
+        gameRenderer.renderMapBuildings(gDM.world);
+        gameRenderer.renderPlayer(gDM.player);
 
         gasStationMenu.render();
         traderMenu.render();

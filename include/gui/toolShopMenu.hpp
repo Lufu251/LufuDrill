@@ -9,7 +9,7 @@
 
 #include <lufuGui.hpp>
 #include <guiContext.hpp>
-#include <assetManager.hpp>
+#include <globals.hpp>
 
 class ToolShopMenu : virtual public GuiContext{
 private:
@@ -36,7 +36,7 @@ public:
             repairHullTextButton.update();
 
             if(repairHullTextButton.mIsPressed){
-                DataManager::getInstance().player.hull.mHealth = DataManager::getInstance().player.hull.mHealthMax;
+                gDM.player.hull.mHealth = gDM.player.hull.mHealthMax;
             }
         }
     }
@@ -44,7 +44,7 @@ public:
     void render() override {
         // Check if menu is activ
         if(mIsActive){
-            Texture2D texture = AssetManager::getInstance().getTexture("menuTemplate");
+            Texture2D texture = gAM.getTexture("menuTemplate");
             DrawTextureEx(texture, mPosition, 0, 4, {255,255,255,250});
 
             // Draw GuiElements

@@ -1,6 +1,8 @@
 #pragma once
 
 #include <string>
+#include <vector>
+#include <block.hpp>
 
 // Base class
 class Tool {
@@ -44,11 +46,52 @@ public:
 
 class CargoBay: public Tool{
 public:
-    int mCapacity;
+    int mStored = 0;
+    int mMaxStored;
+    std::vector<int> mCargo;
 
     CargoBay(){}
-    CargoBay(std::string name, int cost, int capacity) : Tool(name, cost), mCapacity(capacity) {}
+    CargoBay(std::string name, int cost, int capacity) : Tool(name, cost), mMaxStored(capacity) {}
     ~CargoBay(){}
+
+    void setCargoSize(size_t size){
+        mCargo.reserve(size);
+        for (size_t i = 0; i < size; i++){
+            mCargo.push_back(0);
+        }
+    }
+
+    int getWeight(){
+        int weight = 0;
+        for (size_t i = 0; i < mCargo.size(); i++){
+             // Add weights from the amount of cargo
+        }
+        return weight;
+    }
+
+    void clearCargo(){
+        for (size_t i = 0; i < mCargo.size(); i++){
+            mCargo[i] = 0;
+        }
+        mStored = 0;
+    }
+
+    bool addCargo(int id){
+        if(mStored < mMaxStored){
+            mCargo[id] ++;
+            mStored ++;
+            return true;
+        }
+        return false;
+    }
+    bool removeCargo(int id){
+        if(mStored != 0 && mCargo[id] != 0){
+            mCargo[id] --;
+            mStored --;
+            return true;
+        }
+        return false;
+    }
 };
 
 class Engine: public Tool{

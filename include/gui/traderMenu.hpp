@@ -44,7 +44,7 @@ public:
     void render() override {
         // Check if menu is activ
         if(mIsActive){
-            Texture2D texture = AssetManager::getInstance().getTexture("menuTemplate");
+            Texture2D texture = gAM.getTexture("menuTemplate");
             DrawTextureEx(texture, mPosition, 0, 4, {255,255,255,250});
 
             // Draw GuiElements

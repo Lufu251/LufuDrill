@@ -6,8 +6,7 @@
 #include <scene.hpp>
 #include <gameScene.hpp>
 #include <menuScene.hpp>
-#include <assetManager.hpp>
-#include <dataManager.hpp>
+#include <globals.hpp>
 #include <gameHandler.hpp>
 #include <gameRenderer.hpp> 
 
@@ -15,20 +14,21 @@ int main(void){
     // Declaration
     // ----------------------------------------------------------------------------------
     // AssetManager and DataManager
-    AssetManager::getInstance().searchAssetsDirectoryPath("assets", 3);
+    gAM.searchAssetsDirectoryPath("assets", 3);
 
-    DataManager::getInstance().searchDataDirectoryPath("data", 3);
-    DataManager::getInstance().loadSettingConfig("settings.json");
-    DataManager::getInstance().loadToolsConfig("tools.json");
-    DataManager::getInstance().loadBlocksConfig("blocks.json");
+    gDM.searchDataDirectoryPath("data", 3);
+    gDM.loadSettingConfig("settings.json");
+    gDM.loadToolsConfig("tools.json");
+    gDM.loadBlocksConfig("blocks.json");
+    gDM.loadOresConfig("ores.json");
 
     // Initialize audio device
     InitAudioDevice();
-    SetMasterVolume(DataManager::getInstance().masterVolume);
+    SetMasterVolume(gDM.masterVolume);
 
     // Set window parameters
     SetConfigFlags(FLAG_WINDOW_RESIZABLE);
-    InitWindow(DataManager::getInstance().screenWidth, DataManager::getInstance().screenHeight, "LuFu_Drill");
+    InitWindow(gDM.screenWidth, gDM.screenHeight, "LuFu_Drill");
     SetExitKey(KEY_NULL);
     SetTargetFPS(60);
     SetWindowMinSize(500, 500);
@@ -37,35 +37,35 @@ int main(void){
     //ToggleBorderlessWindowed(); // Toggle window state: borderless windowed, resizes window to match monitor resolution
 
     // Load fonts because they need to be loaded after window init
-    AssetManager::getInstance().loadFont("thaleah_fat_20", "ThaleahFat.ttf", 20);
-    AssetManager::getInstance().loadFont("thaleah_fat_48", "ThaleahFat.ttf", 48);
+    gAM.loadFont("thaleah_fat_20", "ThaleahFat.ttf", 20);
+    gAM.loadFont("thaleah_fat_48", "ThaleahFat.ttf", 48);
 
     // Declare scene
-    DataManager::getInstance().activeScene = std::make_unique<MenuScene>();
+    gDM.activeScene = std::make_unique<MenuScene>();
 
     // Initialization
     // ---------------------------------------------------------------------------------
-    DataManager::getInstance().activeScene->initialize();
+    gDM.activeScene->initialize();
 
-    while (DataManager::getInstance().windowOpen){
+    while (gDM.windowOpen){
         // Logic
         // ----------------------------------------------------------------------------------
         // Check window should close
-        if(WindowShouldClose()) DataManager::getInstance().windowOpen = false;
+        if(WindowShouldClose()) gDM.windowOpen = false;
 
         // Update activeScene
-        DataManager::getInstance().activeScene->update();
+        gDM.activeScene->update();
         
         // Draw
         // ----------------------------------------------------------------------------------
         BeginDrawing();
             // Render activeScene
-            DataManager::getInstance().activeScene->render();
+            gDM.activeScene->render();
         EndDrawing();
     }
-    //DataManager::getInstance().saveGameState("save.sv");
+    //gDM.saveGameState("save.sv");
     // Cleanup resources and close raylib
-    AssetManager::getInstance().cleanup();
+    gAM.cleanup();
 
     // De-Initialization
     //--------------------------------------------------------------------------------------

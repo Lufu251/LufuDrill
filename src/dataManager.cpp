@@ -7,12 +7,6 @@
 
 #include <nlohmann/json.hpp>
 
-// Access the singleton instance
-DataManager& DataManager::getInstance() {
-    static DataManager instance;
-    return instance;
-}
-
 // Search for a directory starting from the working directory. The DataManager will look for resources in this directory
 void DataManager::searchDataDirectoryPath(std::string folderName, size_t searchDepth){
     std::filesystem::path currentDir = GetWorkingDirectory();
@@ -149,7 +143,6 @@ void DataManager::loadToolsConfig(const std::string& name){
     }
 }
 
-
 void DataManager::loadBlocksConfig(const std::string& name){
     std::ifstream file(dataPath + "/" + configDirectory + "/" + name);
 
@@ -163,5 +156,21 @@ void DataManager::loadBlocksConfig(const std::string& name){
 
     for (const auto& block : jsonData["blocks"]) {
         blocks.emplace_back(block);
+    }
+}
+
+void DataManager::loadOresConfig(const std::string& name){
+    std::ifstream file(dataPath + "/" + configDirectory + "/" + name);
+
+    // Check if opening file failed
+    if (!file) {
+        std::cerr << "Error opening file!\n";
+    }
+
+    nlohmann::json jsonData;
+    file >> jsonData;
+
+    for (const auto& ore : jsonData["blocks"]) {
+        ores.emplace_back(ore);
     }
 }

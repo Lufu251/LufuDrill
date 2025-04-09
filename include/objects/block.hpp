@@ -7,8 +7,8 @@
 class Block{
 public:
     std::string mName;
-    int mValue;
-    float mWeight;
+    int mOreID;
+    int mRenderID;
     int mHardness;
     bool mBlocking;
 
@@ -16,11 +16,11 @@ public:
     ~Block(){}
 };
 
-// Convert JSON to Block
+// Convert JSON
 inline void from_json(const nlohmann::json& j, Block& b) {
     j.at("name").get_to(b.mName);
-    j.at("value").get_to(b.mValue);
-    j.at("weight").get_to(b.mWeight);
+    j.at("ore_id").get_to(b.mOreID);
+    j.at("render_id").get_to(b.mRenderID);
     j.at("hardness").get_to(b.mHardness);
     j.at("blocking").get_to(b.mBlocking);
 }

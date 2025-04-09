@@ -4,7 +4,7 @@
 #include <algorithm>
 #include <random>
 
-#include <dataManager.hpp>
+#include <globals.hpp>
 #include <inputHandler.hpp>
 #include <world.hpp>
 #include <buildings.hpp>
@@ -16,8 +16,8 @@ GameHandler::~GameHandler(){}
 // Return vector in which player will be moved
 void GameHandler::updateDrillUnitMovement(DrillUnit& drillUnit, World& world){
     // Values for player force
-    Vector2 direction = Vector2Scale(InputHandler::getInstance().movementInput, DataManager::getInstance().thrustForce); // Multiply by speed
-    direction.x = direction.x * DataManager::getInstance().sideThrustForce; // weaken side thruster
+    Vector2 direction = Vector2Scale(InputHandler::getInstance().movementInput, gDM.thrustForce); // Multiply by speed
+    direction.x = direction.x * gDM.sideThrustForce; // weaken side thruster
     if(direction.y > 0) direction.y = 0; // Stop down acceleration
     
     Vector2 airResistance = Vector2Negate(drillUnit.velocity - drillUnit.velocity * world.mAirDensity);
@@ -36,15 +36,15 @@ void GameHandler::updateDrillUnitStates(DrillUnit& player, Vector2& movementInpu
     case LEFT:
         // StateChange triggers
         if(movementInput.x > 0) player.state = RIGHT; // Change facing direction
-        if(player.left > DataManager::getInstance().startDrillThreshold && player.bottom && movementInput.x < 0) player.state = DRILL_LEFT; // Start drill
-        if(player.bottom > DataManager::getInstance().startDrillThreshold && movementInput.y > 0 && movementInput.x == 0) player.state = DRILL_DOWN; // Start drill
+        if(player.left > gDM.startDrillThreshold && player.bottom && movementInput.x < 0) player.state = DRILL_LEFT; // Start drill
+        if(player.bottom > gDM.startDrillThreshold && movementInput.y > 0 && movementInput.x == 0) player.state = DRILL_DOWN; // Start drill
         break;
 
     case RIGHT:
         // StateChange triggers
         if(movementInput.x < 0) player.state = LEFT; // Change facing direction
-        if(player.right > DataManager::getInstance().startDrillThreshold && player.bottom && movementInput.x > 0) player.state = DRILL_RIGHT; // Start drill
-        if(player.bottom > DataManager::getInstance().startDrillThreshold && movementInput.y > 0 && movementInput.x == 0) player.state = DRILL_DOWN; // Start drill
+        if(player.right > gDM.startDrillThreshold && player.bottom && movementInput.x > 0) player.state = DRILL_RIGHT; // Start drill
+        if(player.bottom > gDM.startDrillThreshold && movementInput.y > 0 && movementInput.x == 0) player.state = DRILL_DOWN; // Start drill
         break;
 
     case DRILL_DOWN:
@@ -107,38 +107,38 @@ void GameHandler::generateTerrain(World& world){
 
             // Create a tunnel to the bottom
             if(x == 20){
-                world.mGrid(x,y).setTileFromBlock(0, DataManager::getInstance().blocks[0]);
+                world.mGrid(x,y).setTileFromBlock(0, gDM.blocks[0]);
                 continue;
             }
 
             // Air pokets
             if(dist6(rng) == 2 && y != 15){
-                world.mGrid(x,y).setTileFromBlock(0, DataManager::getInstance().blocks[0]);
+                world.mGrid(x,y).setTileFromBlock(0, gDM.blocks[0]);
                 continue;
             }
 
             // empty_zone
             if(y < 15){
-                world.mGrid(x,y).setTileFromBlock(0, DataManager::getInstance().blocks[0]);
+                world.mGrid(x,y).setTileFromBlock(0, gDM.blocks[0]);
                 continue;
             }
 
             // dirt_zone
             if(y < 250){
                 if(dist6(rng) == 10){
-                    world.mGrid(x,y).setTileFromBlock(2, DataManager::getInstance().blocks[2]); // cuprium
+                    world.mGrid(x,y).setTileFromBlock(2, gDM.blocks[2]); // cuprium
                 }
                 else if(dist6(rng) == 11){
-                    world.mGrid(x,y).setTileFromBlock(3, DataManager::getInstance().blocks[3]); // albium
+                    world.mGrid(x,y).setTileFromBlock(3, gDM.blocks[3]); // albium
                 }
                 else if(dist6(rng) == 12){
-                    world.mGrid(x,y).setTileFromBlock(4, DataManager::getInstance().blocks[4]); // platinum
+                    world.mGrid(x,y).setTileFromBlock(4, gDM.blocks[4]); // platinum
                 }
                 else if(dist6(rng) == 13){
-                    world.mGrid(x,y).setTileFromBlock(5, DataManager::getInstance().blocks[5]); // goldium
+                    world.mGrid(x,y).setTileFromBlock(5, gDM.blocks[5]); // goldium
                 }
                 else{
-                    world.mGrid(x,y).setTileFromBlock(1, DataManager::getInstance().blocks[1]); // dirt
+                    world.mGrid(x,y).setTileFromBlock(1, gDM.blocks[1]); // dirt
                 }
                 continue;
             }
@@ -146,19 +146,19 @@ void GameHandler::generateTerrain(World& world){
             // stone_zone
             if(y < 600){
                 if(dist6(rng) == 10){
-                    world.mGrid(x,y).setTileFromBlock(7, DataManager::getInstance().blocks[7]); // celestium
+                    world.mGrid(x,y).setTileFromBlock(7, gDM.blocks[7]); // celestium
                 }
                 else if(dist6(rng) == 11){
-                    world.mGrid(x,y).setTileFromBlock(8, DataManager::getInstance().blocks[8]); // faerite
+                    world.mGrid(x,y).setTileFromBlock(8, gDM.blocks[8]); // faerite
                 }
                 else if(dist6(rng) == 12){
-                    world.mGrid(x,y).setTileFromBlock(9, DataManager::getInstance().blocks[9]); // florite
+                    world.mGrid(x,y).setTileFromBlock(9, gDM.blocks[9]); // florite
                 }
                 else if(dist6(rng) == 13){
-                    world.mGrid(x,y).setTileFromBlock(10, DataManager::getInstance().blocks[10]); // prismarite
+                    world.mGrid(x,y).setTileFromBlock(10, gDM.blocks[10]); // prismarite
                 }
                 else{
-                    world.mGrid(x,y).setTileFromBlock(6, DataManager::getInstance().blocks[6]); // stone
+                    world.mGrid(x,y).setTileFromBlock(6, gDM.blocks[6]); // stone
                 }
                 continue;
             }
@@ -166,16 +166,16 @@ void GameHandler::generateTerrain(World& world){
             // magma_zone
             if(y < 800){
                 if(dist6(rng) == 10){
-                   world.mGrid(x,y).setTileFromBlock(12, DataManager::getInstance().blocks[12]); // pyrite
+                   world.mGrid(x,y).setTileFromBlock(12, gDM.blocks[12]); // pyrite
                 }
                 else if(dist6(rng) == 11){
-                    world.mGrid(x,y).setTileFromBlock(13, DataManager::getInstance().blocks[13]); // infernium
+                    world.mGrid(x,y).setTileFromBlock(13, gDM.blocks[13]); // infernium
                 }
                 else if(dist6(rng) == 12){
-                    world.mGrid(x,y).setTileFromBlock(14, DataManager::getInstance().blocks[14]); // magmatite
+                    world.mGrid(x,y).setTileFromBlock(14, gDM.blocks[14]); // magmatite
                 }
                 else{
-                    world.mGrid(x,y).setTileFromBlock(11, DataManager::getInstance().blocks[11]); // magmastone
+                    world.mGrid(x,y).setTileFromBlock(11, gDM.blocks[11]); // magmastone
                 }
                 continue;
             }
@@ -183,13 +183,13 @@ void GameHandler::generateTerrain(World& world){
             // void_zone
             if(y < 1000){
                 if(dist6(rng) == 10){
-                    world.mGrid(x,y).setTileFromBlock(16, DataManager::getInstance().blocks[16]); // voidium
+                    world.mGrid(x,y).setTileFromBlock(16, gDM.blocks[16]); // voidium
                 }
                 else if(dist6(rng) == 11){
-                    world.mGrid(x,y).setTileFromBlock(17, DataManager::getInstance().blocks[17]); // singularium
+                    world.mGrid(x,y).setTileFromBlock(17, gDM.blocks[17]); // singularium
                 }
                 else{
-                    world.mGrid(x,y).setTileFromBlock(15, DataManager::getInstance().blocks[15]); // voidstone
+                    world.mGrid(x,y).setTileFromBlock(15, gDM.blocks[15]); // voidstone
                 }
                 continue;
             }
@@ -241,7 +241,7 @@ void GameHandler::clampToGrid(AABB& box, World& world){
 }
 
 void GameHandler::checkCollisionAndMove(AABB& box, World& world){
-    DataManager& dataManager = DataManager::getInstance();
+    DataManager& dataManager = gDM;
     AABB boxClone = box;
 
     // Loop a cloned Player with the collision and end loop when movement is done
@@ -310,7 +310,7 @@ void GameHandler::checkCollisionAndMove(AABB& box, World& world){
 
 // Check if AABB is touching blocks on any side
 void GameHandler::checkPlayerTouchingSides(DrillUnit& player, World& world){
-    DataManager& dataManager = DataManager::getInstance();
+    DataManager& dataManager = gDM;
     std::vector<AABB> blocks = getPossibleCollisionsFromGrid(player, world); // AABB from all blocks that can collide
 
     bool left = false, right = false, bottom = false, top = false;
@@ -373,42 +373,42 @@ void GameHandler::checkBuildingTriggers(AABB& box, World& world){
 void GameHandler::checkGameOverStates(DrillUnit& player){
     // Check if no gas is left
     if(player.gasTank.mGas <= 0){
-        DataManager::getInstance().gameOver = true;
+        gDM.gameOver = true;
     }
     // Check if hull is destroyed
     if(player.hull.mHealth <= 0){
-        DataManager::getInstance().gameOver = true;
+        gDM.gameOver = true;
     }
 }
 
 void GameHandler::collisionDamageToPlayer(){
     float threshold = 8;
     // Check if vertical velocity is greater than
-    if(DataManager::getInstance().player.velocity.y >= threshold){
-        float damage = std::clamp( 6 * (DataManager::getInstance().player.velocity.y -threshold), threshold, 100.0f);
-        DataManager::getInstance().player.hull.mHealth -= damage;
+    if(gDM.player.velocity.y >= threshold){
+        float damage = std::clamp( 6 * (gDM.player.velocity.y -threshold), threshold, 100.0f);
+        gDM.player.hull.mHealth -= damage;
     }
 }
 
 void GameHandler::drainGasFromDrillUnit(DrillUnit& player, Vector2& movementInput){
     // Drain passiv fuel
-    player.gasTank.mGas -= DataManager::getInstance().passivFuelUsage;
+    player.gasTank.mGas -= gDM.passivFuelUsage;
 
     // Drain gas while drilling
     if(player.state == DRILL_DOWN || player.state == DRILL_LEFT || player.state == DRILL_RIGHT){
-        player.gasTank.mGas -= DataManager::getInstance().drillingFuelUsage;
+        player.gasTank.mGas -= gDM.drillingFuelUsage;
         return;
     }
     // Drain gas while moving
     if(Vector2LengthSqr(movementInput) > 0){
-        player.gasTank.mGas -= DataManager::getInstance().movingFuelUsage;
+        player.gasTank.mGas -= gDM.movingFuelUsage;
     }
 
     
 }
 
 void GameHandler::discoverWorldBlocks(DrillUnit& drillUnit, World& world){
-    int radius = DataManager::getInstance().discoverRange;
+    int radius = gDM.discoverRange;
 
     // Get the player position on the grid
     size_t iPlayer = drillUnit.getGridPosition(world.mBlockSize).x;
@@ -475,7 +475,7 @@ void GameHandler::updateDrillUnitDrilling(DrillUnit& drillUnit, World& world){
             if(drillUnit.drillTime <= 0){
                 // Block is mined
                 drillUnit.drillTime = 0; // Reset drillTime
-                drillUnit.drillingBlock->setTileFromBlock(0, DataManager::getInstance().blocks[0]); // Replace block with air
+                drillUnit.drillingBlock->setTileFromBlock(0, gDM.blocks[0]); // Replace block with air
                 // Particles
             }
         }

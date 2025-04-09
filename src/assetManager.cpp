@@ -5,12 +5,6 @@
 #include <fstream>
 #include <sstream>
 
-// Access the singleton instance
-AssetManager& AssetManager::getInstance() {
-    static AssetManager instance;
-    return instance;
-}
-
 // Get a texture
 Texture2D& AssetManager::getTexture(const std::string& name) {
     auto it = textures.find(name);

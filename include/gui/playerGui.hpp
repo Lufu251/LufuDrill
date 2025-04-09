@@ -9,8 +9,7 @@
 
 #include <lufuGui.hpp>
 #include <guiContext.hpp>
-#include <dataManager.hpp>
-#include <assetManager.hpp>
+#include <globals.hpp>
 
 class PlayerGui : virtual public GuiContext{
 private:
@@ -51,8 +50,8 @@ public:
             hullBarText.update();
             hullBar.update();
 
-            fuelBar.setProgress(DataManager::getInstance().player.gasTank.mGas / DataManager::getInstance().player.gasTank.mGasMax);
-            hullBar.setProgress(DataManager::getInstance().player.hull.mHealth / DataManager::getInstance().player.hull.mHealthMax);
+            fuelBar.setProgress(gDM.player.gasTank.mGas / gDM.player.gasTank.mGasMax);
+            hullBar.setProgress(gDM.player.hull.mHealth / gDM.player.hull.mHealthMax);
         }
     }
 

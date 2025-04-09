@@ -9,8 +9,7 @@
 
 #include <lufuGui.hpp>
 #include <guiContext.hpp>
-#include <dataManager.hpp>
-#include <assetManager.hpp>
+#include <globals.hpp>
 
 class GasStationMenu : virtual public GuiContext{
 private:
@@ -37,7 +36,7 @@ public:
             buyGasTextButton.update();
 
             if(buyGasTextButton.mIsPressed){
-                DataManager::getInstance().player.gasTank.mGas = DataManager::getInstance().player.gasTank.mGasMax;
+                gDM.player.gasTank.mGas = gDM.player.gasTank.mGasMax;
             }
         }
     }
@@ -45,7 +44,7 @@ public:
     void render() override {
         // Check if menu is activ
         if(mIsActive){
-            Texture2D texture = AssetManager::getInstance().getTexture("menuTemplate");
+            Texture2D texture = gAM.getTexture("menuTemplate");
             DrawTextureEx(texture, mPosition, 0, 4, {255,255,255,250});
 
             // Draw GuiElements

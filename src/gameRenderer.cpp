@@ -1,6 +1,6 @@
 #include <gameRenderer.hpp>
 
-#include <assetManager.hpp>
+#include <globals.hpp>
 #include <textureAtlas.hpp>
 
 GameRenderer::GameRenderer(/* args */){}
@@ -32,7 +32,7 @@ void GameRenderer::renderMapGrid(World& world){
     int iStartBlock = camera.target.x / world.mBlockSize - xRenderAmount /2;
     int jStartBlock = camera.target.y / world.mBlockSize - yRenderAmount /2;
 
-    TextureAtlas& tileset = AssetManager::getInstance().getTextureAtlas("tileset");
+    TextureAtlas& tileset = gAM.getTextureAtlas("tileset");
 
     // Loop over the amount of blocks that are visible
     for (int i = 0; i <= xRenderAmount; i++){
@@ -59,7 +59,7 @@ void GameRenderer::renderMapGrid(World& world){
 }
 
 void GameRenderer::renderMapBuildings(World& world){
-    TextureAtlas& buildingset = AssetManager::getInstance().getTextureAtlas("buildingset");
+    TextureAtlas& buildingset = gAM.getTextureAtlas("buildingset");
 
     BeginMode2D(camera);
     for (auto& building : world.buildings){
@@ -70,7 +70,7 @@ void GameRenderer::renderMapBuildings(World& world){
 }
 
 void GameRenderer::renderPlayer(DrillUnit& player){
-    TextureAtlas& buildingset = AssetManager::getInstance().getTextureAtlas("drillunitset");
+    TextureAtlas& buildingset = gAM.getTextureAtlas("drillunitset");
 
     BeginMode2D(camera);
     switch (player.state)
@@ -86,9 +86,9 @@ void GameRenderer::renderPlayer(DrillUnit& player){
 
 void GameRenderer::renderBackground(DrillUnit& player){
     BeginMode2D(camera);
-    Texture2D  skyTexture = AssetManager::getInstance().getTexture("sky");
-    Texture2D  cloudTexture = AssetManager::getInstance().getTexture("cloud");
-    Texture2D  mountainTexture = AssetManager::getInstance().getTexture("mountain");
+    Texture2D  skyTexture = gAM.getTexture("sky");
+    Texture2D  cloudTexture = gAM.getTexture("cloud");
+    Texture2D  mountainTexture = gAM.getTexture("mountain");
     
 
     float paralax3 = camera.target.x - (camera.target.x + camera.offset.x) * 0.3;
