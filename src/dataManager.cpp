@@ -170,7 +170,7 @@ void DataManager::loadOresConfig(const std::string& name){
     nlohmann::json jsonData;
     file >> jsonData;
 
-    for (const auto& ore : jsonData["blocks"]) {
+    for (const auto& ore : jsonData["ores"]) {
         ores.emplace_back(ore);
     }
 }

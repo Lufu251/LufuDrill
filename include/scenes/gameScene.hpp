@@ -11,7 +11,6 @@
 #include <traderMenu.hpp>
 #include <toolShopMenu.hpp>
 #include <equipmentShopMenu.hpp>
-#include <globals.hpp>
 #include <inputHandler.hpp>
 #include <globals.hpp>
 
@@ -57,7 +56,7 @@ public:
         gDM.player.engine = gDM.engines[0];
 
         // Set cargo size to the amount of blocks that where loaded from config
-        gDM.player.cargoBay.setCargoSize(gDM.cargoBays.size());
+        gDM.player.setCargoSize(gDM.ores.size());
 
         // Set Hull and Gas to max
         gDM.player.gasTank.mGas = gDM.player.gasTank.mGasMax;
@@ -95,6 +94,9 @@ public:
         gameRenderer.camera.rotation = 0.0f;
         gameRenderer.camera.target = gDM.player.position;
         gameRenderer.setCameraOffset({GetScreenWidth() / 2.0f, GetScreenHeight() / 2.0f});
+
+        gDM.player.addCargo(1);
+        std::cout << gDM.player.getWeight() << std::endl;
     }
 
     void update() override {

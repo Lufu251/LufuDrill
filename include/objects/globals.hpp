@@ -1,7 +1,7 @@
 #pragma once
 
-#include <dataManager.hpp>
-#include <assetManager.hpp>
+class AssetManager;
+class DataManager;
 
 extern AssetManager gAM;
 extern DataManager gDM;
