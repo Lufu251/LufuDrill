@@ -11,6 +11,9 @@
 #include <guiContext.hpp>
 #include <globals.hpp>
 
+#include <dataManager.hpp>
+#include <assetManager.hpp>
+
 class GasStationMenu : virtual public GuiContext{
 private:
     lufu_gui::Text titelText;

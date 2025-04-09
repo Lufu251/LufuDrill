@@ -5,7 +5,7 @@ private:
     bool active = false;
 public:
     Scene(/* args */){}
-    ~Scene(){}
+    virtual ~Scene(){}
 
     virtual void initialize() = 0;
     virtual void update() = 0;
@@ -18,4 +18,7 @@ public:
     void disable(){
         active = false;
     }
+};
+struct A{
+    virtual ~A();
 };

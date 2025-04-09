@@ -20,7 +20,10 @@ include(FetchContent)
 message(STATUS "Fetching Raylib...")
 FetchContent_Declare(
     raylib
-    GIT_REPOSITORY  https://github.com/raysan5/raylib.git
+    #GIT_REPOSITORY  https://github.com/raysan5/raylib.git
+    #GIT_SHALLOW True
+    URL https://github.com/raysan5/raylib/archive/refs/tags/5.5.tar.gz
+    DOWNLOAD_EXTRACT_TIMESTAMP True
     #GIT_TAG         5.0
 )
 # Disable building of examples and shared libraries
