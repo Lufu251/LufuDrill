@@ -475,6 +475,8 @@ void GameHandler::updateDrillUnitDrilling(DrillUnit& drillUnit, World& world){
             if(drillUnit.drillTime <= 0){
                 // Block is mined
                 drillUnit.drillTime = 0; // Reset drillTime
+                if(gDM.blocks[drillUnit.drillingBlock->mType].mOreID >= 0) drillUnit.addCargo(gDM.blocks[drillUnit.drillingBlock->mType].mOreID); // Add the mined block to the cargo
+
                 drillUnit.drillingBlock->setTileFromBlock(0, gDM.blocks[0]); // Replace block with air
                 // Particles
             }

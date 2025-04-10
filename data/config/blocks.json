@@ -3,126 +3,126 @@
         {
             "name": "air",
             "ore_id": -1,
-            "render_id": 0,
+            "render_id": -1,
             "hardness": 0,
             "blocking": false
         },
         {
             "name": "dirt",
             "ore_id": -1,
-            "render_id": 1,
+            "render_id": 0,
             "hardness": 30,
             "blocking": true
         },
         {
             "name": "cuprium",
             "ore_id": 0,
-            "render_id": 2,
+            "render_id": 1,
             "hardness": 30,
             "blocking": true
         },
         {
             "name": "albium",
             "ore_id": 1,
-            "render_id": 3,
+            "render_id": 2,
             "hardness": 30,
             "blocking": true
         },
         {
             "name": "platinum",
             "ore_id": 2,
-            "render_id": 4,
+            "render_id": 3,
             "hardness": 30,
             "blocking": true
         },
         {
             "name": "goldium",
             "ore_id": 3,
-            "render_id": 5,
+            "render_id": 4,
             "hardness": 30,
             "blocking": true
         },
         {
             "name": "stone",
             "ore_id": -1,
-            "render_id": 6,
+            "render_id": 5,
             "hardness": 60,
             "blocking": true
         },
         {
             "name": "celestium",
             "ore_id": 4,
-            "render_id": 7,
+            "render_id": 6,
             "hardness": 60,
             "blocking": true
         },
         {
             "name": "faerite",
             "ore_id": 5,
-            "render_id": 8,
+            "render_id": 7,
             "hardness": 60,
             "blocking": true
         },
         {
             "name": "florite",
             "ore_id": 6,
-            "render_id": 9,
+            "render_id": 8,
             "hardness": 60,
             "blocking": true
         },
         {
             "name": "prismarite",
             "ore_id": 7,
-            "render_id": 10,
+            "render_id": 9,
             "hardness": 60,
             "blocking": true
         },
         {
             "name": "magmastone",
             "ore_id": -1,
-            "render_id": 11,
+            "render_id": 10,
             "hardness": 120,
             "blocking": true
         },
         {
             "name": "pyrite",
             "ore_id": 8,
-            "render_id": 12,
+            "render_id": 11,
             "hardness": 120,
             "blocking": true
         },
         {
             "name": "infernium",
             "ore_id": 9,
-            "render_id": 13,
+            "render_id": 12,
             "hardness": 120,
             "blocking": true
         },
         {
             "name": "magmatite",
             "ore_id": 10,
-            "render_id": 14,
+            "render_id": 13,
             "hardness": 120,
             "blocking": true
         },
         {
             "name": "voidstone",
             "ore_id": -1,
-            "render_id": 15,
+            "render_id": 14,
             "hardness": 200,
             "blocking": true
         },
         {
             "name": "voidium",
             "ore_id": 11,
-            "render_id": 16,
+            "render_id": 15,
             "hardness": 200,
             "blocking": true
         },
         {
             "name": "singularium",
             "ore_id": 12,
-            "render_id": 17,
+            "render_id": 16,
             "hardness": 200,
             "blocking": true
         }

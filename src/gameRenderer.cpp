@@ -44,15 +44,15 @@ void GameRenderer::renderMapGrid(World& world){
                 continue;
             }
 
-            Tile* block = &world.mGrid(iBlock, jBlock); // Set the current block
+            Tile* tile = &world.mGrid(iBlock, jBlock); // Set the current block
             // check if the block is empty
-            if(block->mType > 100000){
+            if(tile->mType > 100000){
                 continue;
             }
             Color color = BLACK;
-            if(!block->mBlocking || block->mDiscovered) color = WHITE;
+            if(!tile->mBlocking || tile->mDiscovered) color = WHITE;
 
-            DrawTextureRec(tileset.texture, tileset.sections[block->mType -1].rect, block->position, color);
+            if(gDM.blocks[tile->mType].mRenderID >= 0) DrawTextureRec(tileset.texture, tileset.sections[gDM.blocks[tile->mType].mRenderID].rect, tile->position, color);
         }
     }
     EndMode2D();

@@ -18,7 +18,7 @@ public:
     AABB() {}
     AABB(const Vector2 rPosition, const Vector2 rSize) : position(rPosition), size(rSize){}
     AABB(const Vector2 rPosition, const Vector2 rSize, const Vector2 rVelocity) : position(rPosition), size(rSize), velocity(rVelocity){}
-    ~AABB(){}
+    virtual ~AABB(){}
 
     Vector2 getGridPosition(size_t& rBlockSize){
          return (position + size /2) / rBlockSize;

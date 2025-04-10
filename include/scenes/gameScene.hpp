@@ -94,9 +94,6 @@ public:
         gameRenderer.camera.rotation = 0.0f;
         gameRenderer.camera.target = gDM.player.position;
         gameRenderer.setCameraOffset({GetScreenWidth() / 2.0f, GetScreenHeight() / 2.0f});
-
-        gDM.player.addCargo(1);
-        std::cout << gDM.player.getWeight() << std::endl;
     }
 
     void update() override {
