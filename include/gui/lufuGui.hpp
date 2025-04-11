@@ -41,12 +41,8 @@ namespace lufu_gui{
         bool mIsSelected = false;
         bool mIsToggled = false;
 
-        virtual void update() = 0;
+        virtual void update(const Vector2& rPosition) = 0;
         virtual void render() = 0;
-
-        void setPosition(const Vector2& rPosition){
-            mPosition = rPosition;
-        }
         void setSize(const Vector2& rSize){
             mSize = rSize;
         }
@@ -112,11 +108,14 @@ namespace lufu_gui{
 
     public:
         Text(){}
-        Text(const std::string& rtext, const float& rtextSize, Font& rFont) : mText(rtext), mTextSize(rtextSize), mFont(rFont){
+        Text(const float& rtextSize, Font& rFont) : mTextSize(rtextSize), mFont(rFont){
             mSize = MeasureTextEx(mFont, mText.c_str(), mTextSize, TEXT_SPACING);
         }
 
-        void update() override{
+        void update(const Vector2& rPosition) override{
+            mPosition = rPosition;
+
+            mSize = MeasureTextEx(mFont, mText.c_str(), mTextSize, TEXT_SPACING);
             // Do nothing only displays text
         }
 
@@ -137,8 +136,8 @@ namespace lufu_gui{
         ProgressBar(){}
         ProgressBar(const Vector2& rSize) : GuiElement(rSize){}
 
-        void update() override{
-            
+        void update(const Vector2& rPosition) override{
+            mPosition = rPosition;
         }
 
         void render() override{
@@ -161,11 +160,11 @@ namespace lufu_gui{
 
     public:
         TextButton(){}
-        TextButton(const Vector2& rSize, const std::string& rtext, const float& rtextSize, Font& rFont) : GuiElement(rSize), mText(rtext), mTextSize(rtextSize), mFont(rFont){
-            mTextMeasure = MeasureTextEx(mFont, mText.c_str(), mTextSize, TEXT_SPACING);
-        }
+        TextButton(const Vector2& rSize, const float& rtextSize, Font& rFont) : GuiElement(rSize), mTextSize(rtextSize), mFont(rFont){}
 
-        void update() override{
+        void update(const Vector2& rPosition) override{
+            mPosition = rPosition;
+            mTextMeasure = MeasureTextEx(mFont, mText.c_str(), mTextSize, TEXT_SPACING);
             
             updateHovered();
             updatePressed();
@@ -195,6 +194,10 @@ namespace lufu_gui{
                 DrawTextEx(mFont, mText.c_str(), mPosition + textOffset , mTextSize, TEXT_SPACING, BASE_TEXT_COLOR);
             }
         }
+
+        void setText(const std::string& text){
+            mText = text;
+        }
     };
 
     class Button : public GuiElement{
@@ -204,7 +207,9 @@ namespace lufu_gui{
         Button(){}
         Button(const Vector2& rSize) : GuiElement(rSize){}
 
-        void update() override{
+        void update(const Vector2& rPosition) override{
+            mPosition = rPosition;
+
             updateHovered();
             updatePressed();
             updateDown();
@@ -237,7 +242,9 @@ namespace lufu_gui{
         Toggle(){}
         Toggle(const Vector2& rSize) : GuiElement(rSize){}
 
-        void update() override{
+        void update(const Vector2& rPosition) override{
+            mPosition = rPosition;
+
             updateHovered();
             updatePressed();
             updateDown();

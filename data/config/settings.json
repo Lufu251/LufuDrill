@@ -3,6 +3,7 @@
         
     },
     "game": {
+        "gasCost": 4,
         "thrustForce": 0.6,
         "sideThrustForce": 0.2,
         "discoverRange": 5,

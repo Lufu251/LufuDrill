@@ -1,7 +1,5 @@
 #pragma once
 
-#include <memory>
-#include <map>
 #include <string>
 
 #include <raylib.h>
@@ -21,19 +19,19 @@ public:
 
     void initialize() override{
         Font font = GetFontDefault();
-        titelText = lufu_gui::Text("Tool Shop", 40, font);
-        repairHullTextButton = lufu_gui::TextButton(Vector2{120,40}, "Repair Hull", 20, font);
+        titelText = lufu_gui::Text(40, font);
+        repairHullTextButton = lufu_gui::TextButton(Vector2{120,40}, 20, font);
     }
 
     void update() override {
         // Check if menu is active
         if(mIsActive){
             // Update GuiElements
-            titelText.setPosition(mPosition + Vector2{15,10});
-            repairHullTextButton.setPosition(mPosition + Vector2{20,100});
+            titelText.update(mPosition + Vector2{15,10});
+            repairHullTextButton.update(mPosition + Vector2{20,100});
 
-            titelText.update();
-            repairHullTextButton.update();
+            titelText.setText("Tool Shop");
+            repairHullTextButton.setText("Repair Hull");
 
             if(repairHullTextButton.mIsPressed){
                 gDM.player.hull.mHealth = gDM.player.hull.mHealthMax;

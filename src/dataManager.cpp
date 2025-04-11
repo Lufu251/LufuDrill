@@ -87,6 +87,7 @@ void DataManager::loadSettingConfig(const std::string& name){
     // GENERAL
 
     // GAME
+    gasCost = settings["game"]["gasCost"];
     thrustForce = settings["game"]["thrustForce"];
     sideThrustForce = settings["game"]["sideThrustForce"];
     discoverRange = settings["game"]["discoverRange"];

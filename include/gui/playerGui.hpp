@@ -1,7 +1,5 @@
 #pragma once
 
-#include <memory>
-#include <map>
 #include <string>
 
 #include <raylib.h>
@@ -27,16 +25,17 @@ private:
 public:
     using GuiContext::GuiContext;
 
-    void initialize(){
+    void initialize() override{
         Font font = GetFontDefault();
         anchorUpperLeftCorner = {0, 0};
+        moneyText = lufu_gui::Text(20, font);
 
         anchorLowerLeftCorner = {0, static_cast<float>(GetScreenHeight() - 200)};
-        fuelBarText = lufu_gui::Text("Fuel:", 20, font);
+        fuelBarText = lufu_gui::Text(20, font);
         fuelBar = lufu_gui::ProgressBar(Vector2{190,20});
-        hullBarText = lufu_gui::Text("Hull:", 20, font);
+        hullBarText = lufu_gui::Text(20, font);
         hullBar = lufu_gui::ProgressBar(Vector2{190,20});
-        cargoBarText = lufu_gui::Text("CargoBay:", 20, font);
+        cargoBarText = lufu_gui::Text(20, font);
         cargoBar = lufu_gui::ProgressBar(Vector2{190,20});
     }
 
@@ -48,20 +47,20 @@ public:
         }
         // Check if menu is active
         if(mIsActive){
-            fuelBarText.setPosition(anchorLowerLeftCorner + Vector2{5,0});
-            fuelBar.setPosition(anchorLowerLeftCorner + Vector2{5,20});
-            hullBarText.setPosition(anchorLowerLeftCorner + Vector2{5,45});
-            hullBar.setPosition(anchorLowerLeftCorner + Vector2{5,65});
-            cargoBarText.setPosition(anchorLowerLeftCorner + Vector2{5,90});
-            cargoBar.setPosition(anchorLowerLeftCorner + Vector2{5,110});
+            moneyText.update(anchorUpperLeftCorner + Vector2{5,0});
 
-            fuelBarText.update();
-            fuelBar.update();
-            hullBarText.update();
-            hullBar.update();
-            cargoBarText.update();
-            cargoBar.update();
+            moneyText.setText("Money: " + std::to_string(gDM.player.money));
 
+            fuelBarText.update(anchorLowerLeftCorner + Vector2{5,0});
+            fuelBar.update(anchorLowerLeftCorner + Vector2{5,20});
+            hullBarText.update(anchorLowerLeftCorner + Vector2{5,45});
+            hullBar.update(anchorLowerLeftCorner + Vector2{5,65});
+            cargoBarText.update(anchorLowerLeftCorner + Vector2{5,90});
+            cargoBar.update(anchorLowerLeftCorner + Vector2{5,110});
+            
+            fuelBarText.setText("Fuel:");
+            hullBarText.setText("Hull:");
+            cargoBarText.setText("CargoBay:");
             fuelBar.setProgress(gDM.player.gasTank.mGas / gDM.player.gasTank.mGasMax);
             hullBar.setProgress(gDM.player.hull.mHealth / gDM.player.hull.mHealthMax);
             cargoBar.setProgress(static_cast<float>(gDM.player.cargoBay.mStored) / static_cast<float>(gDM.player.cargoBay.mMaxStored));
@@ -73,6 +72,8 @@ public:
         if(mIsActive){
             // UpperLeftCorner
             DrawRectangleV(anchorUpperLeftCorner,{200,50}, { 200, 200, 245, 230 });
+            moneyText.render();
+            
 
             // LowerLeftConrner
             DrawRectangleV(anchorLowerLeftCorner,{200,200}, { 200, 200, 245, 230 });

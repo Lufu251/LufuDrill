@@ -46,7 +46,6 @@ public:
     bool gameOver = false;
 
     // GameState
-    int money = 0;
     DrillUnit player;
     World world;
     
@@ -57,6 +56,7 @@ public:
     // General
 
     // GAME
+    int gasCost;
     float thrustForce;
     float sideThrustForce;
     int discoverRange;

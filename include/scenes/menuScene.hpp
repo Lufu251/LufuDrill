@@ -40,10 +40,10 @@ public:
         SetTextureFilter(font20.texture, TEXTURE_FILTER_POINT);
         SetTextureFilter(font48.texture, TEXTURE_FILTER_POINT);
 
-        titelText = lufu_gui::Text("LufuDrill", 48, font48);
-        startTextButton = lufu_gui::TextButton({200,40},"Start New Game", 20, font20);
-        resumeTextButton = lufu_gui::TextButton({200,40},"Resume", 20, font20);
-        exitTextButton = lufu_gui::TextButton({200,40},"Exit", 20, font20);
+        titelText = lufu_gui::Text(48, font48);
+        startTextButton = lufu_gui::TextButton({200,40}, 20, font20);
+        resumeTextButton = lufu_gui::TextButton({200,40}, 20, font20);
+        exitTextButton = lufu_gui::TextButton({200,40}, 20, font20);
     }
 
     void update() override {
@@ -56,15 +56,14 @@ public:
             anchor = {GetScreenWidth() / 2.0f, GetScreenHeight() / 2.0f - 200};
         }
 
-        titelText.setPosition(anchor + Vector2{0,0} - titelText.mSize /2);
-        startTextButton.setPosition(anchor + Vector2{0,200} - startTextButton.mSize /2);
-        resumeTextButton.setPosition(anchor + Vector2{0,250} - resumeTextButton.mSize /2);
-        exitTextButton.setPosition(anchor + Vector2{0,400} - exitTextButton.mSize /2);
-
-        titelText.update();
-        startTextButton.update();
-        resumeTextButton.update();
-        exitTextButton.update();
+        titelText.update(anchor + Vector2{0,0} - titelText.mSize /2);
+        titelText.setText("LufuDrill");
+        startTextButton.update(anchor + Vector2{0,200} - startTextButton.mSize /2);
+        startTextButton.setText("Start New Game");
+        resumeTextButton.update(anchor + Vector2{0,250} - resumeTextButton.mSize /2);
+        resumeTextButton.setText("Resume");
+        exitTextButton.update(anchor + Vector2{0,400} - exitTextButton.mSize /2);
+        exitTextButton.setText("Exit");
 
         if(startTextButton.mIsPressed){
             // Generate map

@@ -1,7 +1,5 @@
 #pragma once
 
-#include <memory>
-#include <map>
 #include <string>
 
 #include <raylib.h>
@@ -21,23 +19,22 @@ public:
 
     void initialize() override{
         Font font = GetFontDefault();
-        titelText = lufu_gui::Text("Trader", 40, font);
-        sellAllTextButton = lufu_gui::TextButton(Vector2{120,40}, "Sell All", 20, font);
+        titelText = lufu_gui::Text(40, font);
+        sellAllTextButton = lufu_gui::TextButton(Vector2{120,40}, 20, font);
     }
 
     void update() override {
         // Check if menu is active
         if(mIsActive){
             // Update GuiElements
-            titelText.setPosition(mPosition + Vector2{15,10});
-            sellAllTextButton.setPosition(mPosition + Vector2{20,100});
-
-            titelText.update();
-            sellAllTextButton.update();
+            titelText.update(mPosition + Vector2{15,10});
+            sellAllTextButton.update(mPosition + Vector2{20,100});
+            titelText.setText("Trader");
+            sellAllTextButton.setText("Sell All");
 
             if(sellAllTextButton.mIsPressed){
                 // Sell All
-                gDM.money += gDM.player.getCargoValue();
+                gDM.player.money += gDM.player.getCargoValue();
                 gDM.player.clearCargo();
             }
         }

@@ -19,6 +19,7 @@ public:
     Engine engine;
 
     // Players state
+    int money = 0;
     int state = 0;
     float drillTime = 0;
     Tile* drillingBlock;
