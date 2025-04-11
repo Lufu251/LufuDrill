@@ -1,6 +1,5 @@
 #pragma once
 
-#include <iostream>
 #include <string>
 #include <vector>
 
@@ -47,6 +46,7 @@ public:
     bool gameOver = false;
 
     // GameState
+    int money = 0;
     DrillUnit player;
     World world;
     

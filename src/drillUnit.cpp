@@ -21,17 +21,22 @@ void DrillUnit::setCargoSize(size_t size){
     }
 }
 
-int DrillUnit::getWeight(){
+int DrillUnit::getCargoWeight(){
     int weight = 0;
     for (size_t i = 0; i < cargoBay.mCargo.size(); i++){
         weight += gDM.ores[i].mWeight * cargoBay.mCargo[i]; // Add weights from the amount of cargo
     }
+
     return weight;
 }
 
-int DrillUnit::getValue(){
+int DrillUnit::getCargoValue(){
+    int value = 0;
+    for (size_t i = 0; i < cargoBay.mCargo.size(); i++){
+        value += gDM.ores[i].mValue * cargoBay.mCargo[i]; // Add values from the amount of cargo
+    }
 
-    return 0;
+    return value;
 }
 
 void DrillUnit::clearCargo(){

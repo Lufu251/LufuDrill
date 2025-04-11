@@ -9,7 +9,7 @@
 
 #include <lufuGui.hpp>
 #include <guiContext.hpp>
-#include <assetManager.hpp>
+#include <globals.hpp>
 
 class TraderMenu : virtual public GuiContext{
 private:
@@ -37,6 +37,8 @@ public:
 
             if(sellAllTextButton.mIsPressed){
                 // Sell All
+                gDM.money += gDM.player.getCargoValue();
+                gDM.player.clearCargo();
             }
         }
     }

@@ -1,6 +1,3 @@
-#include <iostream>
-#include <algorithm>
-
 #include <raylib.h>
 
 #include <scene.hpp>

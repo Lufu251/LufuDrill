@@ -123,6 +123,10 @@ namespace lufu_gui{
         void render() override{
             DrawTextEx(mFont, mText.c_str(), mPosition , mTextSize, TEXT_SPACING, BASE_TEXT_COLOR);
         }
+
+        void setText(const std::string& text){
+            mText = text;
+        }
     };
 
     class ProgressBar : public GuiElement{

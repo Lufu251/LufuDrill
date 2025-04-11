@@ -33,8 +33,8 @@ public:
     void addForce(const Vector2& rVelocity);
     void updatePosition();
     void setCargoSize(size_t size);
-    int getWeight();
-    int getValue();
+    int getCargoWeight();
+    int getCargoValue();
     void clearCargo();
     bool addCargo(int id);
     bool removeCargo(int id);
