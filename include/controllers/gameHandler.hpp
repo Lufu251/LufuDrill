@@ -1,5 +1,6 @@
 #pragma once
 
+#include "world.hpp"
 #include <vector>
 
 #include <raylib.h>
@@ -10,7 +11,8 @@
 #include <grid.hpp>
 #include <gasStationMenu.hpp>
 #include <playerGui.hpp>
-struct World;
+#include <world.hpp>
+
 class GameHandler
 {
 private:

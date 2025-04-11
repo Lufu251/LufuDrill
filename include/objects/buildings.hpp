@@ -2,6 +2,7 @@
 
 #include <aabb.hpp>
 #include <guiContext.hpp>
+#include <nlohmann/json.hpp>
 
 enum BUILDING_TYPE{GAS_STATION, TRADER, TOOL_SHOP, EQUIPMENT_SHOP};
 

@@ -1,6 +1,5 @@
 #include <gameHandler.hpp>
 
-#include <iostream>
 #include <algorithm>
 #include <random>
 

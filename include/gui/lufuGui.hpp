@@ -1,9 +1,9 @@
 #pragma once
 
+#include <string>
+
 #include <raylib.h>
 #include <raymath.h>
-
-#include <iostream>
 
 namespace lufu_gui{
 
@@ -157,11 +157,13 @@ namespace lufu_gui{
         std::string mText;
         float mTextSize;
         Font mFont;
-        Vector2 mTextMeasure = MeasureTextEx(mFont, mText.c_str(), mTextSize, TEXT_SPACING);
+        Vector2 mTextMeasure;
 
     public:
         TextButton(){}
-        TextButton(const Vector2& rSize, const std::string& rtext, const float& rtextSize, Font& rFont) : GuiElement(rSize), mText(rtext), mTextSize(rtextSize), mFont(rFont){}
+        TextButton(const Vector2& rSize, const std::string& rtext, const float& rtextSize, Font& rFont) : GuiElement(rSize), mText(rtext), mTextSize(rtextSize), mFont(rFont){
+            mTextMeasure = MeasureTextEx(mFont, mText.c_str(), mTextSize, TEXT_SPACING);
+        }
 
         void update() override{
             

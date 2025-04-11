@@ -25,12 +25,12 @@ void GameRenderer::renderMapGrid(World& world){
     BeginMode2D(camera);
 
     // Render the visible blocks from the grid
-    int xRenderAmount = (GetScreenWidth() / world.mBlockSize) / camera.zoom +2; // Calculate how many tiles are viewed by the camera
-    int yRenderAmount = (GetScreenHeight() / world.mBlockSize) / camera.zoom +2; // Calculate how many tiles are viewed by the camera
+    int xRenderAmount = (static_cast<float>(GetScreenWidth()) / world.mBlockSize) / camera.zoom +2; // Calculate how many tiles are viewed by the camera
+    int yRenderAmount = (static_cast<float>(GetScreenHeight()) / world.mBlockSize) / camera.zoom +2; // Calculate how many tiles are viewed by the camera
 
     // Calculate the cameraTarget position on the grid and substract half the amount of rendered pixels
-    int iStartBlock = camera.target.x / world.mBlockSize - xRenderAmount /2;
-    int jStartBlock = camera.target.y / world.mBlockSize - yRenderAmount /2;
+    int iStartBlock = camera.target.x / world.mBlockSize - static_cast<float>(xRenderAmount) /2;
+    int jStartBlock = camera.target.y / world.mBlockSize - static_cast<float>(yRenderAmount) /2;
 
     TextureAtlas& tileset = gAM.getTextureAtlas("tileset");
 

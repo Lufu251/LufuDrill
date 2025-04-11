@@ -1,5 +1,6 @@
 #include <assetManager.hpp>
 
+#include <iostream>
 #include <stdexcept>
 #include <filesystem>
 #include <fstream>

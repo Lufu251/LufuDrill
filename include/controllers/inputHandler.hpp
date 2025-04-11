@@ -2,8 +2,7 @@
 
 #include <raylib.h>
 
-class InputHandler
-{
+class InputHandler{
 private:
         // Private constructor
     InputHandler() = default;
