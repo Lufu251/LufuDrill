@@ -6,14 +6,7 @@
 
 DrillUnit::DrillUnit(){}
 DrillUnit::DrillUnit(const Vector2 position, const Vector2 size) : AABB(position, size){}
-
-void DrillUnit::addForce(const Vector2& rVelocity){
-    mVelocity += rVelocity;
-}
-
-void DrillUnit::updatePosition(){
-    mPosition += mVelocity;
-}
+DrillUnit::DrillUnit(const Vector2 position, const Vector2 size, const float mass) : AABB(position, size, mass){}
 
 void DrillUnit::setCargoSize(size_t size){
     cargoBay.mCargo.reserve(size);

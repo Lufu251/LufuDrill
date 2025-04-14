@@ -13,16 +13,25 @@ private:
 public:
     Vector2 mPosition;
     Vector2 mSize;
-    Vector2 mVelocity;
+    Vector2 mVelocity = {0,0};
     float mMass;
 
     AABB() {}
     AABB(const Vector2 position, const Vector2 size) : mPosition(position), mSize(size){}
+    AABB(const Vector2 position, const Vector2 size, const float mass) : mPosition(position), mSize(size), mMass(mass){}
     virtual ~AABB(){}
 
-    Vector2 getGridPosition(size_t& rBlockSize){
-         return (mPosition + mSize /2) / rBlockSize;
+    void addForce(const Vector2& acceleration){
+        mVelocity += acceleration;
     }
+
+    void updatePosition(){
+        mPosition += mVelocity;
+    }
+
+    Vector2 getGridPosition(size_t& rBlockSize){
+        return (mPosition + mSize /2) / rBlockSize;
+   }
 };
 
 class Hit{

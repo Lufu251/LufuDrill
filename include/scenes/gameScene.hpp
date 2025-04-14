@@ -50,12 +50,12 @@ public:
         PlayMusicStream(gAM.getMusic("nebula_run"));
 
         // Init Player
-        gDM.player = DrillUnit({200,300}, {24,24});
-        gDM.player.drill = gDM.drills[1];
-        gDM.player.gasTank = gDM.gasTanks[1];
-        gDM.player.hull = gDM.hulls[1];
-        gDM.player.cargoBay = gDM.cargoBays[1];
-        gDM.player.engine = gDM.engines[1];
+        gDM.player = DrillUnit({200,300}, {24,24}, 50);
+        gDM.player.drill = gDM.drills[0];
+        gDM.player.gasTank = gDM.gasTanks[0];
+        gDM.player.hull = gDM.hulls[0];
+        gDM.player.cargoBay = gDM.cargoBays[0];
+        gDM.player.engine = gDM.engines[0];
 
         // Set cargo size to the amount of blocks that where loaded from config
         gDM.player.setCargoSize(gDM.ores.size());
@@ -119,7 +119,6 @@ public:
         // Update DrillUnit General
         gameHandler.updateDrillUnitStates(gDM.player, InputHandler::getInstance().movementInput);
         gameHandler.updateDrillUnitDrilling(gDM.player, gDM.world);
-        gameHandler.discoverWorldBlocks(gDM.player, gDM.world);
         gameHandler.checkPlayerTouchingSides(gDM.player, gDM.world);
         gameHandler.checkBuildingTriggers(gDM.player, gDM.world);
         gameHandler.drainGasFromDrillUnit(gDM.player, InputHandler::getInstance().movementInput);

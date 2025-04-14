@@ -33,6 +33,5 @@ public:
     void checkGameOverStates(DrillUnit& player);
     void collisionDamageToPlayer();
     void drainGasFromDrillUnit(DrillUnit& player, Vector2& movementInput);
-    void discoverWorldBlocks(DrillUnit& player, World& world);
     void updateDrillUnitDrilling(DrillUnit& player, World& world);
 };

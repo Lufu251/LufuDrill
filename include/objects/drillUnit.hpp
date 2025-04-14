@@ -29,9 +29,8 @@ public:
 
     DrillUnit();
     DrillUnit(const Vector2 position, const Vector2 size);
+    DrillUnit(const Vector2 position, const Vector2 size, const float mass);
     
-    void addForce(const Vector2& rVelocity);
-    void updatePosition();
     void setCargoSize(size_t size);
     int getCargoWeight();
     int getCargoValue();

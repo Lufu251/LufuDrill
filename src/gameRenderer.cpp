@@ -123,7 +123,8 @@ void GameRenderer::renderBackground(DrillUnit& player){
 void GameRenderer::drawLightmap(DrillUnit& player, World& world){
     // Light parameters
     Color lightColor = WHITE;
-    float scale = gDM.world.mBlockSize / static_cast<float>(gAM.getTexture("light_texture").height) * 3.5;
+    Texture2D* lightTexture = &gAM.getTexture("light_texture");
+    float scale = gDM.world.mBlockSize / static_cast<float>(lightTexture->height) * 3.5;
 
 
     // Render the visible blocks from the grid
@@ -155,8 +156,8 @@ void GameRenderer::drawLightmap(DrillUnit& player, World& world){
                     }
                     Tile* tile = &world.mGrid(iBlock, jBlock); // Set the current block
                     if(gDM.blocks[tile->mType].mLight == true){
-                        Vector2 tSize = {static_cast<float>(gAM.getTexture("light_texture").width * scale), static_cast<float>(gAM.getTexture("light_texture").height * scale)};
-                        DrawTextureEx(gAM.getTexture("light_texture"), tile->mPosition + tile->mSize /2 - tSize /2, 0.0f, scale, lightColor);
+                        Vector2 tSize = {static_cast<float>(lightTexture->width * scale), static_cast<float>(lightTexture->height * scale)};
+                        DrawTextureEx(*lightTexture, tile->mPosition + tile->mSize /2 - tSize /2, 0.0f, scale, lightColor);
                     }
                 }
             }

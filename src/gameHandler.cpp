@@ -406,34 +406,6 @@ void GameHandler::drainGasFromDrillUnit(DrillUnit& player, Vector2& movementInpu
     
 }
 
-void GameHandler::discoverWorldBlocks(DrillUnit& drillUnit, World& world){
-    int radius = gDM.discoverRange;
-
-    // Get the player position on the grid
-    size_t iPlayer = drillUnit.getGridPosition(world.mBlockSize).x;
-    size_t jPlayer = drillUnit.getGridPosition(world.mBlockSize).y;
-
-    // Loop blocks near player
-    for (int i = -radius; i <= radius; i++){
-        for (int j = -radius; j <= radius; j++){
-            // Calculate the gridposition of the block that needs to be checked
-            size_t iBlock = iPlayer + i;
-            size_t jBlock = jPlayer + j;
-
-            // Check if position is out of bound from grid and skip this loop
-            if (iBlock < 0 || iBlock >= world.mGrid.gridSizeX || jBlock < 0 || jBlock >= world.mGrid.gridSizeY){
-                // Out of bound
-                continue;
-            }
-            else{
-                // Set block to discovered
-                world.mGrid(iBlock, jBlock).mDiscovered = true;
-            }
-        }
-    }
-    
-}
-
 void GameHandler::updateDrillUnitDrilling(DrillUnit& drillUnit, World& world){
     // Get the player position on the grid
     size_t iPlayer = drillUnit.getGridPosition(world.mBlockSize).x;
