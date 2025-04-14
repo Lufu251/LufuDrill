@@ -1,3 +1,5 @@
+#include "raylib.h"
+#include "world.hpp"
 #include <gameRenderer.hpp>
 
 #include <globals.hpp>
@@ -6,6 +8,15 @@
 GameRenderer::GameRenderer(/* args */){}
 
 GameRenderer::~GameRenderer(){}
+
+void GameRenderer::initialize(){
+    lightmap = LoadRenderTexture(GetScreenWidth(), GetScreenHeight());
+
+    camera.zoom = 2.0f;
+    camera.rotation = 0.0f;
+    camera.target = gDM.player.position;
+    setCameraOffset({GetScreenWidth() / 2.0f, GetScreenHeight() / 2.0f});
+}
 
 void GameRenderer::setCameraOffset(const Vector2& offset){
     camera.offset = offset;
@@ -45,14 +56,8 @@ void GameRenderer::renderMapGrid(World& world){
             }
 
             Tile* tile = &world.mGrid(iBlock, jBlock); // Set the current block
-            // check if the block is empty
-            if(tile->mType > 100000){
-                continue;
-            }
-            Color color = BLACK;
-            if(!tile->mBlocking || tile->mDiscovered) color = WHITE;
 
-            if(gDM.blocks[tile->mType].mRenderID >= 0) DrawTextureRec(tileset.texture, tileset.sections[gDM.blocks[tile->mType].mRenderID].rect, tile->position, color);
+            if(gDM.blocks[tile->mType].mRenderID >= 0) DrawTextureRec(tileset.texture, tileset.sections[gDM.blocks[tile->mType].mRenderID].rect, tile->position, WHITE);
         }
     }
     EndMode2D();
@@ -113,4 +118,62 @@ void GameRenderer::renderBackground(DrillUnit& player){
 
     
     EndMode2D();
+}
+
+void GameRenderer::createLightmap(DrillUnit& player, World& world){
+    Color lightColor = WHITE;
+    float scale = 0.25;
+
+    // Render the visible blocks from the grid
+    int xRenderAmount = (static_cast<float>(GetScreenWidth()) / world.mBlockSize) / camera.zoom +2; // Calculate how many tiles are viewed by the camera
+    int yRenderAmount = (static_cast<float>(GetScreenHeight()) / world.mBlockSize) / camera.zoom +2; // Calculate how many tiles are viewed by the camera
+
+    // Calculate the cameraTarget position on the grid and substract half the amount of rendered pixels
+    int iStartBlock = camera.target.x / world.mBlockSize - static_cast<float>(xRenderAmount) /2;
+    int jStartBlock = camera.target.y / world.mBlockSize - static_cast<float>(yRenderAmount) /2;
+
+    // Start drawing to the lightmap
+    BeginTextureMode(lightmap);
+        ClearBackground(BLACK); // Darkness base
+
+        BeginMode2D(camera); // Camera mode
+            BeginBlendMode(BLEND_ADDITIVE); // Blend mode
+            // ------------ START DRAW ------------
+            // Draw player light
+            DrawCircleGradient(player.position.x + player.size.x / 2, player.position.y + player.size.y / 2, 200, lightColor, BLACK);
+
+            // Draw grid lights
+            for (int i = 0; i <= xRenderAmount; i++){
+                for (int j = 0; j <= yRenderAmount; j++){
+                    size_t iBlock = iStartBlock + i;
+                    size_t jBlock = jStartBlock + j;
+                    // Clamp to grid size
+                    if(iBlock >= world.mGrid.gridSizeX || jBlock >= world.mGrid.gridSizeY){
+                        continue;
+                    }
+                    Tile* tile = &world.mGrid(iBlock, jBlock); // Set the current block
+                    if(gDM.blocks[tile->mType].mLight == true){
+                        //DrawCircleGradient(tile->position.x + tile->size.x / 2, tile->position.y + tile->size.y / 2, tile->size.x *scale, lightColor, BLACK);
+                        //DrawRectangleV(tile->position - tile->size / 2, tile->size * 2, lightColor);
+                        Vector2 tSize = {static_cast<float>(gAM.getTexture("light_texture").width * scale), static_cast<float>(gAM.getTexture("light_texture").height * scale)};
+                        DrawTextureEx(gAM.getTexture("light_texture"), tile->position + tile->size /2 - tSize /2, 0.0f, scale, lightColor);
+                    }
+                }
+            }
+
+            // ------------ END DRAW ------------
+            EndBlendMode();
+        EndMode2D();
+    EndTextureMode();
+}
+
+void GameRenderer::renderLightmap(){
+        // Overlay the lightmap with multiplicative blending
+        BeginBlendMode(BLEND_MULTIPLIED);
+            DrawTextureRec(lightmap.texture,
+                            { 0, 0, static_cast<float>(GetScreenWidth()), static_cast<float>(-GetScreenHeight())}, // Flip Y
+                            { 0, 0 },
+                            WHITE);
+        EndBlendMode();
+
 }

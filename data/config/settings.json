@@ -3,14 +3,14 @@
         
     },
     "game": {
-        "gasCost": 4,
+        "gasCost": 3,
         "thrustForce": 0.6,
         "sideThrustForce": 0.2,
         "discoverRange": 5,
         "startDrillThreshold": 10,
         "passivFuelUsage": 0.005,
-        "movingFuelUsage": 0.02,
-        "drillingFuelUsage": 0.04
+        "movingFuelUsage": 0.01,
+        "drillingFuelUsage": 0.03
     },
     "sound": {
         "masterVolume": 0.1,

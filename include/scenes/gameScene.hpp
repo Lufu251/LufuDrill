@@ -1,5 +1,6 @@
 #pragma once
 
+#include "raylib.h"
 #include <scene.hpp>
 
 #include <iostream>
@@ -41,6 +42,7 @@ public:
         gAM.loadTexture("sky", "sky.png");
         gAM.loadTexture("mountain", "mountain.png");
         gAM.loadTexture("cloud", "cloud.png");
+        gAM.loadTexture("light_texture", "light_texture.png");
         
         gAM.loadMusic("nebula_run", "nebula_run.ogg");
 
@@ -49,11 +51,11 @@ public:
 
         // Init Player
         gDM.player = DrillUnit({200,300}, {24,24}, {0,0});
-        gDM.player.drill = gDM.drills[0];
-        gDM.player.gasTank = gDM.gasTanks[0];
-        gDM.player.hull = gDM.hulls[0];
-        gDM.player.cargoBay = gDM.cargoBays[0];
-        gDM.player.engine = gDM.engines[0];
+        gDM.player.drill = gDM.drills[1];
+        gDM.player.gasTank = gDM.gasTanks[1];
+        gDM.player.hull = gDM.hulls[1];
+        gDM.player.cargoBay = gDM.cargoBays[1];
+        gDM.player.engine = gDM.engines[1];
 
         // Set cargo size to the amount of blocks that where loaded from config
         gDM.player.setCargoSize(gDM.ores.size());
@@ -90,10 +92,7 @@ public:
         }
         
         // Camera initialise
-        gameRenderer.camera.zoom = 2.0f;
-        gameRenderer.camera.rotation = 0.0f;
-        gameRenderer.camera.target = gDM.player.position;
-        gameRenderer.setCameraOffset({GetScreenWidth() / 2.0f, GetScreenHeight() / 2.0f});
+        gameRenderer.initialize();
     }
 
     void update() override {
@@ -103,6 +102,7 @@ public:
         // Do updates on screen resize
         if(IsWindowResized()){
             gameRenderer.setCameraOffset({GetScreenWidth() / 2.0f, GetScreenHeight() / 2.0f});
+            gameRenderer.lightmap = LoadRenderTexture(GetScreenWidth(), GetScreenHeight());
         }
 
         // Update Input
@@ -129,7 +129,6 @@ public:
         gameRenderer.moveCameraToPosition(gDM.player.position + gDM.player.size /2);
         gameRenderer.clampCameraToGrid(gDM.player, gDM.world);
 
-
         // Update Gui
         playerGui.update();
         gasStationMenu.update();
@@ -146,6 +145,8 @@ public:
         gameRenderer.renderMapGrid(gDM.world);
         gameRenderer.renderMapBuildings(gDM.world);
         gameRenderer.renderPlayer(gDM.player);
+        gameRenderer.createLightmap(gDM.player, gDM.world);
+        gameRenderer.renderLightmap();
 
         gasStationMenu.render();
         traderMenu.render();

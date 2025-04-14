@@ -10,6 +10,7 @@ public:
     int mOreID;
     int mRenderID;
     int mHardness;
+    bool mLight;
     bool mBlocking;
 
     Block(/* args */){}
@@ -22,5 +23,6 @@ inline void from_json(const nlohmann::json& j, Block& b) {
     j.at("ore_id").get_to(b.mOreID);
     j.at("render_id").get_to(b.mRenderID);
     j.at("hardness").get_to(b.mHardness);
+    j.at("light").get_to(b.mLight);
     j.at("blocking").get_to(b.mBlocking);
 }
