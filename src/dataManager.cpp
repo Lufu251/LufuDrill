@@ -95,6 +95,7 @@ void DataManager::loadSettingConfig(const std::string& name){
     passivFuelUsage = settings["game"]["passivFuelUsage"];
     movingFuelUsage = settings["game"]["movingFuelUsage"];
     drillingFuelUsage = settings["game"]["drillingFuelUsage"];
+    playerSight = settings["game"]["playerSight"];
 
     // SOUND
     masterVolume = settings["sound"]["masterVolume"];

@@ -27,6 +27,6 @@ public:
     void renderMapBuildings(World& world);
     void renderPlayer(DrillUnit& player);
     void renderBackground(DrillUnit& player);
-    void createLightmap(DrillUnit& player, World& world);
+    void drawLightmap(DrillUnit& player, World& world);
     void renderLightmap();
 };

@@ -10,7 +10,8 @@
         "startDrillThreshold": 10,
         "passivFuelUsage": 0.005,
         "movingFuelUsage": 0.01,
-        "drillingFuelUsage": 0.03
+        "drillingFuelUsage": 0.03,
+        "playerSight": 3
     },
     "sound": {
         "masterVolume": 0.1,

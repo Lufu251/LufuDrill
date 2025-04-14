@@ -145,7 +145,7 @@ public:
         gameRenderer.renderMapGrid(gDM.world);
         gameRenderer.renderMapBuildings(gDM.world);
         gameRenderer.renderPlayer(gDM.player);
-        gameRenderer.createLightmap(gDM.player, gDM.world);
+        gameRenderer.drawLightmap(gDM.player, gDM.world);
         gameRenderer.renderLightmap();
 
         gasStationMenu.render();

@@ -120,9 +120,11 @@ void GameRenderer::renderBackground(DrillUnit& player){
     EndMode2D();
 }
 
-void GameRenderer::createLightmap(DrillUnit& player, World& world){
+void GameRenderer::drawLightmap(DrillUnit& player, World& world){
+    // Light parameters
     Color lightColor = WHITE;
-    float scale = 0.25;
+    float scale = gDM.world.mBlockSize / static_cast<float>(gAM.getTexture("light_texture").height) * 3.5;
+
 
     // Render the visible blocks from the grid
     int xRenderAmount = (static_cast<float>(GetScreenWidth()) / world.mBlockSize) / camera.zoom +2; // Calculate how many tiles are viewed by the camera
@@ -140,7 +142,7 @@ void GameRenderer::createLightmap(DrillUnit& player, World& world){
             BeginBlendMode(BLEND_ADDITIVE); // Blend mode
             // ------------ START DRAW ------------
             // Draw player light
-            DrawCircleGradient(player.position.x + player.size.x / 2, player.position.y + player.size.y / 2, 200, lightColor, BLACK);
+            DrawCircleGradient(player.position.x + player.size.x / 2, player.position.y + player.size.y / 2, gDM.world.mBlockSize * gDM.playerSight, lightColor, BLACK);
 
             // Draw grid lights
             for (int i = 0; i <= xRenderAmount; i++){
@@ -153,8 +155,6 @@ void GameRenderer::createLightmap(DrillUnit& player, World& world){
                     }
                     Tile* tile = &world.mGrid(iBlock, jBlock); // Set the current block
                     if(gDM.blocks[tile->mType].mLight == true){
-                        //DrawCircleGradient(tile->position.x + tile->size.x / 2, tile->position.y + tile->size.y / 2, tile->size.x *scale, lightColor, BLACK);
-                        //DrawRectangleV(tile->position - tile->size / 2, tile->size * 2, lightColor);
                         Vector2 tSize = {static_cast<float>(gAM.getTexture("light_texture").width * scale), static_cast<float>(gAM.getTexture("light_texture").height * scale)};
                         DrawTextureEx(gAM.getTexture("light_texture"), tile->position + tile->size /2 - tSize /2, 0.0f, scale, lightColor);
                     }

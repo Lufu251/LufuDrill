@@ -64,6 +64,7 @@ public:
     float passivFuelUsage;
     float movingFuelUsage;
     float drillingFuelUsage;
+    float playerSight;
 
     // Sound
     float masterVolume;
