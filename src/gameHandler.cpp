@@ -19,14 +19,14 @@ void GameHandler::updateDrillUnitMovement(DrillUnit& drillUnit, World& world){
     direction.x = direction.x * gDM.sideThrustForce; // weaken side thruster
     if(direction.y > 0) direction.y = 0; // Stop down acceleration
     
-    Vector2 airResistance = Vector2Negate(drillUnit.velocity - drillUnit.velocity * world.mAirDensity);
+    Vector2 airResistance = Vector2Negate(drillUnit.mVelocity - drillUnit.mVelocity * world.mAirDensity);
     // Add Forces
     drillUnit.addForce(direction); // Add movementInput to player velocity
     drillUnit.addForce(world.mGravity); // Add gravity to player velocity
     drillUnit.addForce(airResistance); // Add airResistance to player velocity
 
     if(drillUnit.state == DRILL_DOWN){
-        drillUnit.velocity.x = 0;
+        drillUnit.mVelocity.x = 0;
     }
 }
 
@@ -205,8 +205,8 @@ std::vector<AABB> GameHandler::getPossibleCollisionsFromGrid(AABB& box, World& w
     size_t jPlayer = box.getGridPosition(world.mBlockSize).y;
 
     // Check how many tiles around the player need to be calculated
-    int gridDistanceX = Vector2Length(box.velocity) / static_cast<float>(world.mBlockSize) + std::ceil(box.size.x / world.mBlockSize); // amount of tiles that need to be checked
-    int gridDistanceY = Vector2Length(box.velocity) / static_cast<float>(world.mBlockSize) + std::ceil(box.size.y / world.mBlockSize); // amount of tiles that need to be checked
+    int gridDistanceX = Vector2Length(box.mVelocity) / static_cast<float>(world.mBlockSize) + std::ceil(box.mSize.x / world.mBlockSize); // amount of tiles that need to be checked
+    int gridDistanceY = Vector2Length(box.mVelocity) / static_cast<float>(world.mBlockSize) + std::ceil(box.mSize.y / world.mBlockSize); // amount of tiles that need to be checked
 
     // Loop blocks near player
     for (int i = -gridDistanceX; i <= gridDistanceX; i++){
@@ -231,12 +231,12 @@ std::vector<AABB> GameHandler::getPossibleCollisionsFromGrid(AABB& box, World& w
 
 void GameHandler::clampToGrid(AABB& box, World& world){
     // Clamp box to grid
-    Vector2 positionBeforeClamp = box.position;
-    box.position.x = std::clamp(box.position.x, 0.f, static_cast<float>(world.mGrid.gridSizeX * world.mBlockSize - box.size.x));
-    box.position.y = std::clamp(box.position.y, 0.f, static_cast<float>(world.mGrid.gridSizeY * world.mBlockSize - box.size.y));
+    Vector2 positionBeforeClamp = box.mPosition;
+    box.mPosition.x = std::clamp(box.mPosition.x, 0.f, static_cast<float>(world.mGrid.gridSizeX * world.mBlockSize - box.mSize.x));
+    box.mPosition.y = std::clamp(box.mPosition.y, 0.f, static_cast<float>(world.mGrid.gridSizeY * world.mBlockSize - box.mSize.y));
     // If position was clamped set velocity to 0 in this axis
-    if(positionBeforeClamp.x != box.position.x) box.velocity.x = 0;
-    if(positionBeforeClamp.y != box.position.y) box.velocity.y = 0;
+    if(positionBeforeClamp.x != box.mPosition.x) box.mVelocity.x = 0;
+    if(positionBeforeClamp.y != box.mPosition.y) box.mVelocity.y = 0;
 }
 
 void GameHandler::checkCollisionAndMove(AABB& box, World& world){
@@ -244,7 +244,7 @@ void GameHandler::checkCollisionAndMove(AABB& box, World& world){
     AABB boxClone = box;
 
     // Loop a cloned Player with the collision and end loop when movement is done
-    while(Vector2Length(boxClone.velocity) > 0){
+    while(Vector2Length(boxClone.mVelocity) > 0){
         // Create a list with blocks that need to be checked
         std::vector<AABB> blocks = getPossibleCollisionsFromGrid(box, world); // AABB from all blocks that can collide
         // Get the nearest collision from the List
@@ -256,14 +256,14 @@ void GameHandler::checkCollisionAndMove(AABB& box, World& world){
             if(hit.n.x < 0){
                 // RIGHT
                 // Dampening everytime a hit occures
-                boxClone.velocity.x *= dataManager.collisionRetention;
-                box.velocity.x *= dataManager.collisionRetention;
+                boxClone.mVelocity.x *= dataManager.collisionRetention;
+                box.mVelocity.x *= dataManager.collisionRetention;
             }
             else if(hit.n.x > 0){
                 // LEFT
                 // Dampening everytime a hit occures
-                boxClone.velocity.x *= dataManager.collisionRetention;
-                box.velocity.x *= dataManager.collisionRetention;
+                boxClone.mVelocity.x *= dataManager.collisionRetention;
+                box.mVelocity.x *= dataManager.collisionRetention;
             }
             if(hit.n.y < 0){
                 // BOTTOM
@@ -271,40 +271,40 @@ void GameHandler::checkCollisionAndMove(AABB& box, World& world){
                 collisionDamageToPlayer();
 
                 // Dampening everytime a hit occures
-                boxClone.velocity.y *= dataManager.collisionRetention;
-                box.velocity.y *= dataManager.collisionRetention;
+                boxClone.mVelocity.y *= dataManager.collisionRetention;
+                box.mVelocity.y *= dataManager.collisionRetention;
 
                 // Slow when moving over ground
-                boxClone.velocity.x *= dataManager.onGroundResistance;
-                box.velocity.x *= dataManager.onGroundResistance;
+                boxClone.mVelocity.x *= dataManager.onGroundResistance;
+                box.mVelocity.x *= dataManager.onGroundResistance;
             }
             else if(hit.n.y > 0){
                 // TOP
                 // Dampening everytime a hit occures
-                boxClone.velocity.y *= dataManager.collisionRetention;
-                box.velocity.y *= dataManager.collisionRetention;
+                boxClone.mVelocity.y *= dataManager.collisionRetention;
+                box.mVelocity.y *= dataManager.collisionRetention;
             }
 
-            boxClone.position = hit.p; // Move to the point of collision
+            boxClone.mPosition = hit.p; // Move to the point of collision
 
             // Set cPlayer velocity to the remaining velocity
             float remainingTime = 1.0f - hit.collisionTime; // Calculate remaining distance after the collision
-            boxClone.velocity *= remainingTime;
+            boxClone.mVelocity *= remainingTime;
 
             // reflect the velocity of cPlayer and player
-            if (abs(hit.n.x) > 0.0001f) box.velocity.x = -box.velocity.x;
-            if (abs(hit.n.y) > 0.0001f) box.velocity.y = -box.velocity.y;
+            if (abs(hit.n.x) > 0.0001f) box.mVelocity.x = -box.mVelocity.x;
+            if (abs(hit.n.y) > 0.0001f) box.mVelocity.y = -box.mVelocity.y;
 
-            if (abs(hit.n.x) > 0.0001f) boxClone.velocity.x = -boxClone.velocity.x;
-            if (abs(hit.n.y) > 0.0001f) boxClone.velocity.y = -boxClone.velocity.y;
+            if (abs(hit.n.x) > 0.0001f) boxClone.mVelocity.x = -boxClone.mVelocity.x;
+            if (abs(hit.n.y) > 0.0001f) boxClone.mVelocity.y = -boxClone.mVelocity.y;
         }
         else{
             // No hit occured do a regular move
-            boxClone.position += boxClone.velocity; // regulary add velocity
-            boxClone.velocity = {0 , 0}; // Reset velocity all movement has been done / END Loop
+            boxClone.mPosition += boxClone.mVelocity; // regulary add velocity
+            boxClone.mVelocity = {0 , 0}; // Reset velocity all movement has been done / END Loop
         }
     }
-    box.position = boxClone.position; // Loop has ended player can now be set to the new position
+    box.mPosition = boxClone.mPosition; // Loop has ended player can now be set to the new position
 }
 
 // Check if AABB is touching blocks on any side
@@ -317,19 +317,19 @@ void GameHandler::checkPlayerTouchingSides(DrillUnit& player, World& world){
     // Iterate the possible blocks
     for(auto & block : blocks){
         // Bottom
-        if(AABBIntersection(player, AABB(Vector2Add(block.position, {0, -dataManager.touchingDistance}), block.size))){
+        if(AABBIntersection(player, AABB(Vector2Add(block.mPosition, {0, -dataManager.touchingDistance}), block.mSize))){
             bottom = true;
         }
         // Top
-        if(AABBIntersection(player, AABB(Vector2Add(block.position, {0, dataManager.touchingDistance}), block.size))){
+        if(AABBIntersection(player, AABB(Vector2Add(block.mPosition, {0, dataManager.touchingDistance}), block.mSize))){
             top = true;
         }
         // Right
-        if(AABBIntersection(player, AABB(Vector2Add(block.position, {-dataManager.touchingDistance, 0}), block.size))){
+        if(AABBIntersection(player, AABB(Vector2Add(block.mPosition, {-dataManager.touchingDistance, 0}), block.mSize))){
             right = true;
         }
         // Top
-        if(AABBIntersection(player, AABB(Vector2Add(block.position, {dataManager.touchingDistance, 0}), block.size))){
+        if(AABBIntersection(player, AABB(Vector2Add(block.mPosition, {dataManager.touchingDistance, 0}), block.mSize))){
             left = true;
         }
     }
@@ -383,8 +383,8 @@ void GameHandler::checkGameOverStates(DrillUnit& player){
 void GameHandler::collisionDamageToPlayer(){
     float threshold = 8;
     // Check if vertical velocity is greater than
-    if(gDM.player.velocity.y >= threshold){
-        float damage = std::clamp( 6 * (gDM.player.velocity.y -threshold), threshold, 100.0f);
+    if(gDM.player.mVelocity.y >= threshold){
+        float damage = std::clamp( 6 * (gDM.player.mVelocity.y -threshold), threshold, 100.0f);
         gDM.player.hull.mHealth -= damage;
     }
 }

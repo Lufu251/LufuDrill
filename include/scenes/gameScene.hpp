@@ -50,7 +50,7 @@ public:
         PlayMusicStream(gAM.getMusic("nebula_run"));
 
         // Init Player
-        gDM.player = DrillUnit({200,300}, {24,24}, {0,0});
+        gDM.player = DrillUnit({200,300}, {24,24});
         gDM.player.drill = gDM.drills[1];
         gDM.player.gasTank = gDM.gasTanks[1];
         gDM.player.hull = gDM.hulls[1];
@@ -113,7 +113,7 @@ public:
         gameHandler.checkCollisionAndMove(gDM.player, gDM.world); // Physics collision response and move player
         gameHandler.clampToGrid(gDM.player, gDM.world); //Clamp player to grid
         // Stop completely if below the threshold
-        if (Vector2Length(gDM.player.velocity) < gDM.velocityThreshhold) gDM.player.velocity = { 0.0f, 0.0f };
+        if (Vector2Length(gDM.player.mVelocity) < gDM.velocityThreshhold) gDM.player.mVelocity = { 0.0f, 0.0f };
 
 
         // Update DrillUnit General
@@ -126,7 +126,7 @@ public:
         gameHandler.checkGameOverStates(gDM.player);
 
         // Update and pan camera
-        gameRenderer.moveCameraToPosition(gDM.player.position + gDM.player.size /2);
+        gameRenderer.moveCameraToPosition(gDM.player.mPosition + gDM.player.mSize /2);
         gameRenderer.clampCameraToGrid(gDM.player, gDM.world);
 
         // Update Gui

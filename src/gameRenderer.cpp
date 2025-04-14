@@ -14,7 +14,7 @@ void GameRenderer::initialize(){
 
     camera.zoom = 2.0f;
     camera.rotation = 0.0f;
-    camera.target = gDM.player.position;
+    camera.target = gDM.player.mPosition;
     setCameraOffset({GetScreenWidth() / 2.0f, GetScreenHeight() / 2.0f});
 }
 
@@ -57,7 +57,7 @@ void GameRenderer::renderMapGrid(World& world){
 
             Tile* tile = &world.mGrid(iBlock, jBlock); // Set the current block
 
-            if(gDM.blocks[tile->mType].mRenderID >= 0) DrawTextureRec(tileset.texture, tileset.sections[gDM.blocks[tile->mType].mRenderID].rect, tile->position, WHITE);
+            if(gDM.blocks[tile->mType].mRenderID >= 0) DrawTextureRec(tileset.texture, tileset.sections[gDM.blocks[tile->mType].mRenderID].rect, tile->mPosition, WHITE);
         }
     }
     EndMode2D();
@@ -68,7 +68,7 @@ void GameRenderer::renderMapBuildings(World& world){
 
     BeginMode2D(camera);
     for (auto& building : world.buildings){
-        Rectangle buildingRec = {building.position.x, building.position.y, building.size.x, building.size.y};
+        Rectangle buildingRec = {building.mPosition.x, building.mPosition.y, building.mSize.x, building.mSize.y};
         DrawTexturePro(buildingset.texture, buildingset.sections[building.mType].rect, buildingRec, {0,0}, 0, WHITE);
     }
     EndMode2D();
@@ -80,11 +80,11 @@ void GameRenderer::renderPlayer(DrillUnit& player){
     BeginMode2D(camera);
     switch (player.state)
     {
-    case LEFT: DrawTextureRec(buildingset.texture, buildingset.sections[player.state].rect, {player.position.x -6, player.position.y}, WHITE); break;
-    case RIGHT: DrawTextureRec(buildingset.texture, buildingset.sections[player.state].rect, {player.position.x, player.position.y}, WHITE); break;
-    case DRILL_LEFT: DrawTextureRec(buildingset.texture, buildingset.sections[player.state].rect, {player.position.x -6, player.position.y}, WHITE); break;
-    case DRILL_RIGHT: DrawTextureRec(buildingset.texture, buildingset.sections[player.state].rect, {player.position.x, player.position.y}, WHITE); break;
-    case DRILL_DOWN: DrawTextureRec(buildingset.texture, buildingset.sections[player.state].rect, {player.position.x, player.position.y}, WHITE); break;
+    case LEFT: DrawTextureRec(buildingset.texture, buildingset.sections[player.state].rect, {player.mPosition.x -6, player.mPosition.y}, WHITE); break;
+    case RIGHT: DrawTextureRec(buildingset.texture, buildingset.sections[player.state].rect, {player.mPosition.x, player.mPosition.y}, WHITE); break;
+    case DRILL_LEFT: DrawTextureRec(buildingset.texture, buildingset.sections[player.state].rect, {player.mPosition.x -6, player.mPosition.y}, WHITE); break;
+    case DRILL_RIGHT: DrawTextureRec(buildingset.texture, buildingset.sections[player.state].rect, {player.mPosition.x, player.mPosition.y}, WHITE); break;
+    case DRILL_DOWN: DrawTextureRec(buildingset.texture, buildingset.sections[player.state].rect, {player.mPosition.x, player.mPosition.y}, WHITE); break;
     }
     EndMode2D();
 }
@@ -142,7 +142,7 @@ void GameRenderer::drawLightmap(DrillUnit& player, World& world){
             BeginBlendMode(BLEND_ADDITIVE); // Blend mode
             // ------------ START DRAW ------------
             // Draw player light
-            DrawCircleGradient(player.position.x + player.size.x / 2, player.position.y + player.size.y / 2, gDM.world.mBlockSize * gDM.playerSight, lightColor, BLACK);
+            DrawCircleGradient(player.mPosition.x + player.mSize.x / 2, player.mPosition.y + player.mSize.y / 2, gDM.world.mBlockSize * gDM.playerSight, lightColor, BLACK);
 
             // Draw grid lights
             for (int i = 0; i <= xRenderAmount; i++){
@@ -156,7 +156,7 @@ void GameRenderer::drawLightmap(DrillUnit& player, World& world){
                     Tile* tile = &world.mGrid(iBlock, jBlock); // Set the current block
                     if(gDM.blocks[tile->mType].mLight == true){
                         Vector2 tSize = {static_cast<float>(gAM.getTexture("light_texture").width * scale), static_cast<float>(gAM.getTexture("light_texture").height * scale)};
-                        DrawTextureEx(gAM.getTexture("light_texture"), tile->position + tile->size /2 - tSize /2, 0.0f, scale, lightColor);
+                        DrawTextureEx(gAM.getTexture("light_texture"), tile->mPosition + tile->mSize /2 - tSize /2, 0.0f, scale, lightColor);
                     }
                 }
             }

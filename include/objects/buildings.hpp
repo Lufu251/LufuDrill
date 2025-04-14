@@ -37,14 +37,14 @@ inline void from_json(const nlohmann::json& j, Vector2& v) {
 inline void to_json(nlohmann::json& j, const Building& b) {
     j = {
         {"type", b.mType},
-        {"position", b.position},
-        {"size", b.size}
+        {"position", b.mPosition},
+        {"size", b.mSize}
     };
 }
 
 // Convert JSON to Building
 inline void from_json(const nlohmann::json& j, Building& b) {
     j.at("type").get_to(b.mType);
-    j.at("position").get_to(b.position);
-    j.at("size").get_to(b.size);
+    j.at("position").get_to(b.mPosition);
+    j.at("size").get_to(b.mSize);
 }

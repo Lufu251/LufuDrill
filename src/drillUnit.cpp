@@ -5,15 +5,14 @@
 #include <globals.hpp>
 
 DrillUnit::DrillUnit(){}
-DrillUnit::DrillUnit(const Vector2 rPosition, const Vector2 rSize, const Vector2 rVelocity) : AABB(rPosition, rSize, rVelocity){}
-DrillUnit::~DrillUnit(){}
+DrillUnit::DrillUnit(const Vector2 position, const Vector2 size) : AABB(position, size){}
 
 void DrillUnit::addForce(const Vector2& rVelocity){
-    velocity += rVelocity;
+    mVelocity += rVelocity;
 }
 
 void DrillUnit::updatePosition(){
-    position += velocity;
+    mPosition += mVelocity;
 }
 
 void DrillUnit::setCargoSize(size_t size){

@@ -42,8 +42,8 @@ void DataManager::loadGameState(const std::string& name){
     // Init map, set position and size ob aabb
     for (size_t x = 0; x < world.mGrid.gridSizeX; x++){
         for (size_t y = 0; y < world.mGrid.gridSizeY; y++){
-            world.mGrid(x,y).position = {static_cast<float>(x * world.mBlockSize), static_cast<float>(y * world.mBlockSize)};
-            world.mGrid(x,y).size = {static_cast<float>(world.mBlockSize), static_cast<float>(world.mBlockSize)};
+            world.mGrid(x,y).mPosition = {static_cast<float>(x * world.mBlockSize), static_cast<float>(y * world.mBlockSize)};
+            world.mGrid(x,y).mSize = {static_cast<float>(world.mBlockSize), static_cast<float>(world.mBlockSize)};
         }
     }
 

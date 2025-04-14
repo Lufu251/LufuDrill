@@ -28,8 +28,7 @@ public:
     int top, right, bottom, left;
 
     DrillUnit();
-    DrillUnit(const Vector2 rPosition, const Vector2 rSize, const Vector2 rVelocity);
-    ~DrillUnit();
+    DrillUnit(const Vector2 position, const Vector2 size);
     
     void addForce(const Vector2& rVelocity);
     void updatePosition();
