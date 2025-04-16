@@ -4,8 +4,8 @@
     },
     "game": {
         "gasCost": 3,
-        "thrustForce": 0.6,
-        "sideThrustForce": 0.2,
+        "maxPlayerSpeed": 100,
+        "sideThrustForce": 0.3,
         "discoverRange": 5,
         "startDrillThreshold": 10,
         "passivFuelUsage": 0.005,

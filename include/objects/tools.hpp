@@ -16,10 +16,10 @@ public:
 
 class Drill : public Tool{
 public:
-    float mPower;
+    float mStrength;
 
     Drill(){}
-    Drill(std::string name, int cost, float power) : Tool(name, cost), mPower(power) {}
+    Drill(std::string name, int cost, float strength) : Tool(name, cost), mStrength(strength) {}
     ~Drill(){}
 };
 
@@ -58,9 +58,10 @@ public:
 class Engine: public Tool{
 public:
     float mPower;
+    float mMaxPower;
 
     Engine(){}
-    Engine(std::string name, int cost, int power) : Tool(name, cost), mPower(power) {}
+    Engine(std::string name, int cost, int power) : Tool(name, cost), mMaxPower(power) {}
     ~Engine(){}
 };
 

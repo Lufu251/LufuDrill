@@ -21,7 +21,13 @@ public:
     AABB(const Vector2 position, const Vector2 size, const float mass) : mPosition(position), mSize(size), mMass(mass){}
     virtual ~AABB(){}
 
-    void addForce(const Vector2& acceleration){
+    // Divides by mass
+    void addForce(const Vector2& force){
+        mVelocity += force / mMass;
+    }
+
+    // Does not divied by mass
+    void addAcceleration(const Vector2& acceleration){
         mVelocity += acceleration;
     }
 

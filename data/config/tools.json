@@ -3,12 +3,12 @@
         {
             "name": "basic",
             "cost": 50,
-            "power": 0.5
+            "strength": 0.5
         },
         {
             "name": "advanced",
             "cost": 500,
-            "power": 1
+            "strength": 1
         }
     ],
     "fueltank": [
@@ -51,12 +51,12 @@
         {
             "name": "basic",
             "cost": 50,
-            "power": 1
+            "power": 200000
         },
         {
             "name": "advanced",
             "cost": 500,
-            "power": 2
+            "power": 10000
         }
     ],
     "equipment": [

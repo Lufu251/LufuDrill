@@ -57,7 +57,7 @@ public:
 
     // GAME
     int gasCost;
-    float thrustForce;
+    float maxPlayerSpeed;
     float sideThrustForce;
     int discoverRange;
     int startDrillThreshold;

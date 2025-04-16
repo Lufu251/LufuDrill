@@ -88,7 +88,7 @@ void DataManager::loadSettingConfig(const std::string& name){
 
     // GAME
     gasCost = settings["game"]["gasCost"];
-    thrustForce = settings["game"]["thrustForce"];
+    maxPlayerSpeed = settings["game"]["maxPlayerSpeed"];
     sideThrustForce = settings["game"]["sideThrustForce"];
     discoverRange = settings["game"]["discoverRange"];
     startDrillThreshold = settings["game"]["startDrillThreshold"];
@@ -126,7 +126,7 @@ void DataManager::loadToolsConfig(const std::string& name){
 
     // Parse each tool type
     for (const auto& item : jsonData["drill"]) {
-        drills.emplace_back(item["name"], item["cost"], item["power"]);
+        drills.emplace_back(item["name"], item["cost"], item["strength"]);
     }
     for (const auto& item : jsonData["fueltank"]) {
         gasTanks.emplace_back(item["name"], item["cost"], item["fuel"]);

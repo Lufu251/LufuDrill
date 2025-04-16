@@ -14,7 +14,7 @@ public:
     size_t mBlockSize;
     std::vector<Building> buildings;
 
-    float mAirDensity;
+    float dragCoefficient;
     Vector2 mGravity;
 
     World(){}
@@ -28,7 +28,7 @@ public:
 inline void to_json(nlohmann::json& j, const World& w) {
     j = {
         {"blockSize", w.mBlockSize},
-        {"airDensity", w.mAirDensity},
+        {"airDensity", w.dragCoefficient},
         {"gravity", w.mGravity},
         {"buildings", w.buildings},
         {"grid", w.mGrid}
@@ -38,7 +38,7 @@ inline void to_json(nlohmann::json& j, const World& w) {
 // Convert World to Grid
 inline void from_json(const nlohmann::json& j, World& w) {
     j.at("blockSize").get_to(w.mBlockSize);
-    j.at("airDensity").get_to(w.mAirDensity);
+    j.at("airDensity").get_to(w.dragCoefficient);
     j.at("gravity").get_to(w.mGravity);
     j.at("buildings").get_to(w.buildings);
     j.at("grid").get_to(w.mGrid);

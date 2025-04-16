@@ -1,6 +1,7 @@
 #include <gameHandler.hpp>
 
 #include <algorithm>
+#include <iostream>
 #include <random>
 
 #include <globals.hpp>
@@ -13,21 +14,97 @@ GameHandler::GameHandler(/* args */){}
 GameHandler::~GameHandler(){}
 
 // Return vector in which player will be moved
-void GameHandler::updateDrillUnitMovement(DrillUnit& drillUnit, World& world){
-    // Values for player force
-    Vector2 direction = Vector2Scale(InputHandler::getInstance().movementInput, gDM.thrustForce); // Multiply by speed
-    direction.x = direction.x * gDM.sideThrustForce; // weaken side thruster
+void GameHandler::applyForcesToDrillUnit(float& deltaTime){
+    // -------------------- Movement Input --------------------
+    Vector2 direction = InputHandler::getInstance().movementInput;
+    direction.y *= gDM.player.engine.mMaxPower;
+    direction.x *= gDM.player.engine.mMaxPower * gDM.sideThrustForce; // weaken side thruster
     if(direction.y > 0) direction.y = 0; // Stop down acceleration
-    
-    Vector2 airResistance = Vector2Negate(drillUnit.mVelocity - drillUnit.mVelocity * world.mAirDensity);
-    // Add Forces
-    drillUnit.addForce(direction); // Add movementInput to player velocity
-    drillUnit.addForce(world.mGravity); // Add gravity to player velocity
-    drillUnit.addForce(airResistance); // Add airResistance to player velocity
 
-    if(drillUnit.state == DRILL_DOWN){
-        drillUnit.mVelocity.x = 0;
+    gDM.player.addForce(direction * deltaTime);
+    // -------------------- Movement Input --------------------
+
+    // -------------------- Gravity --------------------
+    gDM.player.addAcceleration(gDM.world.mGravity* deltaTime);
+    // -------------------- Gravity --------------------
+
+    // -------------------- Friction --------------------
+    Vector2 dragForce = {-gDM.world.dragCoefficient * (std::abs(gDM.player.mVelocity.x) * gDM.player.mVelocity.x), -gDM.world.dragCoefficient * (std::abs(gDM.player.mVelocity.y) * gDM.player.mVelocity.y)};
+    std::cout << dragForce.y << std::endl;
+    gDM.player.addForce(dragForce * deltaTime); // Add airResistance to player velocity
+    // -------------------- Friction --------------------
+}
+
+void GameHandler::updatePlayerPosition(float& deltaTime){
+    gDM.player.mPosition += gDM.player.mVelocity * deltaTime;
+}
+
+void GameHandler::checkCollisionAndMove(AABB& box, World& world){
+    DataManager& dataManager = gDM;
+    AABB boxClone = box;
+
+    // Loop a cloned Player with the collision and end loop when movement is done
+    while(Vector2Length(boxClone.mVelocity) > 0){
+        // Create a list with blocks that need to be checked
+        std::vector<AABB> blocks = getPossibleCollisionsFromGrid(box, world); // AABB from all blocks that can collide
+        // Get the nearest collision from the List
+        Hit hit = GetNearestCollisionFromList(boxClone, blocks);
+
+        // When nearest is less then one a hit occured
+        if(hit.collisionTime < 1.0f){
+            // A hit occured
+            if(hit.n.x < 0){
+                // RIGHT
+                // Dampening everytime a hit occures
+                boxClone.mVelocity.x *= dataManager.collisionRetention;
+                box.mVelocity.x *= dataManager.collisionRetention;
+            }
+            else if(hit.n.x > 0){
+                // LEFT
+                // Dampening everytime a hit occures
+                boxClone.mVelocity.x *= dataManager.collisionRetention;
+                box.mVelocity.x *= dataManager.collisionRetention;
+            }
+            if(hit.n.y < 0){
+                // BOTTOM
+                // Apply damage to Hull when hitting the bottom
+                collisionDamage();
+
+                // Dampening everytime a hit occures
+                boxClone.mVelocity.y *= dataManager.collisionRetention;
+                box.mVelocity.y *= dataManager.collisionRetention;
+
+                // Slow when moving over ground
+                boxClone.mVelocity.x *= dataManager.onGroundResistance;
+                box.mVelocity.x *= dataManager.onGroundResistance;
+            }
+            else if(hit.n.y > 0){
+                // TOP
+                // Dampening everytime a hit occures
+                boxClone.mVelocity.y *= dataManager.collisionRetention;
+                box.mVelocity.y *= dataManager.collisionRetention;
+            }
+
+            boxClone.mPosition = hit.p; // Move to the point of collision
+
+            // Set cPlayer velocity to the remaining velocity
+            float remainingTime = 1.0f - hit.collisionTime; // Calculate remaining distance after the collision
+            boxClone.mVelocity *= remainingTime;
+
+            // reflect the velocity of cPlayer and player
+            if (abs(hit.n.x) > 0.0001f) box.mVelocity.x = -box.mVelocity.x;
+            if (abs(hit.n.y) > 0.0001f) box.mVelocity.y = -box.mVelocity.y;
+
+            if (abs(hit.n.x) > 0.0001f) boxClone.mVelocity.x = -boxClone.mVelocity.x;
+            if (abs(hit.n.y) > 0.0001f) boxClone.mVelocity.y = -boxClone.mVelocity.y;
+        }
+        else{
+            // No hit occured do a regular move
+            boxClone.mPosition += boxClone.mVelocity; // regulary add velocity
+            boxClone.mVelocity = {0 , 0}; // Reset velocity all movement has been done / END Loop
+        }
     }
+    box.mPosition = boxClone.mPosition; // Loop has ended player can now be set to the new position
 }
 
 void GameHandler::updateDrillUnitStates(DrillUnit& player, Vector2& movementInput){
@@ -81,8 +158,8 @@ void GameHandler::updateDrillUnitStates(DrillUnit& player, Vector2& movementInpu
 }
 
 void GameHandler::generateTerrain(World& world){
-    world.mGravity = {0, 0.4f};
-    world.mAirDensity = 0.985f;
+    world.mGravity = {0, 600.f};
+    world.dragCoefficient = 0.01f;
 
     // Pre init
     for (size_t x = 0; x < world.mGrid.gridSizeX; x++){
@@ -239,74 +316,6 @@ void GameHandler::clampToGrid(AABB& box, World& world){
     if(positionBeforeClamp.y != box.mPosition.y) box.mVelocity.y = 0;
 }
 
-void GameHandler::checkCollisionAndMove(AABB& box, World& world){
-    DataManager& dataManager = gDM;
-    AABB boxClone = box;
-
-    // Loop a cloned Player with the collision and end loop when movement is done
-    while(Vector2Length(boxClone.mVelocity) > 0){
-        // Create a list with blocks that need to be checked
-        std::vector<AABB> blocks = getPossibleCollisionsFromGrid(box, world); // AABB from all blocks that can collide
-        // Get the nearest collision from the List
-        Hit hit = GetNearestCollisionFromList(boxClone, blocks);
-
-        // When nearest is less then one a hit occured
-        if(hit.collisionTime < 1.0f){
-            // A hit occured
-            if(hit.n.x < 0){
-                // RIGHT
-                // Dampening everytime a hit occures
-                boxClone.mVelocity.x *= dataManager.collisionRetention;
-                box.mVelocity.x *= dataManager.collisionRetention;
-            }
-            else if(hit.n.x > 0){
-                // LEFT
-                // Dampening everytime a hit occures
-                boxClone.mVelocity.x *= dataManager.collisionRetention;
-                box.mVelocity.x *= dataManager.collisionRetention;
-            }
-            if(hit.n.y < 0){
-                // BOTTOM
-                // Apply damage to Hull when hitting the bottom
-                collisionDamageToPlayer();
-
-                // Dampening everytime a hit occures
-                boxClone.mVelocity.y *= dataManager.collisionRetention;
-                box.mVelocity.y *= dataManager.collisionRetention;
-
-                // Slow when moving over ground
-                boxClone.mVelocity.x *= dataManager.onGroundResistance;
-                box.mVelocity.x *= dataManager.onGroundResistance;
-            }
-            else if(hit.n.y > 0){
-                // TOP
-                // Dampening everytime a hit occures
-                boxClone.mVelocity.y *= dataManager.collisionRetention;
-                box.mVelocity.y *= dataManager.collisionRetention;
-            }
-
-            boxClone.mPosition = hit.p; // Move to the point of collision
-
-            // Set cPlayer velocity to the remaining velocity
-            float remainingTime = 1.0f - hit.collisionTime; // Calculate remaining distance after the collision
-            boxClone.mVelocity *= remainingTime;
-
-            // reflect the velocity of cPlayer and player
-            if (abs(hit.n.x) > 0.0001f) box.mVelocity.x = -box.mVelocity.x;
-            if (abs(hit.n.y) > 0.0001f) box.mVelocity.y = -box.mVelocity.y;
-
-            if (abs(hit.n.x) > 0.0001f) boxClone.mVelocity.x = -boxClone.mVelocity.x;
-            if (abs(hit.n.y) > 0.0001f) boxClone.mVelocity.y = -boxClone.mVelocity.y;
-        }
-        else{
-            // No hit occured do a regular move
-            boxClone.mPosition += boxClone.mVelocity; // regulary add velocity
-            boxClone.mVelocity = {0 , 0}; // Reset velocity all movement has been done / END Loop
-        }
-    }
-    box.mPosition = boxClone.mPosition; // Loop has ended player can now be set to the new position
-}
-
 // Check if AABB is touching blocks on any side
 void GameHandler::checkPlayerTouchingSides(DrillUnit& player, World& world){
     DataManager& dataManager = gDM;
@@ -380,7 +389,7 @@ void GameHandler::checkGameOverStates(DrillUnit& player){
     }
 }
 
-void GameHandler::collisionDamageToPlayer(){
+void GameHandler::collisionDamage(){
     float threshold = 8;
     // Check if vertical velocity is greater than
     if(gDM.player.mVelocity.y >= threshold){
@@ -389,7 +398,7 @@ void GameHandler::collisionDamageToPlayer(){
     }
 }
 
-void GameHandler::drainGasFromDrillUnit(DrillUnit& player, Vector2& movementInput){
+void GameHandler::drainGas(DrillUnit& player, Vector2& movementInput){
     // Drain passiv fuel
     player.gasTank.mGas -= gDM.passivFuelUsage;
 
@@ -441,7 +450,7 @@ void GameHandler::updateDrillUnitDrilling(DrillUnit& drillUnit, World& world){
             }
 
             // drillUnit is drilling a block reduce drillTime by drillpower
-            drillUnit.drillTime -= drillUnit.drill.mPower;
+            drillUnit.drillTime -= drillUnit.drill.mStrength;
 
             if(drillUnit.drillTime <= 0){
                 // Block is mined

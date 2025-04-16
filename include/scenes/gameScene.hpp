@@ -50,7 +50,7 @@ public:
         PlayMusicStream(gAM.getMusic("nebula_run"));
 
         // Init Player
-        gDM.player = DrillUnit({200,300}, {24,24}, 50);
+        gDM.player = DrillUnit({200,300}, {24,24}, 200);
         gDM.player.drill = gDM.drills[0];
         gDM.player.gasTank = gDM.gasTanks[0];
         gDM.player.hull = gDM.hulls[0];
@@ -96,7 +96,7 @@ public:
     }
 
     void update() override {
-        //float deltaTime = GetFrameTime();
+        float deltaTime = GetFrameTime();
         UpdateMusicStream(gAM.getMusic("nebula_run"));
 
         // Do updates on screen resize
@@ -108,20 +108,22 @@ public:
         // Update Input
         InputHandler::getInstance().updateMovementInput();
 
-        // Movement DrillUnit
-        gameHandler.updateDrillUnitMovement(gDM.player, gDM.world);
-        gameHandler.checkCollisionAndMove(gDM.player, gDM.world); // Physics collision response and move player
+        // Add forces to DrillUnit
+        gameHandler.applyForcesToDrillUnit(deltaTime);
+        // General
+        if(gDM.player.state == DRILL_DOWN){
+            gDM.player.mVelocity.x = 0;
+        }
+        //gameHandler.checkCollisionAndMove(gDM.player, gDM.world); // Physics collision response and move player
+        gameHandler.updatePlayerPosition(deltaTime); // Update player position
         gameHandler.clampToGrid(gDM.player, gDM.world); //Clamp player to grid
-        // Stop completely if below the threshold
-        if (Vector2Length(gDM.player.mVelocity) < gDM.velocityThreshhold) gDM.player.mVelocity = { 0.0f, 0.0f };
-
 
         // Update DrillUnit General
         gameHandler.updateDrillUnitStates(gDM.player, InputHandler::getInstance().movementInput);
         gameHandler.updateDrillUnitDrilling(gDM.player, gDM.world);
         gameHandler.checkPlayerTouchingSides(gDM.player, gDM.world);
         gameHandler.checkBuildingTriggers(gDM.player, gDM.world);
-        gameHandler.drainGasFromDrillUnit(gDM.player, InputHandler::getInstance().movementInput);
+        gameHandler.drainGas(gDM.player, InputHandler::getInstance().movementInput);
         gameHandler.checkGameOverStates(gDM.player);
 
         // Update and pan camera

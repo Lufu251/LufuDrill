@@ -1,6 +1,6 @@
 #pragma once
 
-#include "world.hpp"
+#include <world.hpp>
 #include <vector>
 
 #include <raylib.h>
@@ -22,16 +22,18 @@ public:
     ~GameHandler();
 
     // Helper methods
-    void updateDrillUnitMovement(DrillUnit& drillUnit, World& world);
+    void applyForcesToDrillUnit(float& deltaTime);
+    void updatePlayerPosition(float& deltaTime);
+    void checkCollisionAndMove(AABB& box, World& world);
+
     void updateDrillUnitStates(DrillUnit& player, Vector2& movementInput);
     void generateTerrain(World& world);
     void clampToGrid(AABB& box, World& world);
     std::vector<AABB> getPossibleCollisionsFromGrid(AABB& box, World& world);
-    void checkCollisionAndMove(AABB& box, World& world);
     void checkPlayerTouchingSides(DrillUnit& player, World& world);
     void checkBuildingTriggers(AABB& box, World& world);
     void checkGameOverStates(DrillUnit& player);
-    void collisionDamageToPlayer();
-    void drainGasFromDrillUnit(DrillUnit& player, Vector2& movementInput);
+    void collisionDamage();
+    void drainGas(DrillUnit& player, Vector2& movementInput);
     void updateDrillUnitDrilling(DrillUnit& player, World& world);
 };
