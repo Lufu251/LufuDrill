@@ -51,12 +51,12 @@
         {
             "name": "basic",
             "cost": 50,
-            "power": 200000
+            "power": 400000
         },
         {
             "name": "advanced",
             "cost": 500,
-            "power": 10000
+            "power": 200000
         }
     ],
     "equipment": [

@@ -158,8 +158,8 @@ void GameHandler::updateDrillUnitStates(DrillUnit& player, Vector2& movementInpu
 }
 
 void GameHandler::generateTerrain(World& world){
-    world.mGravity = {0, 600.f};
-    world.dragCoefficient = 0.01f;
+    world.mGravity = {0, 800.f};
+    world.dragCoefficient = 0.15f;
 
     // Pre init
     for (size_t x = 0; x < world.mGrid.gridSizeX; x++){
